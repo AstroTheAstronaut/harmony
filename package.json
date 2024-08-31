@@ -1,0 +1,21 @@
+{
+  "name": "harmony",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "Matteo Sohoreanu",
+  "license": "ISC",
+  "dependencies": {
+    "adm-zip": "^0.5.15",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "mariadb": "^3.3.1",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.11.0",
+    "unidecode": "^1.1.0",
+    "uuid": "^10.0.0"
+  }
+}

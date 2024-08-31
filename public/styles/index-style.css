@@ -1,0 +1,112 @@
+body {
+    background-color: #f4f7f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+.sidebar {
+    background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+    color: #fff;
+    padding: 1rem;
+    height: 100vh;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-right: 1px solid #ddd;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar h4 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 0.5rem;
+}
+
+.sidebar .nav-link {
+    color: #fff;
+    margin: 0.5rem 0;
+    transition: background-color 0.3s, padding-left 0.3s;
+    padding: 0.5rem;
+}
+
+.sidebar .nav-link:hover {
+    text-decoration: none;
+    background-color: #6c757d;
+    padding-left: 1rem;
+}
+
+.main-content {
+    margin-left: 250px;
+    padding: 2rem;
+    flex-grow: 1;
+}
+
+.card {
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    border-bottom: 0;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.btn-custom {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-custom:hover {
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    border: none;
+}
+
+.list-group-item {
+    border: 1px solid #ddd;
+    margin-bottom: 0.5rem;
+    background-color: #fff;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.list-group-item:hover {
+    background-color: #f1f1f1;
+    transform: scale(1.02);
+}
+
+.text-muted {
+    font-size: 0.9rem;
+}
+
+
+
+.form-group label {
+    font-weight: bold;
+}
+
+.form-control {
+    border: 1px solid #ced4da;
+}
+
+.upload-btn {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.upload-btn:hover {
+    background-color: #218838;
+}

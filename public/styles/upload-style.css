@@ -1,0 +1,65 @@
+.song-part-container {
+  display: flex; /* Use flex layout to align items */
+  justify-content: space-between; /* Space between text and buttons */
+  align-items: center; /* Align items at the top */
+  padding: 15px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.song-part {
+  flex: 1; /* Allow the song part to take as much space as possible */
+  margin-right: 20px; /* Space between text and buttons */
+}
+.song-part p {
+  white-space: pre-wrap; /* This preserves both spaces and newlines */
+}
+
+.part-actions {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  align-items: flex-end; /* Align buttons to the right */
+  gap: 10px; /* Space between buttons */
+}
+
+.part-actions .btn {
+  width: 120px; /* Fixed width for buttons */
+  text-align: center; /* Center text in buttons */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.part-actions .btn:hover {
+  background-color: #e0e0e0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+  .preview-container {
+    border-left: 1px solid #ddd;
+    padding-left: 20px;
+  }
+  .preview-title {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  .preview-artist {
+    font-size: 1.2rem;
+    color: #6c757d;
+  }
+  .preview-part {
+    margin-bottom: 10px;
+  }
+  .dragging {
+    opacity: 0.5;
+  }
+  .song-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+  }
+  .book-info {
+    font-size: 1rem;
+    color: #4d4d4d;
+  }

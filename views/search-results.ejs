@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/index-style.css">
+    <style>
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+
+        .card {
+            cursor: pointer;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .list-group-item {
+            border: 0;
+            padding: 1rem;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s;
+        }
+
+        .list-group-item:hover {
+            background-color: #e9ecef;
+        }
+
+        .lyrics {
+            white-space: pre-wrap;
+            /* Maintain spacing in lyrics */
+        }
+
+        .btn-request {
+            align-self: center;
+            /* Center the button horizontally */
+            margin-top: auto;
+            /* Push button to the bottom if needed */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Search Results for "<%= query %>"</h1>
+        <% if (results.length > 0) { %>
+            <div class="row">
+                <% results.forEach(result => { %>
+                    <div class="col-md-12 mb-3">
+                        <div class="card" onclick="window.location.href='/song-view/<%= result.song_id %>'">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= result.title %></h5>
+                                <% if (result.artist) { %>
+                                    <h6 class="card-subtitle mb-2 text-muted">by <%= result.artist %></h6>
+                                <% } %>
+                                <% if (result.bo_name) { %>
+                                    <h6 class="card-subtitle mb-2 text-muted"><%= result.bo_name %></h6>
+                                <% } %>
+                                
+                                <!-- List each unique part with repetition count -->
+                                <% result.parts.forEach(part => { %>
+                                    <p class="card-text">
+                                        <em><%= part.part_type %></em>
+                                        <% if (part.repetitions > 1) { %>
+                                            x<%= part.repetitions %>
+                                        <% } %>
+                                    </p>
+                                    <pre class="lyrics"><%= part.lyrics %></pre>
+                                <% }) %>
+
+                                <form action="/request-song" method="POST" class="mb-0">
+                                    <input type="hidden" name="song_uid" value="<%= result.song_uid %>">
+                                    <button type="submit" class="btn btn-warning btn-sm btn-request">Request</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <p class="text-center">No results found.</p>
+        <% } %>
+        <a href="/" class="btn btn-primary mt-3">Back to Home</a>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function highlightLyrics(lyrics, term) {
+            if (!term) return lyrics;
+
+            // Function to remove diacritics
+            const removeDiacritics = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+            // Normalize both lyrics and term
+            const normalizedLyrics = removeDiacritics(lyrics);
+            const normalizedTerm = removeDiacritics(term);
+
+            // Create a new RegExp with the normalized term
+            const regex = new RegExp(`(${normalizedTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
+
+            // Replace the original lyrics with highlighted versions by comparing the normalized ones
+            return normalizedLyrics.replace(regex, (match) => {
+                // Find original match by index to preserve original diacritics
+                const originalMatch = lyrics.substr(normalizedLyrics.indexOf(match), match.length);
+                return `<span class="highlight">${originalMatch}</span>`;
+            });
+        }
+        
+        // Apply highlighting to lyrics after page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const term = "<%= query %>";
+            document.querySelectorAll('.lyrics').forEach(elem => {
+                elem.innerHTML = highlightLyrics(elem.textContent, term);
+            });
+        });
+
+    </script>
+</body>
+
+</html>

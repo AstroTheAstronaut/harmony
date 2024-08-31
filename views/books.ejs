@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books</title>
+    <!-- Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+     <link rel="stylesheet" href="/styles/sidebar.css">
+     <link rel="stylesheet" href="/styles/books-style.css">
+     <script src="https://kit.fontawesome.com/d3b482db3e.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <%- include('partials/sidebar') %>
+    <div class="main-content">
+        <div class="container mt-5">
+            <!-- Books List -->
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">Books</div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <% books.forEach(book=> { %>
+                                <li class="align-items-center d-flex justify-content-between list-group-item">
+                                    <div><strong>
+                                            <%= book.bo_name %>
+                                        </strong> - <%= book.bo_uid %>
+                                    </div>
+                                    <button class="btn btn-danger btn-sm" data-book-id="<%= book.bo_uid %>"
+                                        data-target="#deleteBookModal" data-toggle="modal" type="button">Delete</button>
+                                </li>
+                                <% }) %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add New Book Form -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    Add New Book
+                </div>
+                <div class="card-body">
+                    <!-- Existing form for adding a book manually -->
+                    <form action="/add-book" method="POST">
+                        <div class="form-group">
+                            <label for="bookName">Book Name</label>
+                            <input type="text" class="form-control" id="bookName" name="book_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookUUID">Book UUID</label>
+                            <input type="text" class="form-control" id="bookUUID" name="book_uuid" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Book</button>
+                    </form>
+                    <!-- New form for uploading ZIP files -->
+                    <form action="/upload-book" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="bookFile">Upload ZIP File</label>
+                            <input type="file" class="form-control-file" id="bookFile" name="bookFile" accept=".zip"
+                                required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload Book</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Add event listeners to filter songs by book
+        document.querySelectorAll('.list-group-item').forEach(item => {
+            item.addEventListener('click', function () {
+                const bookId = this.querySelector('button[data-book-id]').getAttribute('data-book-id');
+                filterSongsByBook(bookId);
+            });
+        });
+
+        function filterSongsByBook(bookId) {
+            const songsList = document.getElementById('songs-list');
+            songsList.querySelectorAll('.list-group-item').forEach(songItem => {
+                const songBookId = songItem.getAttribute('data-book-id');
+                if (bookId === '' || songBookId === bookId) {
+                    songItem.style.display = '';
+                } else {
+                    songItem.style.display = 'none';
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('#deleteBookModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var book_uuid = button.data('book-id'); // Fetch the specific book ID
+
+                // Display the UUID in the modal
+                $('#bookUUIDDisplay').text(book_uuid);
+
+                // Clear any previous input and disable the buttons
+                $('#confirmBookUUID').val('');
+                $('#deleteOnlyForm button').prop('disabled', true);
+                $('#deleteWithSongsForm button').prop('disabled', true);
+
+                // Listen for changes in the confirmation input
+                $('#confirmBookUUID').on('input', function () {
+                    var inputUUID = $(this).val().trim();
+                    var isMatch = inputUUID === book_uuid;
+
+                    // Enable or disable buttons based on input match
+                    $('#deleteOnlyForm button').prop('disabled', !isMatch);
+                    $('#deleteWithSongsForm button').prop('disabled', !isMatch);
+
+                    // Set hidden input values if there's a match
+                    if (isMatch) {
+                        $('#hiddenDeleteOnlyUUID').val(book_uuid);
+                        $('#hiddenDeleteWithSongsUUID').val(book_uuid);
+                    } else {
+                        $('#hiddenDeleteOnlyUUID').val('');
+                        $('#hiddenDeleteWithSongsUUID').val('');
+                    }
+                });
+            });
+        });
+
+
+    </script>
+
+    <div class="fade modal" role="dialog" aria-hidden="true" aria-labelledby="deleteBookModalLabel" id="deleteBookModal"
+        tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteBookModalLabel">Confirm Deletion</h5>
+                    <button class="close" type="button" aria-label="Close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this book?</p>
+                    <p>This action has two options:</p>
+                    <ul>
+                        <li><strong>Delete Only Book:</strong> This will remove the book entry but keep associated
+                            songs.</li>
+                        <li><strong>Delete Book with Songs:</strong> This will remove the book entry along with all
+                            associated songs.</li>
+                    </ul>
+                    <p>To continue, please type the Book UID (Unique Identifier) into the textbox below:</p>
+                    <div class="card uuid-card">
+                        <div class="card-body text-center">
+                            <strong>Book UID: </strong><strong class="uuid-text" id="bookUUIDDisplay"></strong>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmBookUUID">Type the Book UID to confirm:</label>
+                        <input type="text" class="form-control" id="confirmBookUUID" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <form action="/delete-book" method="POST" class="d-inline" id="deleteOnlyForm">
+                        <input name="book_uuid" type="hidden" id="hiddenDeleteOnlyUUID">
+                        <button type="submit" class="btn btn-secondary" disabled>Delete Only Book</button>
+                    </form>
+                    <form action="/delete-book-with-songs" method="POST" class="d-inline" id="deleteWithSongsForm">
+                        <input name="book_uuid" type="hidden" id="hiddenDeleteWithSongsUUID">
+                        <button type="submit" class="btn btn-danger" disabled>Delete Book with Songs</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

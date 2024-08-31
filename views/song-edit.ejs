@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Include your custom styles here */
+    </style>
+</head>
+
+<body>
+    <div class="container my-4">
+        <h1 class="mb-4">Editing song:</h1>
+        <form action="/update-song/<%= song.song_uid %>" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" name="title" class="form-control" value="<%= song.title %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="artist">Artist</label>
+                        <input type="text" id="artist" name="artist" class="form-control" value="<%= song.artist %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="partType">Part Type</label>
+                        <select id="partType" name="partType" class="form-control" required>
+                            <option value="Verse" <% if (song.partType === 'Verse') { %>selected<% } %>>Verse</option>
+                            <option value="Chorus" <% if (song.partType === 'Chorus') { %>selected<% } %>>Chorus</option>
+                            <option value="Bridge" <% if (song.partType === 'Bridge') { %>selected<% } %>>Bridge</option>
+                            <option value="Coda" <% if (song.partType === 'Coda') { %>selected<% } %>>Coda</option>
+                            <option value="Intro" <% if (song.partType === 'Intro') { %>selected<% } %>>Intro</option>
+                            <option value="Outro" <% if (song.partType === 'Outro') { %>selected<% } %>>Outro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="book">Book</label>
+                        <select id="book" name="book" class="form-control">
+                            <option value="">Select a book (optional)</option>
+                            <% books.forEach(book => { %>
+                                <option value="<%= book.bo_uid %>" <% if (song.book === book.bo_uid) { %>selected<% } %>>
+                                    <%= book.bo_name %>
+                                </option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bookSongNumber">Song Number in Book</label>
+                        <input type="number" id="bookSongNumber" name="bookSongNumber" class="form-control" value="<%= song.bookSongNumber %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="lyricsPart">Lyrics</label>
+                        <textarea id="lyricsPart" name="lyricsPart" class="form-control" rows="4" required><%= song.lyrics %></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success mt-4">Save Changes</button>
+                    <a href="/" class="btn btn-secondary mt-4">Back to Home</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
