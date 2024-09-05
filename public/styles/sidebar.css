@@ -1,42 +1,100 @@
-body{
-    background: #eee;
-   }
-   
-   #side_nav{
-    background: #0056b3 !important;
-    min-width: 250px;
-    max-width: 250px;
-    transition: all 0.3s;
-   }
-   .content{
-      min-height: 100vh;
-      width: 100%;
-   }
-   hr.h-color{
-     background: #eee;
-   }
-   
-   .sidebar li.active{
-      background: #eee;
-      border-radius: 8px;
-   }
-   
-   .sidebar li.active a, .sidebar li.active a:hover {
-    color: #000;
-   }
-   .sidebar li a{
-    color: #fff;
-   }
-   
-   @media(max-width: 767px){
-    #side_nav{
-      margin-left: -250px;
-      position: absolute;
-      min-height: 100vh;
-      z-index: 1;
-   
-    }
-    #side_nav.active{
-      margin-left: 0;
-     }
-   }
+/* General body styles */
+body {
+  background: #eee;
+}
+
+/* Sidebar styles */
+.sidebar {
+  background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+  color: #fff;
+  padding: 1rem;
+  height: 100vh;
+  width: 250px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-right: 1px solid #ddd;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease; /* Adjusted for smooth sliding effect */
+  transform: translateX(-250px); /* Hide the sidebar initially */
+  z-index: 1000; /* Ensure it is above other content */
+}
+
+.sidebar.active {
+  transform: translateX(0); /* Show the sidebar when active */
+}
+
+/* Sidebar header and links */
+.sidebar h1, .sidebar h4 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.sidebar .nav-link {
+  color: #fff;
+  margin: 0.5rem 0;
+  transition: background-color 0.3s, padding-left 0.3s;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.sidebar .nav-link:hover {
+  text-decoration: none;
+  background-color: #6c757d;
+  padding-left: 1rem;
+}
+
+/* Responsive adjustments for mobile view */
+@media (max-width: 767px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    transform: translateX(-100%); /* Hide the sidebar initially */
+  }
+
+  .sidebar.active {
+    transform: translateX(0); /* Show the sidebar when active */
+  }
+
+  .main-content {
+    margin-left: 0; /* No margin on mobile */
+    padding: 1rem;
+  }
+
+  .sidebar .close-btn {
+    display: block;
+  }
+
+  .header-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* Adjustments for main content margin on larger screens */
+@media (min-width: 768px) {
+  .main-content {
+    margin-left: 250px;
+  }
+
+  /* Ensure sidebar is visible and correctly positioned on larger screens */
+  .sidebar {
+    transform: translateX(0); /* Always visible on large screens */
+    width: 250px; /* Ensure proper width */
+  }
+}
+
+/* Active link styles */
+.sidebar li.active {
+  background: #eee;
+  border-radius: 8px;
+}
+
+.sidebar li.active a, .sidebar li.active a:hover {
+  color: #000;
+}
+
+.sidebar li a {
+  color: #fff;
+}

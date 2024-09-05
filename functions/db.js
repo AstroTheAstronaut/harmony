@@ -18,6 +18,21 @@ async function getBooks() {
     }
 }
 
+// Example implementation of getBookNameById
+async function getBookNameById(bookId) {
+    let conn;
+    try{
+        conn = await pool.getConnection(); // Get a connection from the pool
+        const [book] = await conn.query('SELECT bo_name FROM books_db WHERE bo_uid = ?', [bookId]);
+        return book[0] ? book[0].bo_name : 'Unknown Book';
+    } catch (err) {
+        console.error('Error fetching book name:', err);
+        return 'Unknown Book';
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
 async function deleteBook(book_uuid) {
     let conn;
     try {
@@ -121,6 +136,36 @@ async function getSongs() {
     }
 }
 
+async function getSongsWithPagination(offset = 0, limit = 10) {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const [rows] = await conn.query(`
+            SELECT s.id, s.title, s.artist, s.book_uuid, s.book_song_number, b.bo_name, s.song_uid
+            FROM songs s 
+            LEFT JOIN books_db b ON s.book_uuid = b.bo_uid
+            LIMIT ? OFFSET ?`, [limit, offset]);
+        return rows;
+    } catch (err) {
+        return Promise.reject(err);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+async function getTotalSongsByBook(bookId) {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const [result] = await conn.query('SELECT COUNT(*) AS count FROM songs WHERE book_uuid = ?', [bookId]);
+        return result[0].count;
+    } catch (err) {
+        return Promise.reject(err);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
 async function getSongById(id) {
     let conn;
     try {
@@ -143,7 +188,37 @@ async function getSongById(id) {
       if (conn) conn.release();
     }
   }
-  
+
+  async function getSongsByBook(bookId, offset = 0, limit = 10) {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const [rows] = await conn.query(`
+            SELECT s.id, s.title, s.artist, s.book_uuid, s.book_song_number, b.bo_name, s.song_uid
+            FROM songs s 
+            LEFT JOIN books_db b ON s.book_uuid = b.bo_uid
+            WHERE s.book_uuid = ?
+            LIMIT ? OFFSET ?`, [bookId, limit, offset]);
+        return rows;
+    } catch (err) {
+        return Promise.reject(err);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+async function getTotalSongs() {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const [result] = await conn.query('SELECT COUNT(*) AS count FROM songs');
+        return result[0].count;
+    } catch (err) {
+        return Promise.reject(err);
+    } finally {
+        if (conn) conn.release();
+    }
+}
 
 async function removeSong(id) {
     let conn;
@@ -359,5 +434,10 @@ module.exports = {
     getMostRequestedSongs,
     deleteBookWithSongs,
     getRequestedSongs,
-    removeRequestedSong
+    removeRequestedSong,
+    getSongsWithPagination,
+    getTotalSongs,
+    getSongsByBook,
+    getTotalSongsByBook,
+    getBookNameById,
 };
