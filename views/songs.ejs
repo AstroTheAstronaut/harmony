@@ -36,88 +36,92 @@
                 </div>
 
                 <!-- Songs List Section -->
-<div class="card mb-4">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-        <h4 class="mb-0">
-            <% if (bookName==='All Books') { %>
-                Songs List
-            <% } else { %>
-                Showing songs for: <%= bookName %>
-            <% } %>
-        </h4>
-        <a href="/upload" class="btn btn-light">Upload a New Song</a>
-        <!-- Dropdown for Filtering by Books -->
-        <div class="dropdown ml-3">
-            <button class="btn btn-light dropdown-toggle" type="button" id="bookFilterDropdown"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Filter by Book
-            </button>
-            <div class="dropdown-menu" aria-labelledby="bookFilterDropdown">
-                <a class="dropdown-item" href="/songs?book=all">All Books</a>
-                <% books.forEach(book => { %>
-                    <a class="dropdown-item" href="/songs?book=<%= book.bo_uid %>">
-                        <%= book.bo_name %>
-                    </a>
-                <% }) %>
-            </div>
-        </div>
-    </div>
-    <div class="card-body">
-        <% if (songs.length > 0) { %>
-            <ul class="list-group" id="songs-list">
-                <% songs.forEach(song => { %>
-                    <li class="list-group-item d-flex justify-content-between align-items-center position-relative">
-                        <div>
-                            <a href="/song-view/<%= song.song_uid %>"
-                                class="text-decoration-none text-dark">
-                                <strong>
-                                    <% if (song.book_song_number) { %>
-                                        <%= song.book_song_number %>. <%= song.title %>
-                                    <% } else { %>
-                                        <%= song.title %>
-                                    <% } %>
-                                </strong>
-                            </a>
-                            <% if (song.artist) { %>
-                                <span class="text-muted"> by <%= song.artist %></span>
-                            <% } %>
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">
+                            <% if (bookName==='All Books' ) { %>
+                                Songs List
+                                <% } else { %>
+                                    Showing songs for: <%= bookName %>
+                                        <% } %>
+                        </h4>
+                        <a href="/upload" class="btn btn-light">Upload a New Song</a>
+                        <!-- Dropdown for Filtering by Books -->
+                        <div class="dropdown ml-3">
+                            <button class="btn btn-light dropdown-toggle" type="button" id="bookFilterDropdown"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Filter by Book
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="bookFilterDropdown">
+                                <a class="dropdown-item" href="/songs?book=all">All Books</a>
+                                <% books.forEach(book=> { %>
+                                    <a class="dropdown-item" href="/songs?book=<%= book.bo_uid %>">
+                                        <%= book.bo_name %>
+                                    </a>
+                                    <% }) %>
+                            </div>
                         </div>
-                        <div class="d-none d-md-block">
-                            <form action="/request-song" method="POST" class="d-inline">
-                                <input type="hidden" name="song_name" value="<%= song.title %>">
-                                <button type="submit" class="btn btn-warning btn-sm">Request</button>
-                            </form>
-                            <form action="/remove-song" method="POST" class="d-inline ml-2">
-                                <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
-                            </form>
-                        </div>
-                        <!-- Mobile dropdown for actions -->
-<div class="dropdown d-md-none">
-    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="actionsDropdown<%= song.song_uid %>"
-        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Actions
-    </button>
-    <div class="dropdown-menu" aria-labelledby="actionsDropdown<%= song.song_uid %>">
-        <form action="/request-song" method="POST" class="px-3 py-2">
-            <input type="hidden" name="song_name" value="<%= song.title %>">
-            <button type="submit" class="btn btn-warning btn-sm">Request</button>
-        </form>
-        <form action="/remove-song" method="POST" class="px-3 py-2">
-            <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
-        </form>
-    </div>
-</div>
+                    </div>
+                    <div class="card-body">
+                        <% if (songs.length> 0) { %>
+                            <ul class="list-group" id="songs-list">
+                                <% songs.forEach(song=> { %>
+                                    <li
+                                        class="list-group-item d-flex justify-content-between align-items-center position-relative">
+                                        <div>
+                                            <a href="/song-view/<%= song.song_uid %>"
+                                                class="text-decoration-none text-dark">
+                                                <strong>
+                                                    <% if (song.book_song_number) { %>
+                                                        <%= song.book_song_number %>. <%= song.title %>
+                                                                <% } else { %>
+                                                                    <%= song.title %>
+                                                                        <% } %>
+                                                </strong>
+                                            </a>
+                                            <% if (song.artist) { %>
+                                                <span class="text-muted"> by <%= song.artist %></span>
+                                                <% } %>
+                                        </div>
+                                        <div class="d-none d-md-block">
+                                            <form action="/request-song" method="POST" class="d-inline">
+                                                <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                                <button type="submit" class="btn btn-warning btn-sm">Request</button>
+                                            </form>
+                                            <form action="/remove-song" method="POST" class="d-inline ml-2">
+                                                <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                            </form>
+                                        </div>
+                                        <!-- Mobile dropdown for actions -->
+                                        <div class="dropdown d-md-none">
+                                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                                id="actionsDropdown<%= song.song_uid %>" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">
+                                                Actions
+                                            </button>
+                                            <div class="dropdown-menu"
+                                                aria-labelledby="actionsDropdown<%= song.song_uid %>">
+                                                <form action="/request-song" method="POST" class="px-3 py-2">
+                                                    <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                                    <button type="submit"
+                                                        class="btn btn-warning btn-sm">Request</button>
+                                                </form>
+                                                <form action="/remove-song" method="POST" class="px-3 py-2">
+                                                    <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                                    <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                                </form>
+                                            </div>
+                                        </div>
 
-                    </li>
-                <% }) %>
-            </ul>
-        <% } else { %>
-            <p class="text-center">No songs available!</p>
-        <% } %>
-    </div>
-</div>
+                                    </li>
+                                    <% }) %>
+                            </ul>
+                            <% } else { %>
+                                <p class="text-center">No songs available!</p>
+                                <% } %>
+                    </div>
+                </div>
 
                 <!-- Pagination Section -->
                 <div class="pagination mt-4">
