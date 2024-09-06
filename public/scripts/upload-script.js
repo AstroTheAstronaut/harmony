@@ -62,7 +62,16 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         previewDiv.innerHTML = previewContent;
-        addDragAndDropEvents(); // Ensure drag-and-drop events are attached
+        addDragAndDropEvents(); 
+        Sortable.create(document.getElementById('preview'), {
+            animation: 150,  // Animation speed in milliseconds
+            onEnd: function (evt) {
+                const movedPart = parts.splice(evt.oldIndex, 1)[0];
+                parts.splice(evt.newIndex, 0, movedPart);
+                updatePreview();
+                partsInput.value = JSON.stringify(parts);
+            }
+        });// Ensure drag-and-drop events are attached
     }
 
     function renderParts() {
@@ -82,6 +91,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         addDragAndDropEvents(); // Add this line to attach drag and drop events after rendering parts
     }
+
+    titleInput.addEventListener('input', updatePreview);
+    artistInput.addEventListener('input', updatePreview);
+    bookSelect.addEventListener('change', updatePreview);
+    bookSongNumberInput.addEventListener('input', updatePreview);
+    partTypeSelect.addEventListener('change', updatePreview);
+    
 
     addPartButton.addEventListener('click', function () {
         const type = partTypeSelect.value;
