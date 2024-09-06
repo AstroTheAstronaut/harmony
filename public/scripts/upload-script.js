@@ -121,6 +121,16 @@ document.addEventListener('DOMContentLoaded', function () {
             container.addEventListener('drop', drop);
             container.addEventListener('dragend', dragEnd);
         });
+
+        Sortable.create(document.getElementById('sortableParts'), {
+            animation: 150,  // Animation speed in milliseconds
+            onEnd: function (evt) {
+                const movedPart = parts.splice(evt.oldIndex, 1)[0];
+                parts.splice(evt.newIndex, 0, movedPart);
+                updatePreview();
+                partsInput.value = JSON.stringify(parts);
+            }
+        });
     }
 
     function drag(event) {
