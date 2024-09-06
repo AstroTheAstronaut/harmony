@@ -78,13 +78,7 @@
                     </div>
                     <% } %>
                 </div>
-                <footer class="bg-white sticky-footer">
-                    <div class="container my-auto">
-                        <div class="text-center my-auto copyright"><span>Harmony App<br>All glory be to God!</span>
-                        </div>
-                    </div>
-                </footer>
-                <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+                <%- include('partials/footer') %>
             </div>
         </div>
     </div>
@@ -102,22 +96,22 @@
     <script>
         function highlightLyrics(lyrics, term) {
             if (!term) return lyrics;
-
+    
             // Function to remove diacritics
             const removeDiacritics = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
+    
             // Normalize both lyrics and term
             const normalizedLyrics = removeDiacritics(lyrics);
             const normalizedTerm = removeDiacritics(term);
-
+    
             // Create a new RegExp with the normalized term
             const regex = new RegExp(`(${normalizedTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
-
+    
             // Replace the original lyrics with highlighted versions by comparing the normalized ones
             return normalizedLyrics.replace(regex, (match) => {
                 // Find original match by index to preserve original diacritics
                 const originalMatch = lyrics.substr(normalizedLyrics.indexOf(match), match.length);
-                return `<span class="highlight">${originalMatch}</span>`;
+                return `<mark>${originalMatch}</mark>`; // Bootstrap background and text color
             });
         }
         
@@ -128,8 +122,8 @@
                 elem.innerHTML = highlightLyrics(elem.textContent, term);
             });
         });
-
     </script>
+    
 </body>
 
 </html>
