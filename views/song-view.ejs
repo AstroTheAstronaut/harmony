@@ -44,10 +44,10 @@
                                 <div class="col-md-4 d-flex justify-content-end d-none d-md-flex">
                                     <form action="/request-song" method="POST" class="mb-0 me-2">
                                         <input type="hidden" name="song_uid" value="<%= song.song_uid%>">
-                                        <button type="submit" class="btn btn-warning btn-sm"><%= t('request') %></button>
+                                        <button type="submit" class="btn btn-warning btn-sm"><%= t('general.request') %></button>
                                     </form>
                                     <form action="/edit-song/<%= song.song_uid %>" method="GET" class="mb-0">
-                                        <button type="submit" class="btn btn-success btn-sm"><%= t('edit_song')%></button>
+                                        <button type="submit" class="btn btn-success btn-sm"><%= t('messages.edit_song')%></button>
                                     </form>
                                 </div>
                             </div>
@@ -55,10 +55,10 @@
                             <div class="d-md-none mt-3">
                                 <form action="/request-song" method="POST" class="mb-2">
                                     <input type="hidden" name="song_uid" value="<%= song.song_uid%>">
-                                    <button type="submit" class="btn btn-warning btn-sm w-100">Request</button>
+                                    <button type="submit" class="btn btn-warning btn-sm w-100"><%= t('general.request') %></button>
                                 </form>
                                 <form action="/edit-song/<%= song.song_uid %>" method="GET">
-                                    <button type="submit" class="btn btn-success btn-sm w-100">Edit song</button>
+                                    <button type="submit" class="btn btn-success btn-sm w-100"><%= t('messages.edit_song') %></button>
                                 </form>
                             </div>
                         </div>
