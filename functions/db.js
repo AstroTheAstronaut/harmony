@@ -258,8 +258,9 @@ async function searchLyrics(term) {
             FROM song_parts sp
             JOIN songs s ON sp.song_uid = s.song_uid
             LEFT JOIN books_db b ON s.book_uuid = b.bo_uid
-            WHERE sp.lyrics LIKE ?`, [`%${normalizedQuery}%`]);        
+            WHERE sp.lyrics LIKE ?`, [`%${normalizedQuery}%`]);
         return rows;
+        
     } catch (err) {
         return Promise.reject(err);
     } finally {

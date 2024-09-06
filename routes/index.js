@@ -130,6 +130,7 @@ router.get('/search', async (req, res) => {
                     title: result.title,
                     artist: result.artist,
                     bo_name: result.bo_name,
+                    book_song_number: result.book_song_number,
                     song_uid: result.song_uid,
                     song_id: result.song_id,
                     parts: []
@@ -157,7 +158,7 @@ router.get('/search', async (req, res) => {
         // Convert the results object to an array
         const groupedResults = Object.values(results);
         
-        res.render('search-results', { results: groupedResults, query });
+        res.render('search-results', { results: groupedResults, query ,activePage: 'home'});
     } catch (err) {
         console.error('Error searching lyrics:', err);
         res.status(500).send('Error searching lyrics');

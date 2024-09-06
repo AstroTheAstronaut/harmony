@@ -3,108 +3,102 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Results</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="styles/index-style.css">
-    <style>
-        .highlight {
-            background-color: yellow;
-            font-weight: bold;
-        }
-
-        .card {
-            cursor: pointer;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-body {
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .list-group-item {
-            border: 0;
-            padding: 1rem;
-            background-color: #f9f9f9;
-            transition: background-color 0.3s;
-        }
-
-        .list-group-item:hover {
-            background-color: #e9ecef;
-        }
-
-        .lyrics {
-            white-space: pre-wrap;
-            /* Maintain spacing in lyrics */
-        }
-
-        .btn-request {
-            align-self: center;
-            /* Center the button horizontally */
-            margin-top: auto;
-            /* Push button to the bottom if needed */
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Harmony</title>
+    <!-- Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/styles/bootstrap.min.css">
+    <!-- Font Awesome CSS from CDN -->
+    <script src="https://kit.fontawesome.com/d3b482db3e.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
 </head>
 
-<body>
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Search Results for "<%= query %>"</h1>
-        <% if (results.length > 0) { %>
-            <div class="row">
-                <% results.forEach(result => { %>
-                    <div class="col-md-12 mb-3">
-                        <div class="card" onclick="window.location.href='/song-view/<%= result.song_id %>'">
-                            <div class="card-body">
-                                <h5 class="card-title"><%= result.title %></h5>
-                                <% if (result.artist) { %>
-                                    <h6 class="card-subtitle mb-2 text-muted">by <%= result.artist %></h6>
-                                <% } %>
-                                <% if (result.bo_name) { %>
-                                    <h6 class="card-subtitle mb-2 text-muted"><%= result.bo_name %></h6>
-                                <% } %>
-                                
-                                <!-- List each unique part with repetition count -->
-                                <% result.parts.forEach(part => { %>
-                                    <p class="card-text">
-                                        <em><%= part.part_type %></em>
-                                        <% if (part.repetitions > 1) { %>
-                                            x<%= part.repetitions %>
+<body id="page-top">
+    <div id="wrapper">
+        <%- include('partials/sidebar') %>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <%- include('partials/navbar') %>
+                <div class="container-fluid">
+                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                        <h3 class="text-dark mb-0">Search Results for "<%= query %>" </h3>
+                    </div>
+                    <% if (results.length > 0) { %>
+                    <div class="row-auto align-items-center">
+                        <% results.forEach(result => { %>
+                            <div class="card shadow mb-4" onclick="window.location.href='/song-view/<%= result.song_uid %>'">
+                                <div class="card-header py-3">
+                                    <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <h3 class="text-dark fw-bold m-0">
+                                            <% if(result.book_song_number) { %>
+                                                <%= result.book_song_number %>. <%= result.title%>
+                                            <% } else { %>
+                                                <%= result.title %>
+                                            <% } %>
+                                        </h3>
+                                        <% if(result.artist) { %>
+                                            <h5 class="mt-2">Artist: <%= result.artist %></h5>
                                         <% } %>
-                                    </p>
-                                    <pre class="lyrics"><%= part.lyrics %></pre>
-                                <% }) %>
-
-                                <form action="/request-song" method="POST" class="mb-0">
-                                    <input type="hidden" name="song_uid" value="<%= result.song_uid %>">
-                                    <button type="submit" class="btn btn-warning btn-sm btn-request">Request</button>
-                                </form>
+                                        <% if (result.bo_name) { %>
+                                            <h5 class="mt-2"><%= result.bo_name %></h6>
+                                        <% } %>
+                                    </div>
+                                    <div class="col-md-4 d-flex justify-content-end d-none d-md-flex">
+                                        <form action="/request-song" method="POST" class="mb-0 me-2">
+                                            <input type="hidden" name="song_uid" value="<%= result.song_uid %>">
+                                            <button type="submit" class="btn btn-warning btn-sm">Request</button>
+                                        </form>
+                                    </div>
+                                    <div class="d-md-none mt-3">
+                                        <form action="/request-song" method="POST" class="mb-2">
+                                            <input type="hidden" name="song_uid" value="<%= result.song_uid %>">
+                                            <button type="submit" class="btn btn-warning btn-sm w-100">Request</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <% result.parts.forEach(part => { %>
+                                                <p class="card-text">
+                                                    <strong><%= part.part_type %></strong>
+                                                    <% if (part.repetitions > 1) { %>
+                                                        x<%= part.repetitions %>
+                                                    <% } %>
+                                                </p>
+                                                <pre class="lyrics"><%= part.lyrics %></pre>
+                                            <% }) %>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
+                        <% }); %>
+                    </div>
+                    <% } %>
+                </div>
+                <footer class="bg-white sticky-footer">
+                    <div class="container my-auto">
+                        <div class="text-center my-auto copyright"><span>Harmony App<br>All glory be to God!</span>
                         </div>
                     </div>
-                <% }) %>
+                </footer>
+                <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
             </div>
-        <% } else { %>
-            <p class="text-center">No results found.</p>
-        <% } %>
-        <a href="/" class="btn btn-primary mt-3">Back to Home</a>
+        </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/scripts/script.min.js"></script>
     <script>
         function highlightLyrics(lyrics, term) {
             if (!term) return lyrics;
