@@ -3,252 +3,299 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Harmony</title>
     <!-- Bootstrap CSS from CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="/styles/bootstrap.min.css">
     <!-- Font Awesome CSS from CDN -->
     <script src="https://kit.fontawesome.com/d3b482db3e.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="/styles/index-style.css">
-    <link rel="stylesheet" href="/styles/sidebar.css">
-</head>
-<body>
-    <%- include('partials/sidebar') %>
-    <div class="main-content">
-        <h1 class="text-center mb-4">Harmony Song Viewer</h1>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
 
-        <div class="container mt-5">
-            <!-- Search Form -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    Search Lyrics
-                </div>
-                <div class="card-body">
-                    <form action="/search" method="GET">
-                        <div class="form-group">
-                            <label for="searchQuery">Search Lyrics</label>
-                            <input type="text" class="form-control" id="searchQuery" name="query" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Search</button>
-                    </form>
-                </div>
-            </div>
-            <div class="row">
-                <!--  Requested Songs -->
-                <div class="col-md-12 mb-4">
-                    <div class="card">
-                        <div class="card-header">
-                            Requested Songs
-                        </div>
-                        <div class="card-body">
-                            <ul class="list-group">
-                                <% if (requestedSongs.length> 0) { %>
-                                    <% requestedSongs.forEach(song=> { %>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <a href="/song-view/<%= song.song_uid %>" class="text-decoration-none text-dark">
-                                                <strong>
-                                                    <% if(song.book_song_number) { %>
-                                                        <%= song.book_song_number %>. <%= song.title %>
-                                                                <% } else {%>
-                                                                    <%= song.title %>
-                                                                        <% } %> 
-                                                </strong>
-                                            </a>
-                                                <% if (song.artist) { %> - <%= song.artist %>
-                                                        <% } %>
-                                                            <% if (song.book_song_number) { %>
-                                                                <span class="badge bg-secondary ml-2">
-                                                                    Book: <%= song.bo_name %>
-                                                                </span>
-                                                                <% } else{ %>
-                                                                    <span class="badge bg-secondary ml-2">
-                                                                        Book: None
-                                                                    </span>
-                                                                    <% } %>
-                                                                    <!-- <span class="badge bg-secondary ml-2">
-                                                                        Req_id: <%= song.request_id %>
-                                                                    </span> -->
-                                            </div>
-                                            <div>
-                                                <span class="badge bg-primary">
-                                                    Requests: <%= song.request_count %>
-                                                </span>
-                                                <!-- Remove Button -->
-                                                <form action="/remove-requested" method="post" style="display: inline;">
-                                                    <input type="hidden" name="request_id" value="<%= song.request_id %>">
-                                                    <button type="submit" class="btn btn-danger btn-sm">Remove
-                                                        request</button>
-                                                </form>
-                                            </div>
-                                        </li>
-                                        <% }) %>
-                                            <% } else { %>
-                                                <p class="text-center">No requests yet.</p>
-                                                <% } %>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- Most Requested Songs -->
-                <div class="col-md-12 mb-4">
-                    <div class="card">
-                        <div class="card-header">
-                            Most Requested Songs
-                        </div>
-                        <div class="card-body">
-                            <ul class="list-group">
-                                <% if (mostRequestedSongs.length> 0) { %>
-                                    <% mostRequestedSongs.forEach(song=> { %>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <a href="/song-view/<%= song.song_uid %>" class="text-decoration-none text-dark">
-                                                <strong>
-                                                    <% if(song.book_song_number) { %>
-                                                        <%=song.book_song_number %>. <%= song.title %>
-                                                                <% } else { %>
-                                                                    <%= song.title %>
-                                                                        <% } %>
-                                                </strong>
-                                                </a>
-                                                <% if (song.artist) { %> - <%= song.artist %>
-                                                    <% } %>
-                                                        <% if (song.book_song_number) { %>
-                                                            <span class="badge bg-secondary ml-2">
-                                                                Book: <%= song.bo_name %>
-                                                            </span>
-                                                            <% } else{ %>
-                                                                <span class="badge bg-secondary ml-2">
-                                                                    Book: None
-                                                                </span>
-                                                                <% } %>
-                                            </div>
-                                            <div>
-                                                <span class="badge bg-primary">
-                                                    Requests: <%= song.request_count %>
-                                                </span>
-                                            </div>
-                                        </li>
-                                        <% }) %>
-                                            <% } else { %>
-                                                <p class="text-center">No requests yet.</p>
-                                                <% } %>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- Books List -->
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <div class="card-header">Books</div>
-                        <div class="card-body">
-                            <ul class="list-group">
-                                <% books.forEach(book=> { %>
-                                    <li class="align-items-center d-flex justify-content-between list-group-item">
-                                        <div><strong>
-                                                <%= book.bo_name %>
-                                            </strong> - <%= book.bo_uid %>
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <%- include('partials/sidebar') %>
+            <div class="d-flex flex-column" id="content-wrapper">
+                <div id="content">
+                    <%- include('partials/navbar') %>
+                        <div class="container-fluid">
+                            <div class="d-sm-flex justify-content-between align-items-center mb-4">
+                                <h3 class="text-dark mb-0">Dashboard</h3>
+                            </div>
+                            <div class="row">
+                                <!-- Requested songs -->
+                                <div class="col">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header py-3">
+                                            <h6 class="text-primary fw-bold m-0">Requested songs:</h6>
                                         </div>
-                                        <button class="btn btn-danger btn-sm" data-book-id="<%= book.bo_uid %>"
-                                            data-target="#deleteBookModal" data-toggle="modal"
-                                            type="button">Delete</button>
-                                    </li>
-                                    <% }) %>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!--
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <div class="card-header">
-                            Songs List
-                        </div>
-                        <div class="card-body">
-                            <ul class="list-group" id="songs-list">
-                                <% songs.forEach(song=> { %>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center"
-                                        data-book-id="<%= song.book_uuid %>">
-                                        <div>
-                                            <a href="/song-view/<%= song.song_uid %>" class="text-decoration-none text-dark">
-                                                <strong>
-                                                    <% if (song.book_song_number) { %>
-                                                        <%= song.book_song_number %>. <%= song.title %>
-                                                                <% } else { %>
-                                                                    <%= song.title %>
+                                        <ul class="list-group list-group-flush">
+                                            <% if (requestedSongs.length> 0) { %>
+                                                <% requestedSongs.forEach(song=> { %>
+                                                    <li class="list-group-item">
+                                                        <div class="row">
+                                                            <div class="col-auto align-self-center me-2">
+                                                                <a class="link-dark text-decoration-none"
+                                                                    href="/song-view/<%= song.song_uid %>">
+                                                                    <strong>
+                                                                        <% if(song.book_song_number) { %>
+                                                                            <%= song.book_song_number %>. <%= song.title
+                                                                                    %>
+                                                                                    <% } else { %>
+                                                                                        <%= song.title %>
+                                                                                            <% } %>
+                                                                    </strong>
+                                                                </a>
+                                                                <% if (song.artist) { %> - <%= song.artist %>
                                                                         <% } %>
-                                                </strong>
-                                            </a>
-                                            <% if (song.artist) { %>
-                                                <span class="text-muted"> by <%= song.artist %></span>
-                                                <% } %>
-                                                    <span class="badge bg-secondary ml-2">
-                                                        <%= song.bo_name || 'None' %>
-                                                    </span>
+                                                                            <span class="text-xs ms-2">
+                                                                                <%= song.request_time %>
+                                                                            </span>
+                                                                            <% if (song.book_song_number) { %>
+                                                                                <span
+                                                                                    class="badge rounded-pill bg-primary ms-2">
+                                                                                    Book: <%= song.bo_name %>
+                                                                                </span>
+                                                                                <% } else { %>
+                                                                                    <span
+                                                                                        class="badge rounded-pill bg-primary ms-2">
+                                                                                        Book: None
+                                                                                    </span>
+                                                                                    <% } %>
+                                                            </div>
+                                                            <div class="col-auto me-2 text-end ms-auto">
+                                                                <form action="/remove-requested" method="post"
+                                                                    style="display: inline;">
+                                                                    <input type="hidden" name="request_id"
+                                                                        value="<%= song.request_id %>">
+                                                                    <button type="submit"
+                                                                        class="btn btn-danger btn-sm">Remove
+                                                                        Request</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <% }) %>
+                                                        <% } else { %>
+                                                            <p class="text-center">No requests yet.</p>
+                                                            <% } %>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header py-3">
+                                            <h6 class="text-primary fw-bold m-0">Most Requested Songs:</h6>
                                         </div>
-                                        <form action="/request-song" method="POST" class="mb-0 mr-2">
-                                            <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                            <button type="submit" class="btn btn-warning btn-sm">Request</button>
-                                        </form>
-                                        <form action="/remove-song" method="POST" class="mb-0">
-                                            <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
-                                        </form>
-                                    </li>
-                                    <% }) %>
-                            </ul>
+                                        <ul class="list-group list-group-flush">
+                                            <% if (mostRequestedSongs.length> 0) { %>
+                                                <% mostRequestedSongs.forEach(song=> { %>
+                                                    <li class="list-group-item">
+                                                        <div class="row">
+                                                            <div class="col-auto align-self-center me-2">
+                                                                <a class="link-dark text-decoration-none"
+                                                                    href="/song-view/<%= song.song_uid %>">
+                                                                    <strong>
+                                                                        <% if(song.book_song_number) { %>
+                                                                            <%= song.book_song_number %>. <%= song.title
+                                                                                    %>
+                                                                                    <% } else { %>
+                                                                                        <%= song.title %>
+                                                                                            <% } %>
+                                                                    </strong>
+                                                                </a>
+                                                                <% if (song.artist) { %> - <%= song.artist %>
+                                                                        <% } %>
+                                                                            <span class="text-xs ms-2">
+                                                                                <%= song.request_time %>
+                                                                            </span>
+                                                                            <% if (song.book_song_number) { %>
+                                                                                <span
+                                                                                    class="badge rounded-pill bg-primary ms-2">
+                                                                                    Book: <%= song.bo_name %>
+                                                                                </span>
+                                                                                <% } else { %>
+                                                                                    <span
+                                                                                        class="badge rounded-pill bg-primary ms-2">Book:
+                                                                                        None</span>
+                                                                                    <% } %>
+                                                            </div>
+                                                            <div class="col-auto me-2 text-end ms-auto">
+                                                                <span class="badge bg-primary">Requests: <%=
+                                                                        song.request_count %></span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <% }) %>
+                                                        <% } else { %>
+                                                            <p class="text-center">No requests yet.</p>
+                                                            <% } %>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6 mb-4">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header py-3">
+                                            <h6 class="text-primary fw-bold m-0">Books</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-group">
+                                                <% books.forEach(book=> { %>
+                                                    <li class="list-group-item">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <h4 class="small fw-bold"
+                                                                    style="color: var(--bs-emphasis-color); font-size: 16px;">
+                                                                    <%= book.bo_name %>
+                                                                </h4>
+                                                                <!-- Placeholder for number of songs -->
+                                                                <span
+                                                                    class="float-start"><!-- Number of songs will be inserted here later --></span>
+                                                            </div>
+                                                            <div class="col-auto align-self-center">
+                                                                <button class="btn btn-danger btn-sm"
+                                                                    data-book-id="<%= book.bo_uid %>"
+                                                                    data-target="#deleteBookModal" data-toggle="modal"
+                                                                    type="button">Delete <%= book.bo_uid %></button>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <% }) %>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header py-3">
+                                            <h6 class="text-primary fw-bold m-0">Todo List</h6>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">
+                                                <div class="row g-0 align-items-center">
+                                                    <div class="col me-2">
+                                                        <h6 class="mb-0"><strong>Momentan nu merge apasat butonul X dupa
+                                                                ce apesi pe "Delete" la Books</strong></h6><span
+                                                            class="text-xs">10:30 AM</span>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div class="form-check"><input class="form-check-input"
+                                                                type="checkbox" id="formCheck-1"><label
+                                                                class="form-check-label" for="formCheck-1"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <div class="row g-0 align-items-center">
+                                                    <div class="col me-2">
+                                                        <h6 class="mb-0"><strong>TO BE ADDED</strong></h6><span
+                                                            class="text-xs">11:30 AM</span>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div class="form-check"><input class="form-check-input"
+                                                                type="checkbox" id="formCheck-2"><label
+                                                                class="form-check-label" for="formCheck-2"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <div class="row g-0 align-items-center">
+                                                    <div class="col me-2">
+                                                        <h6 class="mb-0"><strong>TO BE ADDED</strong></h6><span
+                                                            class="text-xs">12:30 AM</span>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div class="form-check"><input class="form-check-input"
+                                                                type="checkbox" id="formCheck-3"><label
+                                                                class="form-check-label" for="formCheck-3"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                </div>
+                <footer class="bg-white sticky-footer">
+                    <div class="container my-auto">
+                        <div class="text-center my-auto copyright"><span>Harmony App<br>All glory be to God!</span>
                         </div>
                     </div>
-                </div>
-            </div> -->
-            <!-- Add New Book Form -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    Add New Book
-                </div>
-                <div class="card-body">
-                    <!-- Existing form for adding a book manually -->
-                    <form action="/add-book" method="POST">
-                        <div class="form-group">
-                            <label for="bookName">Book Name</label>
-                            <input type="text" class="form-control" id="bookName" name="book_name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="bookUUID">Book UUID</label>
-                            <input type="text" class="form-control" id="bookUUID" name="book_uuid" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Add Book</button>
-                    </form>
-                    <!-- New form for uploading ZIP files -->
-                    <form action="/upload-book" method="POST" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label for="bookFile">Upload ZIP File</label>
-                            <input type="file" class="form-control-file" id="bookFile" name="bookFile" accept=".zip"
-                                required>
-                        </div>
-                        <button id="uploadZipButton" type="submit" class="btn btn-primary">Upload Book</button>
-                    </form>
-                </div>
-            </div>
-            <!-- Upload Button -->
-            <a href="/upload" class="btn btn-primary btn-lg my-4">Upload a new song</a>
-        </div>
+                </footer>
+            </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
     <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="/scripts/index-script.js"></script>
-    
-    <div class="fade modal" role="dialog" aria-hidden="true" aria-labelledby="deleteBookModalLabel" id="deleteBookModal"
-        tabindex="-1">
-        <div class="modal-dialog" role="document">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/scripts/script.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Function to show the modal with the correct book UUID
+            document.querySelectorAll('[data-target="#deleteBookModal"]').forEach(button => {
+                button.addEventListener('click', function () {
+                    const bookId = this.getAttribute('data-book-id');
+                    document.getElementById('bookUUIDDisplay').textContent = bookId;
+                    document.getElementById('hiddenDeleteOnlyUUID').value = bookId;
+                    document.getElementById('hiddenDeleteWithSongsUUID').value = bookId;
+                });
+            });
+
+            // Function to enable/disable buttons based on UUID verification
+            document.getElementById('confirmBookUUID').addEventListener('input', function () {
+                const enteredUUID = this.value.trim();
+                const displayedUUID = document.getElementById('bookUUIDDisplay').textContent;
+                const deleteOnlyButton = document.querySelector('#deleteOnlyForm button');
+                const deleteWithSongsButton = document.querySelector('#deleteWithSongsForm button');
+
+                if (enteredUUID === displayedUUID) {
+                    deleteOnlyButton.disabled = false;
+                    deleteWithSongsButton.disabled = false;
+                } else {
+                    deleteOnlyButton.disabled = true;
+                    deleteWithSongsButton.disabled = true;
+                }
+            });
+
+            // Function to reset the modal when closed
+            const modal = document.getElementById('deleteBookModal');
+            modal.addEventListener('hidden.bs.modal', function () {
+                document.getElementById('confirmBookUUID').value = '';
+                document.querySelector('#deleteOnlyForm button').disabled = true;
+                document.querySelector('#deleteWithSongsForm button').disabled = true;
+            });
+        });
+    </script>
+
+    <!-- Modal for deleting books -->
+    <div class="modal fade" id="deleteBookModal" tabindex="-1" aria-labelledby="deleteBookModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteBookModalLabel">Confirm Deletion</h5>
-                    <button class="close" type="button" aria-label="Close" data-dismiss="modal">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close close" data-dismiss="modal" aria-label="Close"></button>
+
                 </div>
                 <div class="modal-body">
                     <p>Are you sure you want to delete this book?</p>
@@ -278,6 +325,6 @@
             </div>
         </div>
     </div>
-</body>
 
+</body>
 </html>

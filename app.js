@@ -1,4 +1,5 @@
 const express = require('express');
+const favicon = require('serve-favicon');
 const path = require('path');
 const app = express();
 
@@ -9,7 +10,7 @@ const setupDatabase = require('./functions/db-creator');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 // View engine setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));

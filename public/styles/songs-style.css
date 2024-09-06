@@ -23,6 +23,7 @@ body {
     margin-bottom: 1.5rem;
     border-radius: 0.5rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: visible;
 }
 
 .card-header {
@@ -43,6 +44,8 @@ body {
     margin-bottom: 0.5rem;
     background-color: #fff;
     transition: background-color 0.3s, transform 0.2s;
+    z-index: 1;
+    position: relative;
 }
 
 .list-group-item:hover {
@@ -95,10 +98,17 @@ body {
 .dropdown-menu {
     display: none; /* Hide all dropdown menus by default */
     position: absolute; /* Ensure proper positioning */
-    z-index: 1050; /* Ensure it appears above other content */
+    z-index: 1050 !important; /* Ensure it appears above other content */
 }
 
-/* Show the dropdown menu when the parent button is active */
-.dropdown.show .dropdown-menu {
-    display: block; /* Display the dropdown menu when parent is active */
+/* Ensure dropdowns are shown when the button is clicked */
+.dropdown-menu.show {
+    display: block !important; /* Force display */
+    position: absolute !important; /* Ensure absolute positioning */
+    z-index: 1050 !important; /* Ensure it appears above other content */
+    top: 100%; /* Position directly below the button */
+    left: 0; /* Align with the left edge of the button */
+}
+#mobile-actions-dropdown.active {
+    z-index: 1000; /* Adjust the value as needed */
 }

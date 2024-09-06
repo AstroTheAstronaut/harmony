@@ -1,46 +1,19 @@
-<div class="sidebar" id="side_nav">
-        <div class="header-box px-2 pt-3 pb-4 d-flex justify-content-between">
-            <h1 class="fs-4"><i class="fa fa-water"></i><span class="text-white">Harmony</span></h1>
-            <button class="btn d-md-none d-block close-btn px-1 py-0 text-white" id="closeSidebar">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
+<style>
     
-        <ul class="list-unstyled px-2">
-            <li class="<%= activePage === 'home' ? 'active' : '' %>">
-                <a href="/" class="text-decoration-none px-3 py-2 d-block">
-                    <i class="fa fa-home"></i> Home
-                </a>
-            </li>
-            <li class="<%= activePage === 'songs' ? 'active' : '' %>">
-                <a href="/songs" class="text-decoration-none px-3 py-2 d-block">
-                    <i class="fa fa-music"></i> Songs
-                </a>
-            </li>
-            <li class="<%= activePage === 'books' ? 'active' : '' %>">
-                <a href="/books" class="text-decoration-none px-3 py-2 d-block d-flex justify-content-between">
-                    <span><i class="fa fa-book"></i> Books</span>
-                </a>
-            </li>
-            <li>
-                <a href="/upload" class="text-decoration-none px-3 py-2 d-block">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> Upload
-                </a>
-            </li>
+</style>
+<nav class="navbar align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0 navbar-dark toggled">
+    <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+            <div class="sidebar-brand-icon rotate-n-15"><img src="/img/iconmonstr-sound-wave-4.svg" style="filter: invert(100%);width: 50px;"></div>
+            <div class="sidebar-brand-text mx-3"><span>Harmony</span></div>
+        </a>
+        <hr class="sidebar-divider my-0">
+        <ul class="navbar-nav text-light" id="accordionSidebar">
+            <li class="nav-item"><a class="nav-link active" href="/"><i class="fas fa-tachometer-alt" style="font-size: 15px;"></i><span style="font-size: 15px;">Home</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="/songs"><i class="fas fa-music" style="width: 15.6016px;font-size: 15px;"></i><span style="font-size: 15px;">Songs</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="/books"><i class="fas fa-book" style="font-size: 15px;"></i><span style="font-size: 15px;">Books</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="/settings"><i class="fas fa-cog" style="font-size: 15px;"></i><span style="font-size: 15px;">Settings</span></a></li>
+            <li class="nav-item"></li>
         </ul>
-        <hr class="h-color mx-2">
-    
-        <ul class="list-unstyled px-2">
-            <li class="<%= activePage === 'settings' ? 'active' : '' %>">
-                <a href="/settings" class="text-decoration-none px-3 py-2 d-block">
-                    <i class="fa fa-cog"></i> Settings
-                </a>
-            </li>
-            <li>
-                <a href="#" class="text-decoration-none px-3 py-2 d-block">
-                    <i class="fa fa-bell"></i> Notifications
-                </a>
-            </li>
-        </ul>
+        <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
     </div>
-    
+</nav>

@@ -102,7 +102,7 @@
                                                 aria-haspopup="true" aria-expanded="false">
                                                 Actions
                                             </button>
-                                            <div class="dropdown-menu"
+                                            <div class="dropdown-menu" id="mobile-actions-dropdown"
                                                 aria-labelledby="actionsDropdown<%= song.song_uid %>">
                                                 <form action="/request-song" method="POST" class="px-3 py-2">
                                                     <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
@@ -255,6 +255,14 @@
                 const closeSidebarButton = document.getElementById('closeSidebar');
                 const sidebar = document.getElementById('side_nav');
 
+                const actionsDropdown = document.getElementById('mobile-actions-dropdown');
+
+                if (actionsDropdown) {
+                    actionsDropdown.addEventListener('click', function () {
+                        actionsDropdown.classList.toggle('active');
+                    });
+                }
+
                 if (openSidebarButton && closeSidebarButton && sidebar) {
                     openSidebarButton.addEventListener('click', function () {
                         sidebar.classList.add('active');
@@ -272,6 +280,7 @@
                 }
             });
         </script>
+
 </body>
 
 </html>
