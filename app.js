@@ -10,7 +10,11 @@ const setupDatabase = require('./functions/db-creator');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+// Serve static files from the .well-known directory
+app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
+
 // View engine setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -41,7 +45,6 @@ const editSongRoute = require('./routes/edit-song');
     app.use('/songs', songsRoute);
     app.use('/books', booksRoute);
     app.use('/settings', settingsRoute);
-    
 
     // Start server
     const PORT = process.env.PORT || 3000;
