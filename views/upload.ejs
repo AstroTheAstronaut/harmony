@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Harmony</title>
+    <title><%= t('general.harmony') %></title>
     <!-- Bootstrap CSS from CDN -->
     <link rel="stylesheet" href="/styles/bootstrap.min.css">
     <!-- Font Awesome CSS from CDN -->
@@ -23,7 +23,7 @@
       <%- include('partials/navbar') %>
       <div class="container-fluid">
         <div class="d-sm-flex justify-content-between align-items-center mb-4">
-          <h3 class="text-dark mb-0">Upload a song</h3>
+          <h3 class="text-dark mb-0"><%= t('upload.upload_song_head_title') %></h3>
         </div>
         <div class="card shadow mb-4">
           <div class="container my-4">
@@ -32,28 +32,28 @@
               <!-- Song Parts Column -->
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="title">Title</label>
+                  <label for="title"><%= t('song.title') %></label>
                   <input type="text" id="title" name="title" class="form-control" required>
                 </div>
                 <div class="form-group">
-                  <label for="artist">Artist</label>
+                  <label for="artist"><%= t('song.artist') %></label>
                   <input type="text" id="artist" name="artist" class="form-control">
                 </div>
                 <div class="form-group">
-                  <label for="partType">Part Type</label>
+                  <label for="partType"><%= t('song.part_type') %></label>
                   <select id="partType" class="form-control" required>
-                    <option value="Verse">Verse</option>
-                    <option value="Chorus">Chorus</option>
-                    <option value="Bridge">Bridge</option>
-                    <option value="Coda">Coda</option>
-                    <option value="Intro">Intro</option>
-                    <option value="Outro">Outro</option>
+                    <option value="Verse"><%= t('song_parts.verse') %></option>
+                    <option value="Chorus"><%= t('song_parts.chorus') %></option>
+                    <option value="Bridge"><%= t('song_parts.bridge') %></option>
+                    <option value="Coda"><%= t('song_parts.coda') %></option>
+                    <option value="Intro"><%= t('song_parts.intro') %></option>
+                    <option value="Outro"><%= t('song_parts.outro') %></option>
                   </select>
                 </div>
                 <div class="form-group">
                   <label for="book">Book</label>
                   <select id="book" name="book" class="form-control">
-                    <option value="">Select a book (optional)</option>
+                    <option value=""><%= t('general.select_book_opt') %></option>
                     <% books.forEach(book => { %>
                       <option value="<%= book.bo_uid %>">
                         <%= book.bo_name %>
@@ -62,26 +62,26 @@
                   </select>
                 </div>
                 <div class="form-group">
-                  <label for="bookSongNumber">Song Number in Book</label>
+                  <label for="bookSongNumber"><%= t('song.song_no_in_bo') %></label>
                   <input type="number" id="bookSongNumber" name="bookSongNumber" class="form-control">
                 </div>
                 <div class="form-group">
-                  <label for="lyricsPart">Lyrics</label>
+                  <label for="lyricsPart"><%= t('song.lyrics') %></label>
                   <textarea id="lyricsPart" name="lyricsPart" class="form-control" rows="4" required></textarea>
                 </div>
-                <button type="button" id="addPart" class="btn btn-primary">Add Part</button>
+                <button type="button" id="addPart" class="btn btn-primary"><%= t('general.add_part') %></button>
                 <input type="file" id="fileInput" accept=".lyric" class="form-control mt-2">
-                <button type="button" id="importButton" class="btn btn-secondary mt-2">Import from File</button>
+                <button type="button" id="importButton" class="btn btn-secondary mt-2"><%= t('upload.import_from_file') %></button>
       
                 <input type="hidden" id="parts" name="parts">
                 <br>
-                <button type="submit" class="btn btn-success mt-4">Upload</button>
-                <a href="/" class="btn btn-secondary mt-4">Back to Home</a>
+                <button type="submit" class="btn btn-success mt-4"><%= t('upload.upload') %></button>
+                
               </div>
       
               <!-- Preview Column (Interactive) -->
               <div class="col-md-6">
-                <h2 class="mt-4 fst-italic">Preview</h2>
+                <h2 class="mt-4 fst-italic"><%= t('general.preview') %></h2>
                 <div id="preview" class="preview-container">
                   <ul id="sortablePreview" class="list-unstyled">
                     <!-- Interactive preview content will be injected here -->
@@ -94,12 +94,12 @@
       
           <!-- Dropdown for changing part type -->
           <select id="typeDropdown" class="form-control mt-2" style="display: none;">
-            <option value="Verse">Verse</option>
-            <option value="Chorus">Chorus</option>
-            <option value="Bridge">Bridge</option>
-            <option value="Coda">Coda</option>
-            <option value="Intro">Intro</option>
-            <option value="Outro">Outro</option>
+            <option value="Verse"><%= t('song_parts.verse') %></option>
+            <option value="Chorus"><%= t('song_parts.chorus') %></option>
+            <option value="Bridge"><%= t('song_parts.bridge') %></option>
+            <option value="Coda"><%= t('song_parts.coda') %></option>
+            <option value="Intro"><%= t('song_parts.intro') %></option>
+            <option value="Outro"><%= t('song_parts.outro') %></option>
           </select>
         </div>
         </div>

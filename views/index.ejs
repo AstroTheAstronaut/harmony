@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Harmony</title>
+    <title><%= t('general.harmony') %></title>
     <!-- Bootstrap CSS from CDN -->
     <link rel="stylesheet" href="/styles/bootstrap.min.css">
     <!-- Font Awesome CSS from CDN -->
@@ -22,14 +22,14 @@
                     <%- include('partials/navbar') %>
                         <div class="container-fluid">
                             <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                                <h3 class="text-dark mb-0">Dashboard</h3>
+                                <h3 class="text-dark mb-0"><%= t('general.dashboard') %></h3>
                             </div>
                             <div class="row">
                                 <!-- Requested songs -->
                                 <div class="col">
                                     <div class="card shadow mb-4">
                                         <div class="card-header py-3">
-                                            <h6 class="text-primary fw-bold m-0">Requested songs:</h6>
+                                            <h6 class="text-primary fw-bold m-0"><%= t('messages.requested_songs') %>:</h6>
                                         </div>
                                         <ul class="list-group list-group-flush">
                                             <% if (requestedSongs.length> 0) { %>
@@ -56,12 +56,12 @@
                                                                             <% if (song.book_song_number) { %>
                                                                                 <span
                                                                                     class="badge rounded-pill bg-primary ms-2">
-                                                                                    Book: <%= song.bo_name %>
+                                                                                    <%= t('book.book') %>: <%= song.bo_name %>
                                                                                 </span>
                                                                                 <% } else { %>
                                                                                     <span
                                                                                         class="badge rounded-pill bg-primary ms-2">
-                                                                                        Book: None
+                                                                                        <%= t('book.book') %>: <%= t('none') %>
                                                                                     </span>
                                                                                     <% } %>
                                                             </div>
@@ -71,15 +71,14 @@
                                                                     <input type="hidden" name="request_id"
                                                                         value="<%= song.request_id %>">
                                                                     <button type="submit"
-                                                                        class="btn btn-danger btn-sm">Remove
-                                                                        Request</button>
+                                                                        class="btn btn-danger btn-sm"><%= t('general.remove_request') %></button>
                                                                 </form>
                                                             </div>
                                                         </div>
                                                     </li>
                                                     <% }) %>
                                                         <% } else { %>
-                                                            <p class="text-center">No requests yet.</p>
+                                                            <p class="text-center"><%= t('messages.no_requests_yet') %></p>
                                                             <% } %>
                                         </ul>
                                     </div>
@@ -90,7 +89,7 @@
                                 <div class="col">
                                     <div class="card shadow mb-4">
                                         <div class="card-header py-3">
-                                            <h6 class="text-primary fw-bold m-0">Most Requested Songs:</h6>
+                                            <h6 class="text-primary fw-bold m-0"><%= t('messages.most_requested_songs') %>:</h6>
                                         </div>
                                         <ul class="list-group list-group-flush">
                                             <% if (mostRequestedSongs.length> 0) { %>
@@ -117,23 +116,23 @@
                                                                             <% if (song.book_song_number) { %>
                                                                                 <span
                                                                                     class="badge rounded-pill bg-primary ms-2">
-                                                                                    Book: <%= song.bo_name %>
+                                                                                    <%= t('book.book') %>: <%= song.bo_name %>
                                                                                 </span>
                                                                                 <% } else { %>
                                                                                     <span
-                                                                                        class="badge rounded-pill bg-primary ms-2">Book:
-                                                                                        None</span>
+                                                                                        class="badge rounded-pill bg-primary ms-2"><%= t('book.book') %>:
+                                                                                        <%= t('none') %></span>
                                                                                     <% } %>
                                                             </div>
                                                             <div class="col-auto me-2 text-end ms-auto">
-                                                                <span class="badge bg-primary">Requests: <%=
+                                                                <span class="badge bg-primary"><%= t('general.requests') %> <%=
                                                                         song.request_count %></span>
                                                             </div>
                                                         </div>
                                                     </li>
                                                     <% }) %>
                                                         <% } else { %>
-                                                            <p class="text-center">No requests yet.</p>
+                                                            <p class="text-center"><%= t('messages.no_requests_yet') %>.</p>
                                                             <% } %>
                                         </ul>
                                     </div>
@@ -144,7 +143,7 @@
                                 <div class="col-lg-6 mb-4">
                                     <div class="card shadow mb-4">
                                         <div class="card-header py-3">
-                                            <h6 class="text-primary fw-bold m-0">Books</h6>
+                                            <h6 class="text-primary fw-bold m-0"><%= t('general.books') %></h6>
                                         </div>
                                         <div class="card-body">
                                             <ul class="list-group">
@@ -164,7 +163,7 @@
                                                                 <button class="btn btn-danger btn-sm"
                                                                     data-book-id="<%= book.bo_uid %>"
                                                                     data-target="#deleteBookModal" data-toggle="modal"
-                                                                    type="button">Delete <%= book.bo_uid %></button>
+                                                                    type="button"><%= t('delete') %> <%= book.bo_uid %></button>
                                                             </div>
                                                         </div>
                                                     </li>

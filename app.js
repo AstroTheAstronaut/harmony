@@ -1,6 +1,9 @@
 const express = require('express');
 const favicon = require('serve-favicon');
 const path = require('path');
+const i18next = require('./i18n'); // Import i18next configuration
+const i18nextMiddleware = require('i18next-http-middleware');
+const cookieParser = require('cookie-parser'); // For handling cookies
 const app = express();
 
 // Import the setupDatabase function
@@ -11,9 +14,23 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(cookieParser()); // Initialize cookie parser
 
 // Serve static files from the .well-known directory
 app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
+
+// Initialize i18next middleware
+app.use(i18nextMiddleware.handle(i18next));
+
+// Route to change language
+app.get('/change-language/:lng', (req, res) => {
+  const { lng } = req.params;
+  if (i18next.hasResourceBundle(lng, 'translation')) {
+    res.cookie('i18next', lng); // Save the selected language in a cookie
+    i18next.changeLanguage(lng);
+  }
+  res.redirect('back'); // Redirect back to the previous page
+});
 
 // View engine setup
 app.set('view engine', 'ejs');
@@ -22,7 +39,6 @@ app.set('views', path.join(__dirname, 'views'));
 // Routes
 const indexRoute = require('./routes/index');
 const uploadRoute = require('./routes/upload');
-// const searchRoute = require('./routes/search');
 const songRoute = require('./routes/song-view');
 const loginRoute = require('./routes/login');
 const songsRoute = require('./routes/songs');
@@ -39,7 +55,6 @@ const editSongRoute = require('./routes/edit-song');
     // Use routes
     app.use('/', indexRoute);
     app.use('/upload', uploadRoute);
-    // app.use('/', searchRoute);
     app.use('/', songRoute);
     app.use('/login', loginRoute);
     app.use('/songs', songsRoute);

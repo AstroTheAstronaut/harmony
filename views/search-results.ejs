@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Harmony</title>
+    <title><%= t('general.harmony') %></title>
     <!-- Bootstrap CSS from CDN -->
     <link rel="stylesheet" href="/styles/bootstrap.min.css">
     <!-- Font Awesome CSS from CDN -->
@@ -21,7 +21,7 @@
                 <%- include('partials/navbar') %>
                 <div class="container-fluid">
                     <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-dark mb-0">Search Results for "<%= query %>" </h3>
+                        <h3 class="text-dark mb-0"><%= t('messages.search_results') %> "<%= query %>" </h3>
                     </div>
                     <% if (results.length > 0) { %>
                     <div class="row-auto align-items-center">
@@ -38,7 +38,7 @@
                                             <% } %>
                                         </h3>
                                         <% if(result.artist) { %>
-                                            <h5 class="mt-2">Artist: <%= result.artist %></h5>
+                                            <h5 class="mt-2"><%= t('song.artist') %>: <%= result.artist %></h5>
                                         <% } %>
                                         <% if (result.bo_name) { %>
                                             <h5 class="mt-2"><%= result.bo_name %></h6>
@@ -47,13 +47,13 @@
                                     <div class="col-md-4 d-flex justify-content-end d-none d-md-flex">
                                         <form action="/request-song" method="POST" class="mb-0 me-2">
                                             <input type="hidden" name="song_uid" value="<%= result.song_uid %>">
-                                            <button type="submit" class="btn btn-warning btn-sm">Request</button>
+                                            <button type="submit" class="btn btn-warning btn-sm"><%= t('general.request') %></button>
                                         </form>
                                     </div>
                                     <div class="d-md-none mt-3">
                                         <form action="/request-song" method="POST" class="mb-2">
                                             <input type="hidden" name="song_uid" value="<%= result.song_uid %>">
-                                            <button type="submit" class="btn btn-warning btn-sm w-100">Request</button>
+                                            <button type="submit" class="btn btn-warning btn-sm w-100"><%= t('general.request') %></button>
                                         </form>
                                     </div>
                                 </div>

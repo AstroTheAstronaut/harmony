@@ -31,7 +31,7 @@
                                         <% } %>
                                     </h2>
                                     <% if(song.artist) { %>
-                                        <h5 class="mt-2">Artist: <%= song.artist %></h5>
+                                        <h5 class="mt-2"><%= t('song.artist') %>: <%= song.artist %></h5>
                                     <% } %>
                                     <% if (song.book_name ) { %>
                                         <h5 class="mt-2">
@@ -44,10 +44,10 @@
                                 <div class="col-md-4 d-flex justify-content-end d-none d-md-flex">
                                     <form action="/request-song" method="POST" class="mb-0 me-2">
                                         <input type="hidden" name="song_uid" value="<%= song.song_uid%>">
-                                        <button type="submit" class="btn btn-warning btn-sm">Request</button>
+                                        <button type="submit" class="btn btn-warning btn-sm"><%= t('request') %></button>
                                     </form>
                                     <form action="/edit-song/<%= song.song_uid %>" method="GET" class="mb-0">
-                                        <button type="submit" class="btn btn-success btn-sm">Edit song</button>
+                                        <button type="submit" class="btn btn-success btn-sm"><%= t('edit_song')%></button>
                                     </form>
                                 </div>
                             </div>

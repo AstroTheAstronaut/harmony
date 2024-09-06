@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Songs - Harmony</title>
+    <title><%= t('general.songs') %> - <%= t('general.harmony') %></title>
     <!-- Bootstrap CSS from CDN -->
     <link rel="stylesheet" href="/styles/bootstrap.min.css">
     <!-- Font Awesome CSS from CDN -->
@@ -24,23 +24,23 @@
         <div id="content">
             <%- include('partials/navbar') %>
             <div class="container-fluid">
-                <h3 class="text-dark mb-0">Songs</h3>
+                <h3 class="text-dark mb-0"><%= t('general.songs') %></h3>
                 </br>
                 <div class="card shadow">
                     <div class="card-header py-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <p class="text-primary m-0 fw-bold">
                                 <% if (bookName === 'All Books') { %>
-                                    Showing all songs
+                                    <%= t('messages.showing_all_songs') %>
                                 <% } else { %>
-                                    Showing songs for: <%= bookName %>
+                                    <%= t('messages.showing_songs_for') %>: <%= bookName %>
                                 <% } %>
                             </p>
                             <!-- Filter by Book -->
                             <form id="filterForm" class="d-flex align-items-center mb-0">
                                 <label class="form-label mb-0 me-2" for="bookFilterSelect">Book:</label>
                                 <select class="form-select form-select-sm" id="bookFilterSelect">
-                                    <option value="all" <% if (bookName === 'All Books') { %> selected <% } %>>All Books</option>
+                                    <option value="all" <% if (bookName === 'All Books') { %> selected <% } %>> <%= t('messages.all_books') %></option>
                                     <% books.forEach(book => { %>
                                         <option value="<%= book.bo_uid %>" <% if (book.bo_name === bookName) { %> selected <% } %>>
                                             <%= book.bo_name %>
@@ -56,11 +56,11 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>No.</th>
-                                        <th>Name</th>
-                                        <th>Artist</th>
-                                        <th>Book</th>
-                                        <th>Actions</th>
+                                        <th><%= t('general.no') %></th>
+                                        <th><%= t('song.title') %></th>
+                                        <th><%= t('song.artist') %></th>
+                                        <th><%= t('book.book') %></th>
+                                        <th><%= t('general.actions') %></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -79,11 +79,11 @@
                                                 <div class="d-none d-md-block">
                                                     <form action="/request-song" method="POST" class="d-inline">
                                                         <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                                        <button type="submit" class="btn btn-warning btn-sm">Request</button>
+                                                        <button type="submit" class="btn btn-warning btn-sm"><%= t('general.request') %></button>
                                                     </form>
                                                     <form action="/remove-song" method="POST" class="d-inline ms-2">
                                                         <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                                        <button type="submit" class="btn btn-danger btn-sm"><%= t('general.remove') %></button>
                                                     </form>
                                                 </div>
                                                 <!-- Mobile dropdown for actions -->
@@ -91,16 +91,16 @@
                                                     <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
                                                         id="actionsDropdown<%= song.song_uid %>" data-bs-toggle="dropdown"
                                                         aria-haspopup="true" aria-expanded="false">
-                                                        Actions
+                                                        <%= t('general.actions') %>
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="actionsDropdown<%= song.song_uid %>">
                                                         <form action="/request-song" method="POST" class="px-3 py-2">
                                                             <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                                            <button type="submit" class="btn btn-warning btn-sm">Request</button>
+                                                            <button type="submit" class="btn btn-warning btn-sm"><%= t('general.request') %></button>
                                                         </form>
                                                         <form action="/remove-song" method="POST" class="px-3 py-2">
                                                             <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                                            <button type="submit" class="btn btn-danger btn-sm"><%= t('general.remove') %></button>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -110,16 +110,16 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th>No.</th>
-                                        <th>Name</th>
-                                        <th>Artist</th>
-                                        <th>Book</th>
-                                        <th>Actions</th>
+                                        <th><%= t('general.no') %></th>
+                                        <th><%= t('song.title') %></th>
+                                        <th><%= t('song.artist') %></th>
+                                        <th><%= t('book.book') %></th>
+                                        <th><%= t('general.actions') %></th>
                                     </tr>
                                 </tfoot>
                             </table>
                         <% } else { %>
-                            <p class="text-center">No songs available!</p>
+                            <p class="text-center"><%= t('messages.no_songs_available') %>!</p>
                         <% } %>
                     </div>
                     <div class="card-footer py-3">

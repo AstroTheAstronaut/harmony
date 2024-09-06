@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Books - Harmony</title>
+    <title><%= t('general.books') %> - <%= t('general.harmony'); %></title>
     <!-- Bootstrap CSS from CDN -->
     <link rel="stylesheet" href="/styles/bootstrap.min.css">
     <!-- Font Awesome CSS from CDN -->
@@ -22,13 +22,13 @@
                 <%- include('partials/navbar') %>
                 <div class="container-fluid">
                     <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-dark mb-0">Books</h3>
+                        <h3 class="text-dark mb-0"><%= t('general.books') %></h3>
                     </div>
                     <div class="row">
                         <div class="col-lg-6 mb-4">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="text-primary fw-bold m-0">Books</h6>
+                                    <h6 class="text-primary fw-bold m-0"><%= t('general.books') %></h6>
                                 </div>
                                 <div class="card-body">
                                     <ul class="list-group">
@@ -48,7 +48,7 @@
                                                         <button class="btn btn-danger btn-sm"
                                                             data-book-id="<%= book.bo_uid %>"
                                                             data-target="#deleteBookModal" data-toggle="modal"
-                                                            type="button">Delete <%= book.bo_uid %></button>
+                                                            type="button"><%= t('general.delete') %></button>
                                                     </div>
                                                 </div>
                                             </li>
@@ -60,41 +60,41 @@
                         <div class="col">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="text-primary fw-bold m-0">Create a book</h6>
+                                    <h6 class="text-primary fw-bold m-0"><%= t('general.create_a_book') %></h6>
                                 </div>
                                 <div class="card-body">
                                     <form action="/add-book" method="POST">
                                         <div class="form-group">
-                                            <label for="bookName">Book Name</label>
+                                            <label for="bookName"><%= t('book.name') %></label>
                                             <input type="text" class="form-control" id="bookName" name="book_name" required>
                                         </div>
                                         <div class="form-group">
-                                            <label for="bookUUID">Book UUID</label>
+                                            <label for="bookUUID"><%= t('book.uid') %></label>
                                             <input type="text" class="form-control" id="bookUUID" name="book_uuid" required>
                                         </div>
                                         <br>
                                         <div class="text-end">
-                                            <button type="submit" class="btn btn-primary">Add Book</button>
+                                            <button type="submit" class="btn btn-primary"><%= t('general.add_book') %></button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>                        
                     </div>
-                    <div class="row">
+                    <div class="row-auto">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="text-primary fw-bold m-0">Upload a book</h6>
+                                <h6 class="text-primary fw-bold m-0"><%= t('upload.upload_a_book') %></h6>
                             </div>
                             <div class="card-body">
                                 <form action="/upload-book" method="POST" enctype="multipart/form-data">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="form-group mb-0">
-                                            <label for="bookFile" class="me-2">Upload ZIP File</label>
+                                            <label for="bookFile" class="me-2"><%= t('upload.upload_zip') %></label>
                                             <input type="file" class="form-control-file" id="bookFile" name="bookFile" accept=".zip" required>
                                         </div>
                                         <div>
-                                            <button type="submit" class="btn btn-primary">Upload Book</button>
+                                            <button type="submit" class="btn btn-primary"><%= t('upload.upload_book') %></button>
                                         </div>
                                     </div>
                                 </form>

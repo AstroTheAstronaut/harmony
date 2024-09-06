@@ -1,15 +1,15 @@
 <nav class="navbar align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0 navbar-dark toggled">
     <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="/">
             <div class="sidebar-brand-icon rotate-n-15" ><img src="/img/iconmonstr-sound-wave-4.svg" style="filter: invert(100%);width: 50px;"></div>
-            <div class="sidebar-brand-text mx-3"><span>Harmony</span></div>
+            <div class="sidebar-brand-text mx-3"><span><%= t('general.harmony') %></span></div>
         </a>
         <hr class="sidebar-divider my-0">
         <ul class="navbar-nav text-light" id="accordionSidebar">
-            <li class="nav-item"><a class="nav-link <%= activePage === 'home' ? 'active' : '' %>" href="/"><i class="fas fa-tachometer-alt" style="font-size: 15px;"></i><span style="font-size: 15px;">Home</span></a></li>
-            <li class="nav-item"><a class="nav-link <%= activePage === 'songs' ? 'active' : '' %>" href="/songs"><i class="fas fa-music" style="width: 15.6016px;font-size: 15px;"></i><span style="font-size: 15px;">Songs</span></a></li>
-            <li class="nav-item"><a class="nav-link <%= activePage === 'books' ? 'active' : '' %>" href="/books"><i class="fas fa-book" style="font-size: 15px;"></i><span style="font-size: 15px;">Books</span></a></li>
-            <li class="nav-item"><a class="nav-link <%= activePage === 'upload' ? 'active' : '' %>" href="/upload"><i class="fas fa-upload" style="font-size: 15px;"></i><span style="font-size: 15px;">Upload song</span></a></li>
-            <li class="nav-item"><a class="nav-link <%= activePage === 'settings' ? 'active' : '' %>" href="/settings"><i class="fas fa-cog" style="font-size: 15px;"></i><span style="font-size: 15px;">Settings</span></a></li>
+            <li class="nav-item"><a class="nav-link <%= activePage === 'home' ? 'active' : '' %>" href="/"><i class="fas fa-tachometer-alt" style="font-size: 15px;"></i><span style="font-size: 15px;"><%= t('general.home') %></span></a></li>
+            <li class="nav-item"><a class="nav-link <%= activePage === 'songs' ? 'active' : '' %>" href="/songs"><i class="fas fa-music" style="width: 15.6016px;font-size: 15px;"></i><span style="font-size: 15px;"><%= t('general.songs') %></span></a></li>
+            <li class="nav-item"><a class="nav-link <%= activePage === 'books' ? 'active' : '' %>" href="/books"><i class="fas fa-book" style="font-size: 15px;"></i><span style="font-size: 15px;"><%= t('general.books') %></span></a></li>
+            <li class="nav-item"><a class="nav-link <%= activePage === 'upload' ? 'active' : '' %>" href="/upload"><i class="fas fa-upload" style="font-size: 15px;"></i><span style="font-size: 15px;"><%= t('upload.upload_song') %></span></a></li>
+            <li class="nav-item"><a class="nav-link <%= activePage === 'settings' ? 'active' : '' %>" href="/settings"><i class="fas fa-cog" style="font-size: 15px;"></i><span style="font-size: 15px;"><%= t('general.settings') %></span></a></li>
             <li class="nav-item"></li>
         </ul>
         <!-- <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div> -->
