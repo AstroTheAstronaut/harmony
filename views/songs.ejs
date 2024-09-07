@@ -15,6 +15,20 @@
 
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/d3b482db3e.js" crossorigin="anonymous"></script>
+    <style>
+        @media (max-width: 576px) { /* Adjust the max-width as needed */
+    .pagination {
+        font-size: 0.875rem; /* Reduce font size */
+    }
+    .pagination .page-link {
+        padding: 0.25rem 0.5rem; /* Adjust padding */
+    }
+    .pagination .page-item {
+        margin: 0; /* Remove margin */
+    }
+}
+
+    </style>
 </head>
 
 <body id="page-top">
@@ -140,6 +154,7 @@
                                 </p>
                             </div>
                             <div class="col-md-6">
+                                <div class="text-center">
                                 <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
                                     <ul class="pagination">
                                         <!-- Previous Page Button -->
@@ -214,6 +229,7 @@
                                         <% } %>
                                     </ul>
                                 </nav>
+                            </div>
                             </div>
                         </div>
                     </div>

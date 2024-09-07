@@ -19,3 +19,20 @@
         <!-- <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div> -->
     </div>
 </nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebar = document.querySelector('nav');
+
+            function handleClickOutside(event) {
+                // Check if the click is outside the sidebar
+                if (sidebar.contains(event.target) && window.innerWidth < 768) {
+                    sidebar.classList.add('toggled');
+                }
+            }
+
+            // Handle clicks outside the sidebar
+            document.addEventListener('click', handleClickOutside);
+
+    });
+</script>
