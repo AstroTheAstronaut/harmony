@@ -60,7 +60,9 @@
                                         <th><%= t('song.title') %></th>
                                         <th><%= t('song.artist') %></th>
                                         <th><%= t('book.book') %></th>
+                                        <% if(userRole === 'Viewer') {} else { %>
                                         <th><%= t('general.actions') %></th>
+                                        <% } %>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -75,16 +77,21 @@
                                             <td><%= song.artist || 'N/A' %></td>
                                             <td><%= song.bo_name || 'N/A' %></td>
                                             <td>
+                                                <% if(userRole === 'Viewer') {} else { %>
                                                 <!-- Desktop actions -->
                                                 <div class="d-none d-md-block">
+                                                    <% if(userRole === 'Editor') {} else{ %>
                                                     <form action="/request-song" method="POST" class="d-inline">
                                                         <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
                                                         <button type="submit" class="btn btn-warning btn-sm"><%= t('general.request') %></button>
                                                     </form>
+                                                    <% } %>
+                                                    <% if(userRole === 'Moderator') {} else { %>
                                                     <form action="/remove-song" method="POST" class="d-inline ms-2">
                                                         <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
                                                         <button type="submit" class="btn btn-danger btn-sm"><%= t('general.remove') %></button>
                                                     </form>
+                                                    <% } %>
                                                 </div>
                                                 <!-- Mobile dropdown for actions -->
                                                 <div class="dropdown d-md-none">
@@ -104,6 +111,7 @@
                                                         </form>
                                                     </div>
                                                 </div>
+                                                <% } %>
                                             </td>
                                         </tr>
                                     <% }) %>
@@ -114,7 +122,9 @@
                                         <th><%= t('song.title') %></th>
                                         <th><%= t('song.artist') %></th>
                                         <th><%= t('book.book') %></th>
+                                        <% if(userRole === 'Viewer') {} else { %>
                                         <th><%= t('general.actions') %></th>
+                                        <% } %>
                                     </tr>
                                 </tfoot>
                             </table>

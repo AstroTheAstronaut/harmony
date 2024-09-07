@@ -8,7 +8,7 @@ router.post('/login-user', async (req, res) => {
 
     try {
         let user;
-        if (role === 'viewer') {
+        if (role === 'Viewer') {
             user = await getUserWithoutPassword(role);
         } else {
             user = await getUser(role, password);

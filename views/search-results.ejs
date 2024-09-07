@@ -44,6 +44,7 @@
                                             <h5 class="mt-2"><%= result.bo_name %></h6>
                                         <% } %>
                                     </div>
+                                    <% if(userRole === 'Viewer' || userRole === 'Editor') {} else { %>
                                     <div class="col-md-4 d-flex justify-content-end d-none d-md-flex">
                                         <form action="/request-song" method="POST" class="mb-0 me-2">
                                             <input type="hidden" name="song_uid" value="<%= result.song_uid %>">
@@ -56,6 +57,7 @@
                                             <button type="submit" class="btn btn-warning btn-sm w-100"><%= t('general.request') %></button>
                                         </form>
                                     </div>
+                                    <% } %>
                                 </div>
                                 </div>
                                 <div class="card-body">

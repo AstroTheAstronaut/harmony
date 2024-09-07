@@ -84,6 +84,7 @@ const actionsRoute = require('./routes/helpers/actions');
     app.use('/books', checkAuth, booksRoute);
     app.use('/settings', checkAuth, settingsRoute);
     app.use('/edit-song', checkAuth, editSongRoute);
+    app.use('/song-view', checkAuth, songRoute)
 
     // Redirect root to login if not authenticated
     app.get('/', checkAuth, (req, res) => {

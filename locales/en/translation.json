@@ -21,6 +21,7 @@
         "add_book": "Add Book",
         "add_part": "Add Part",
         "delete": "Delete",
+        "password": "Password",
         "general_settings": "General Settings",
         "select_book_opt": "Select a book (Optional)",
         "preview": "Preview",
@@ -35,8 +36,14 @@
         "current_language": "Current Language",
         "actions": "Actions",
         "no": "No.",
-        "footer_verse": "Worship the Lord with gladness; come before him with joyful songs",
+        "footer_verse": "Serve the Lord with gladness; come before him with joyful songs",
         "devinfo": "2024 Harmony App by Matteo"
+    },
+    "login_page": {
+        "viewer": "Viewer",
+        "moderator": "Moderator",
+        "editor": "Editor",
+        "admin": "Admin"
     },
     "song_parts": {
         "title": "Song Parts",
@@ -72,6 +79,10 @@
         "upload_song": "Upload Song"
     },
     "messages": {
+        "change_language": "Change language",
+        "english": "English",
+        "romanian": "Romanian",
+        "entering_password_for": "Entering password for: ",
         "no_parts_added": "No Parts Added",
         "no_books": "No Books",
         "no_songs": "No Songs",

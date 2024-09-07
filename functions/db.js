@@ -24,7 +24,6 @@ async function getUserWithoutPassword(role) {
         conn = await pool.getConnection();
         const [user] = await conn.query('SELECT * FROM users WHERE role = ?', [role]);
         return user;
-        console.log('User:', user);
     } catch (err) {
         return Promise.reject(err);
     } finally {

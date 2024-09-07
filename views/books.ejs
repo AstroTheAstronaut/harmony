@@ -22,7 +22,7 @@
                 <%- include('partials/navbar') %>
                 <div class="container-fluid">
                     <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-dark mb-0"><%= t('general.books') %> for <%= userRole %></h3>
+                        <h3 class="text-dark mb-0"><%= t('general.books') %></h3>
                     </div>
                     <div class="row">
                         <div class="col-lg-6 mb-4">
@@ -44,12 +44,14 @@
                                                         <span
                                                             class="float-start"><!-- Number of songs will be inserted here later --></span>
                                                     </div>
+                                                    <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
                                                     <div class="col-auto align-self-center">
                                                         <button class="btn btn-danger btn-sm"
                                                             data-book-id="<%= book.bo_uid %>"
                                                             data-target="#deleteBookModal" data-toggle="modal"
                                                             type="button"><%= t('general.delete') %></button>
                                                     </div>
+                                                    <% } %>
                                                 </div>
                                             </li>
                                             <% }) %>
@@ -57,6 +59,7 @@
                                 </div>
                             </div>
                         </div>
+                        <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
                         <div class="col">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
@@ -79,7 +82,7 @@
                                     </form>
                                 </div>
                             </div>
-                        </div>                        
+                        </div>                       
                     </div>
                     <div class="row-auto">
                         <div class="card shadow mb-4">
@@ -102,6 +105,7 @@
                         </div>
                         
                     </div>
+                    <% } %>
                 </div>
             </div>
             <%- include('partials/footer') %>

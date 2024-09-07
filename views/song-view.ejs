@@ -48,11 +48,14 @@
                                         <% song.parts.forEach(part => { %>
                                             <input type="hidden" name="part_<%= part.id %>" id="hidden-part-<%= part.id %>" value="<%= part.lyrics %>">
                                         <% }) %>
+                                        <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
                                         <button id="edit-button" type="button" class="btn btn-success btn-sm" data-edit="false"><%= t('messages.edit_song') %></button>
                                         <button id="save-button" type="submit" class="btn btn-primary btn-sm d-none"><%= t('messages.save_song') %></button>
+                                        <% } %>
                                     </form>
                                 </div>
                             </div>
+                            <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
                             <!-- Mobile buttons container -->
                             <div class="d-md-none mt-3">
                                 <form action="/request-song" method="POST" class="mb-2">
@@ -63,6 +66,7 @@
                                     <button type="submit" class="btn btn-success btn-sm w-100"><%= t('messages.edit_song') %></button>
                                 </form>
                             </div>
+                            <% } %>
                         </div>
                         <div class="card-body">
                             <ul class="list-group">

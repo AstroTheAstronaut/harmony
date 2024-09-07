@@ -21,6 +21,7 @@
         "add_book": "Adaugă carte",
         "add_part": "Adaugă parte",
         "delete": "Șterge",
+        "password": "Parolă",
         "general_settings": "Setări generale",
         "select_book_opt": "Selectați o carte (Opțional)",
         "preview": "Previzualizare",
@@ -36,6 +37,12 @@
         "no": "Nr.",
         "footer_verse": "Slujiți Domnului cu bucurie, veniți cu veselie înaintea Lui!",
         "devinfo": "2024 Harmony App by Matteo"
+    },
+    "login_page": {
+        "viewer": "Vizualizator",
+        "moderator": "Moderator",
+        "editor": "Editor",
+        "admin": "Administrator"
     },
     "song_parts": {
         "title": "Părți ale Cântecului",
@@ -71,6 +78,10 @@
         "upload_song": "Încărcați un cântec"
     },
     "messages": {
+        "change_language": "Schimbă limba",
+        "english": "Engleză",
+        "romanian": "Romană",
+        "entering_password_for": "Introducerea parolei pentru:",
         "no_parts_added": "Nici o parte adăugată",
         "no_books": "Nicio carte",
         "no_songs": "Niciun cântec",
@@ -79,7 +90,7 @@
         "no_notifications": "Nici o notificare",
         "no_requests_yet": "Nicio cerere încă",
         "requested_songs": "Cântece solicitate",
-        "showing_all_songs": "Afișând toate cântecele",
+        "showing_all_songs": "Toate cântecele",
         "edit_song": "Editează cântecul",
         "save_song": "Salvează cântecul",
         "most_requested_songs": "Cântece cele mai solicitate",
@@ -87,7 +98,7 @@
         "page_not_found": "Pagina nu a fost gasită",
         "back_to_dashboard": "Înapoi la Tabloul de Bord",
         "lost": "Se pare că te-ai rătăcit. Nu-i nimic, hai să te ducem înapoi la tabloul de bord.",
-        "showing_songs_for": "Afișând cântece pentru",
+        "showing_songs_for": "Afișând cântece din",
         "auto_delete_requests": "Șterge automat cererile",
         "requests_deletion_time": "Timpul de ștergere a cererilor",
         "requests_deletion_time_desc": "Setați timpul (în ore) după care cererile vor fi șterse automat. Activat doar dacă ștergerea automată este activată"

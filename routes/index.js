@@ -19,8 +19,6 @@ router.get('/', async (req, res) => {
         const songs = await getSongs();
         const mostRequestedSongs = await getMostRequestedSongs();
         const requestedSongs = await getRequestedSongs();
-        // Use res.locals.userRole instead of userRole
-        console.log('User role:', res.locals.userRole);
         res.render('index', { books, songs, mostRequestedSongs, requestedSongs, userRole: res.locals.userRole, activePage: 'home' });
     } catch (err) {
         console.error('Error fetching books or songs:', err);
