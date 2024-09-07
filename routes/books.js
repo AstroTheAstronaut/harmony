@@ -5,7 +5,7 @@ const {getBooks, deleteBook, addBook} = require('../functions/db');
 router.get('/', async (req, res) => {
     try {
         const books = await getBooks();
-        res.render('books', { books, activePage: 'books' });
+        res.render('books', { books, userRole: res.locals.userRole, activePage: 'books' });
     } catch (err) {
         console.error('Error fetching books:', err);
         res.status(500).send('Error fetching data');

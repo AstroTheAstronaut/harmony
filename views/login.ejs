@@ -3,24 +3,27 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Harmony</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title><%= t('general.harmony') %></title>
     <!-- Bootstrap CSS from CDN -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/styles/bootstrap.min.css">
+    <!-- Font Awesome CSS from CDN -->
+    <script src="https://kit.fontawesome.com/d3b482db3e.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <style>
         body {
-            background-color: #f4f7f9;
+            background-image: url('/img/login-bg50.jpg');
+            background-size: cover;
             color: #333;
         }
 
-        .login-container {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 30px;
+        .card {
             border-radius: 0.5rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            background-color: #ffffff;
+        }
+
+        .card-body {
+            padding: 30px;
         }
 
         .btn-custom {
@@ -39,12 +42,6 @@
 
         .form-group {
             margin-top: 20px;
-            display: none;
-            /* Initially hidden */
-        }
-
-        .form-control {
-            border-radius: 0.375rem;
         }
 
         #loginBtn {
@@ -58,49 +55,65 @@
             color: #333;
             text-align: center;
         }
+
+        /* Center the card */
+        .centered-card {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 400px;
+        }
     </style>
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col">
-                <div class="login-container">
-                    <h2>Select Login Type</h2>
-                    <button class="btn btn-custom" id="viewerBtn">Viewer</button>
-                    <button class="btn btn-custom" id="moderatorBtn">Moderator</button>
-                    <button class="btn btn-custom" id="editorBtn">Editor</button>
-                    <button class="btn btn-custom" id="adminBtn">Admin</button>
-
-                    <div class="form-group" id="adminLogin">
-                        <input type="password" class="form-control" id="adminPassword"
-                            placeholder="Enter admin password">
-                        <button class="btn btn-primary" id="loginBtn">Login</button>
+    <div class="container-fluid centered-card">
+        <div class="card shadow">
+            <div class="card-header py-3 text-center">
+                <h3 class="text-primary fw-bold m-0">Login</h3>
+            </div>
+            <div class="card-body">
+                <form id="loginForm" action="/auth/login-user" method="POST">
+                    <div class="form-group">
+                        <label for="roleInput">Role:</label>
+                        <input type="text" name="role" id="roleInput" class="form-control" placeholder="Enter role (e.g., viewer, admin)" oninput="updatePasswordField()" required>
                     </div>
-                </div>
+                    <div class="form-group" id="passwordGroup">
+                        <input type="password" name="password" id="passwordInput" class="form-control" placeholder="Password" required>
+                    </div>
+                    <button type="submit" id="loginBtn" class="btn btn-custom">Login</button>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <span class="d-block mb-2 h5">
+                    <em><%= t('general.footer_verse') %></em>
+                </span> 
             </div>
         </div>
     </div>
+
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        // Show the admin login form when the Admin button is clicked
-        document.getElementById('adminBtn').addEventListener('click', function () {
-            const adminLogin = document.getElementById('adminLogin');
-            adminLogin.style.display = adminLogin.style.display === 'none' ? 'block' : 'none';
-        });
+        function updatePasswordField() {
+            const roleInput = document.getElementById('roleInput').value.trim().toLowerCase();
+            const passwordGroup = document.getElementById('passwordGroup');
+            const rolesRequiringPassword = ['moderator', 'editor', 'admin'];
 
-        // Add logic for viewer and user buttons if needed
-        document.getElementById('viewerBtn').addEventListener('click', function () {
-            alert('Viewer login not implemented yet.');
-        });
-
-        document.getElementById('userBtn').addEventListener('click', function () {
-            alert('User login not implemented yet.');
-        });
+            if (rolesRequiringPassword.includes(roleInput)) {
+                passwordGroup.style.display = 'block';
+            } else {
+                passwordGroup.style.display = 'none';
+                document.getElementById('passwordInput').value = ''; // Clear password input
+            }
+        }
     </script>
 </body>
-
 </html>

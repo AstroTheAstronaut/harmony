@@ -45,16 +45,16 @@ document.addEventListener('DOMContentLoaded', function () {
             parts.forEach((part, index) => {
                 previewContent += `
                 <div class="song-part-container" data-index="${index}" draggable="true">
-                <div class="song-part">
-                    <strong>${part.type}:</strong>
-                    <p>${part.lyrics}</p>
+                    <div class="song-part">
+                        <strong>${part.type}:</strong>
+                        <p>${part.lyrics}</p>
+                    </div>
+                    <div class="part-actions">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="removePart(${index})">Remove</button>
+                        <button type="button" class="btn btn-success btn-sm" onclick="duplicatePart(${index})">Duplicate</button>
+                        <button type="button" class="btn btn-warning btn-sm" onclick="changePartType(${index})">Change Type</button>
+                    </div>
                 </div>
-                <div class="part-actions">
-                    <button type="button" class="btn btn-danger btn-sm" onclick="removePart(${index})">Remove</button>
-                    <button type="button" class="btn btn-success btn-sm" onclick="duplicatePart(${index})">Duplicate</button>
-                    <button type="button" class="btn btn-warning btn-sm" onclick="changePartType(${index})">Change Type</button>
-                </div>
-            </div>
                 `;
             });
         } else {
@@ -64,14 +64,14 @@ document.addEventListener('DOMContentLoaded', function () {
         previewDiv.innerHTML = previewContent;
         addDragAndDropEvents(); 
         Sortable.create(document.getElementById('preview'), {
-            animation: 150,  // Animation speed in milliseconds
+            animation: 150,
             onEnd: function (evt) {
                 const movedPart = parts.splice(evt.oldIndex, 1)[0];
                 parts.splice(evt.newIndex, 0, movedPart);
                 updatePreview();
                 partsInput.value = JSON.stringify(parts);
             }
-        });// Ensure drag-and-drop events are attached
+        });
     }
 
     function renderParts() {
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
           <div class="song-part-container" data-index="${index}" draggable="true">
             <div class="song-part">
                 <strong>${part.type}:</strong>
-                 <p>${part.lyrics}</p>
+                <p>${part.lyrics}</p>
             </div>
             <div class="part-actions">
                 <button type="button" class="btn btn-danger btn-sm" onclick="removePart(${index})">Remove</button>
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
       `).join('');
 
-        addDragAndDropEvents(); // Add this line to attach drag and drop events after rendering parts
+        addDragAndDropEvents();
     }
 
     titleInput.addEventListener('input', updatePreview);
@@ -97,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function () {
     bookSelect.addEventListener('change', updatePreview);
     bookSongNumberInput.addEventListener('input', updatePreview);
     partTypeSelect.addEventListener('change', updatePreview);
-    
 
     addPartButton.addEventListener('click', function () {
         const type = partTypeSelect.value;
@@ -108,6 +107,12 @@ document.addEventListener('DOMContentLoaded', function () {
             lyricsPartInput.value = '';
             updatePreview();
             partsInput.value = JSON.stringify(parts);
+
+            // Make sure the parts input is no longer required after the first part
+            if (!isFirstPartAdded) {
+                isFirstPartAdded = true;
+                partsInput.required = false;
+            }
         } else {
             alert('Please enter lyrics.');
         }
@@ -197,5 +202,5 @@ document.addEventListener('DOMContentLoaded', function () {
             };
             reader.readAsText(file);
         }
-    });
+    }); 
 });

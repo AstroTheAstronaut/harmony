@@ -10,7 +10,7 @@ const { v4: uuidv4 } = require('uuid');
 router.get('/', async (req, res) => {
   try {
     const books = await getBooks();
-    res.render('upload', { title: 'Upload Song', books, activePage: 'upload' });
+    res.render('upload', { title: 'Upload Song', books, userRole: res.locals.userRole, activePage: 'upload' });
   } catch (err) {
     console.error('Error fetching books:', err);
     res.status(500).send('Internal Server Error');

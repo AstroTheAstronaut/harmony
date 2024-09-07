@@ -3,7 +3,35 @@ const unidecode = require('unidecode');
 
 function normalizeText(text) {
     return unidecode(text).toLowerCase();
-  }
+}
+
+async function getUser(role, passwd) {
+    let conn;
+    try{
+        conn = await pool.getConnection();
+        const [user] = await conn.query('SELECT * FROM users WHERE role = ? AND password = ?', [role, passwd]);
+        return user;
+    } catch (err) {
+        return Promise.reject(err);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+async function getUserWithoutPassword(role) {
+    let conn;
+    try{
+        conn = await pool.getConnection();
+        const [user] = await conn.query('SELECT * FROM users WHERE role = ?', [role]);
+        return user;
+        console.log('User:', user);
+    } catch (err) {
+        return Promise.reject(err);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
 
 async function getBooks() {
     let conn;
@@ -441,5 +469,7 @@ module.exports = {
     getSongsByBook,
     getTotalSongsByBook,
     getBookNameById,
-    editSong
+    editSong,
+    getUser,
+    getUserWithoutPassword
 };

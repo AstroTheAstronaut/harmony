@@ -6,7 +6,7 @@ router.get('/song-view/:id', async (req, res) => {
     try {
         const song = await getSongById(req.params.id);
         if (song) {
-            res.render('song-view', { song: song, activePage: 'songs' }); // Ensure song data is being passed
+            res.render('song-view', { song: song, userRole: res.locals.userRole, activePage: 'songs' }); // Ensure song data is being passed
         } else {
             res.status(404).send('Song not found');
         }

@@ -33,6 +33,7 @@ router.get('/', async (req, res) => {
             currentPage: page,
             totalPages,
             activePage: 'songs',
+            userRole: res.locals.userRole,
             bookName // Pass the book name to the template
         });
     } catch (err) {

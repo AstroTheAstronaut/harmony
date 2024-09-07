@@ -4,10 +4,21 @@ const path = require('path');
 const i18next = require('./i18n'); // Import i18next configuration
 const i18nextMiddleware = require('i18next-http-middleware');
 const cookieParser = require('cookie-parser'); // For handling cookies
-const app = express();
+const session = require('express-session');
+const { checkAuth, attachUserRole } = require('./middleware/authers'); // Import the auth check middleware
 
 // Import the setupDatabase function
 const setupDatabase = require('./functions/db-creator');
+
+const app = express();
+
+// Session setup
+app.use(session({
+  secret: 'secret_key', // Replace with a strong, unique secret
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true if you're using HTTPS
+}));
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -21,6 +32,9 @@ app.use('/.well-known', express.static(path.join(__dirname, '.well-known')));
 
 // Initialize i18next middleware
 app.use(i18nextMiddleware.handle(i18next));
+
+// Attach user role to res.locals
+app.use(attachUserRole);
 
 // Route to change language
 app.get('/change-language/:lng', (req, res) => {
@@ -36,7 +50,7 @@ app.get('/change-language/:lng', (req, res) => {
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Routes
+// Import routes
 const indexRoute = require('./routes/index');
 const uploadRoute = require('./routes/upload');
 const songRoute = require('./routes/song-view');
@@ -45,6 +59,8 @@ const songsRoute = require('./routes/songs');
 const booksRoute = require('./routes/books');
 const settingsRoute = require('./routes/settings');
 const editSongRoute = require('./routes/edit-song');
+const authRoute = require('./routes/helpers/auth');
+const actionsRoute = require('./routes/helpers/actions');
 
 // Run the database setup function before starting the server
 (async () => {
@@ -52,14 +68,28 @@ const editSongRoute = require('./routes/edit-song');
     await setupDatabase();
     console.log('Database setup complete. Starting the main app...');
 
-    // Use routes
-    app.use('/', indexRoute);
-    app.use('/upload', uploadRoute);
-    app.use('/', songRoute);
+    // Public routes (No authentication required)
+    app.use('/auth', authRoute); // Public routes for authentication
     app.use('/login', loginRoute);
-    app.use('/songs', songsRoute);
-    app.use('/books', booksRoute);
-    app.use('/settings', settingsRoute);
+    app.use('/change-language', (req, res, next) => {
+      // Allow access to language change route without authentication
+      next();
+    });
+    app.use('/', actionsRoute); // Assuming actionsRoute might be public
+
+    // Protected routes (Authentication required)
+    app.use('/dash', checkAuth, indexRoute);
+    app.use('/upload', checkAuth, uploadRoute);
+    app.use('/songs', checkAuth, songsRoute);
+    app.use('/books', checkAuth, booksRoute);
+    app.use('/settings', checkAuth, settingsRoute);
+    app.use('/edit-song', checkAuth, editSongRoute);
+
+    // Redirect root to login if not authenticated
+    app.get('/', checkAuth, (req, res) => {
+      res.redirect('/dash'); // Redirect to the index route if authenticated
+    });
+
     // 404 route - Place it AFTER all other routes
     app.use((req, res, next) => {
       res.status(404).render('404', { activePage: 'home' });
@@ -75,4 +105,3 @@ const editSongRoute = require('./routes/edit-song');
     process.exit(1); // Exit if there is a setup error
   }
 })();
-
