@@ -94,6 +94,8 @@
         "showing_all_songs": "Showing all songs",
         "edit_song": "Edit Song",
         "save_song": "Save Song",
+        "access_denied": "Access denied",
+        "not_supposed_to_be_here": "Oops! You're not supposed to be here! Let's get you back to safety.",
         "most_requested_songs": "Most requested songs",
         "search_results": "Search results for:",
         "page_not_found": "Page not found",

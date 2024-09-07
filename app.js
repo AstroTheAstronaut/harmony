@@ -6,6 +6,7 @@ const i18nextMiddleware = require('i18next-http-middleware');
 const cookieParser = require('cookie-parser'); // For handling cookies
 const session = require('express-session');
 const { checkAuth, attachUserRole } = require('./middleware/authers'); // Import the auth check middleware
+const checkRole = require('./middleware/roleCheck');
 
 // Import the setupDatabase function
 const setupDatabase = require('./functions/db-creator');
@@ -79,12 +80,14 @@ const actionsRoute = require('./routes/helpers/actions');
 
     // Protected routes (Authentication required)
     app.use('/dash', checkAuth, indexRoute);
-    app.use('/upload', checkAuth, uploadRoute);
     app.use('/songs', checkAuth, songsRoute);
     app.use('/books', checkAuth, booksRoute);
-    app.use('/settings', checkAuth, settingsRoute);
-    app.use('/edit-song', checkAuth, editSongRoute);
-    app.use('/song-view', checkAuth, songRoute)
+    app.use('/song-view', checkAuth, songRoute);
+
+    // Apply role-based middleware
+    app.use('/upload', checkAuth, checkRole(['Admin', 'Editor']), uploadRoute);
+    app.use('/edit-song', checkAuth, checkRole(['Admin', 'Editor']), editSongRoute);
+    app.use('/settings', checkAuth, checkRole(['Admin']), settingsRoute);
 
     // Redirect root to login if not authenticated
     app.get('/', checkAuth, (req, res) => {
