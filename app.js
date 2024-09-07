@@ -60,6 +60,10 @@ const editSongRoute = require('./routes/edit-song');
     app.use('/songs', songsRoute);
     app.use('/books', booksRoute);
     app.use('/settings', settingsRoute);
+    // 404 route - Place it AFTER all other routes
+    app.use((req, res, next) => {
+      res.status(404).render('404', { activePage: 'home' });
+    });
 
     // Start server
     const PORT = process.env.PORT || 3000;
@@ -71,3 +75,4 @@ const editSongRoute = require('./routes/edit-song');
     process.exit(1); // Exit if there is a setup error
   }
 })();
+

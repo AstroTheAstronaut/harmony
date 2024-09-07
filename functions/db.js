@@ -441,4 +441,5 @@ module.exports = {
     getSongsByBook,
     getTotalSongsByBook,
     getBookNameById,
+    editSong
 };

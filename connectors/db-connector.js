@@ -5,6 +5,7 @@ const pool = mysql.createPool({
   host: 'localhost',
   user: 'root', // Change this to your MariaDB username
   password: 'matthy05', // Change this to your MariaDB password
+  database: 'cchantdb',
   waitForConnections: true,
   connectionLimit: 10, // Adjust as needed
   queueLimit: 0
