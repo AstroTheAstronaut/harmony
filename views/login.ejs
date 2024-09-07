@@ -159,7 +159,32 @@
                     }
                 });
             });
-        });
+
+
+            // Example function to get the current language from a cookie
+            function getCurrentLanguage() {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                      let [name, value] = cookie.split('=');
+                      if (name.trim() === 'i18next') {
+                        return value;
+                     }
+                }
+                return 'en'; // Default language
+            }
+
+            // Set the flag based on the current language
+            const currentLang = getCurrentLanguage();
+            const langIcon = document.querySelector('.flag-icon');
+            if (currentLang === 'ro') {
+                langIcon.classList.remove('flag-icon-us');
+                langIcon.classList.add('flag-icon-gb');
+            } else {
+                langIcon.classList.remove('flag-icon-ro');
+                langIcon.classList.add('flag-icon-gb');
+            }
+                });
     </script>
+
 </body>
 </html>
