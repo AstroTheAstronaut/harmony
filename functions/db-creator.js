@@ -18,8 +18,8 @@ async function setupDatabase() {
     const createBooksTableQuery = `
       CREATE TABLE IF NOT EXISTS books_db (
         id INT(11) NOT NULL AUTO_INCREMENT,
-        bo_uid VARCHAR(255) NOT NULL COLLATE 'utf8mb4_uca1400_ai_ci',
-        bo_name VARCHAR(255) NOT NULL COLLATE 'utf8mb4_uca1400_ai_ci',
+        bo_uid VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
+        bo_name VARCHAR(255) NOT NULL COLLATE 'utf8mb4_general_ci',
         PRIMARY KEY (id) USING BTREE,
         UNIQUE INDEX bo_uid (bo_uid) USING BTREE,
         UNIQUE INDEX bo_name (bo_name) USING BTREE
@@ -31,9 +31,9 @@ async function setupDatabase() {
     const createSongsTableQuery = `
       CREATE TABLE IF NOT EXISTS songs (
         id INT(11) NOT NULL AUTO_INCREMENT,
-        title VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_uca1400_ai_ci',
-        artist VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_uca1400_ai_ci',
-        book_uuid VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_uca1400_ai_ci',
+        title VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+        artist VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+        book_uuid VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
         book_song_number INT(11) NULL DEFAULT NULL,
         PRIMARY KEY (id) USING BTREE,
         INDEX book_uuid (book_uuid) USING BTREE,
@@ -47,8 +47,8 @@ async function setupDatabase() {
       CREATE TABLE IF NOT EXISTS song_parts (
         id INT(11) NOT NULL AUTO_INCREMENT,
         song_id INT(11) NULL DEFAULT NULL,
-        part_type VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_uca1400_ai_ci',
-        lyrics TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_uca1400_ai_ci',
+        part_type VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
+        lyrics TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_general_ci',
         part_order INT(11) NULL DEFAULT NULL,
         PRIMARY KEY (id) USING BTREE,
         INDEX song_id (song_id) USING BTREE,
