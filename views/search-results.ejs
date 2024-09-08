@@ -78,6 +78,10 @@
                             </div>
                         <% }); %>
                     </div>
+                    <% } else { %>
+                        <div class="row-auto align-items-center">
+                            <h6 class="text-dark fw-bold m-0"><%= t('messages.no_results');%></h6>
+                        </div>
                     <% } %>
                 </div>
                 
