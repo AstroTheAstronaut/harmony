@@ -53,6 +53,10 @@
                                         <button id="save-button" type="submit" class="btn btn-primary btn-sm d-none"><%= t('messages.save_song') %></button>
                                         <% } %>
                                     </form>
+                                    <form action="/request-song" method="POST" class="mb-0 me-2">
+                                        <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                        <button type="submit" class="btn btn-warning btn-sm"><%= t('general.request') %></button>
+                                    </form>
                                 </div>
                             </div>
                             <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>

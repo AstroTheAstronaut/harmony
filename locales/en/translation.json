@@ -80,6 +80,8 @@
         "upload_song": "Upload Song"
     },
     "messages": {
+        "show": "Show",
+        "book": "Book",
         "change_language": "Change language",
         "english": "English",
         "romanian": "Romanian",

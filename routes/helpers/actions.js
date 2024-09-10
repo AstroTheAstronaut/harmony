@@ -117,46 +117,54 @@ router.post('/upload-book', upload.single('bookFile'), async (req, res) => {
     try {
         const zip = new AdmZip(zipPath);
         const zipEntries = zip.getEntries();
-        const bookJsonEntry = zipEntries.find(entry => entry.entryName === 'book.json');
+
+        // Function to find a specific file recursively, no matter where it is in the ZIP
+        function findFileByName(entries, filename) {
+            return entries.find(entry => entry.entryName.endsWith(`/${filename}`) || entry.entryName === filename);
+        }
+
+        const bookJsonEntry = findFileByName(zipEntries, 'book.json');
         
         if (!bookJsonEntry) {
             return res.status(400).send('No book.json file found in the ZIP.');
         }
-        
+
         const bookJson = JSON.parse(bookJsonEntry.getData().toString('utf8'));
         const { name: bookName, book_uuid } = bookJson;
-        
+
         // Add the book to the database
         await addBook(bookName, book_uuid);
-        
+
         // Filter for song entries
-        const songEntries = zipEntries.filter(entry => entry.entryName.endsWith('.lyric'));
-        
+        const songEntries = zipEntries.filter(entry => entry.entryName.startsWith('lyrics/') && entry.entryName.endsWith('.lyric'));
+        console.log('Found song entries:', songEntries.length);
+
         for (const songEntry of songEntries) {
             const song_uid = uuidv4();
             const songData = JSON.parse(songEntry.getData().toString('utf8'));
             const { ATTR_TITLE, ATTR_ARTIST, ATTR_NUMBER, ATTR_LYRICS, ATTR_ORDER } = songData;
-            
+
             // Process the parts (lyrics parts)
             const parts = (ATTR_LYRICS || []).map((lyric, index) => ({
                 type: lyric.TYPE || '',
                 lyrics: lyric.LYRIC || '',
                 order: ATTR_ORDER ? ATTR_ORDER[index] : index + 1  // Ensure order is preserved
             }));
-            
+
             // Pass the parts to the addSong function
             await addSong(ATTR_TITLE, ATTR_ARTIST, book_uuid, song_uid, parts, ATTR_NUMBER);
         }
-        
+
         // Clean up the uploaded file
         fs.unlinkSync(zipPath);
         res.redirect('/');
-        
+
     } catch (err) {
         console.error('Error processing ZIP file:', err);
         res.status(500).send('Error processing ZIP file');
     }
 });
+
 
 // Route to handle searching lyrics
 router.get('/search', async (req, res) => {

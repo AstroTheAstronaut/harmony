@@ -79,6 +79,8 @@
         "upload_song": "Încărcați un cântec"
     },
     "messages": {
+        "show": "Afișează",
+        "book": "Carte",
         "change_language": "Schimbă limba",
         "english": "Engleză",
         "romanian": "Romană",

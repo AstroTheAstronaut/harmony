@@ -1,6 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { getBooks, getSongsWithPagination, getTotalSongs, getSongsByBook, removeSong, getBookNameById } = require('../functions/db');
+const {
+    getBooks,
+    getSongsWithPagination,
+    getTotalSongs,
+    getTotalSongsByBook,
+    getSongsByBook,
+    removeSong,
+    getBookNameById
+} = require('../functions/db');
 
 router.get('/', async (req, res) => {
     try {
@@ -23,7 +31,8 @@ router.get('/', async (req, res) => {
             songs = await getSongsWithPagination(offset, limit); // Get songs with pagination
         }
 
-        const totalSongs = await getTotalSongs(); // Get the total number of songs
+        const totalSongs = bookId && bookId !== 'all' ? await getTotalSongsByBook(bookId) : await getTotalSongs();
+        // Get the total number of songs
 
         const totalPages = Math.ceil(totalSongs / limit); // Calculate total pages
 
@@ -34,6 +43,7 @@ router.get('/', async (req, res) => {
             totalPages,
             activePage: 'songs',
             userRole: res.locals.userRole,
+            limit,
             bookName // Pass the book name to the template
         });
     } catch (err) {
