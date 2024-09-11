@@ -163,6 +163,29 @@ async function getSongs() {
     }
 }
 
+async function getSongsByBookUUID(book_uuid) {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const [rows] = await conn.query('SELECT title, artist, book_song_number, book_uuid FROM songs WHERE book_uuid = ?', [book_uuid]);
+        const result = rows.map(row => ({
+            title: row.title || '',
+            artist: row.artist || '',
+            number: row.book_song_number || '',
+            book_uuid: row.book_uuid || ''
+        }));
+        return result;
+    } catch (err) {
+        return Promise.reject(err);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+
+
+
+
 async function getSongsWithPagination(offset = 0, limit = 10) {
     let conn;
     try {
@@ -470,5 +493,6 @@ module.exports = {
     getBookNameById,
     editSong,
     getUser,
-    getUserWithoutPassword
+    getUserWithoutPassword,
+    getSongsByBookUUID
 };

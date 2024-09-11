@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
         const page = parseInt(req.query.page) || 1; // Get the current page from query, default to 1
         const limit = parseInt(req.query.limit) || 10; // Set the limit for songs per page
         const offset = (page - 1) * limit; // Calculate the offset for the database query
-
+        const requestURL = req.originalUrl; // Get the current URL to pass to the template
         const books = await getBooks();
         
         let bookId = req.query.book; // Get the selected book filter from query
@@ -44,12 +44,15 @@ router.get('/', async (req, res) => {
             activePage: 'songs',
             userRole: res.locals.userRole,
             limit,
-            bookName // Pass the book name to the template
+            requestURL,
+            bookName,  // Pass the book name to the template
+            bookId     // Make sure to pass the bookId to the template as well
         });
     } catch (err) {
         console.error('Error fetching books or songs:', err);
         res.status(500).send('Error fetching data');
     }
 });
+
 
 module.exports = router;

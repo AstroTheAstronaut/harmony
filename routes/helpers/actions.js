@@ -14,9 +14,11 @@ const {
     requestSong,
     removeRequestedSong,
     getSongById,
+    getBooksByUUID,
     addSong,
     searchLyrics,
-    deleteBookWithSongs
+    deleteBookWithSongs,
+    getSongsByBookUUID
 } = require('../../functions/db');
 
 // Route to handle book deletion
@@ -59,10 +61,10 @@ router.post('/add-book', async (req, res) => {
 
 // Route to handle song removal
 router.post('/remove-song', async (req, res) => {
-    const { song_uid } = req.body;
+    const { song_uid, redirectTo  } = req.body;
     try {
         await removeSong(song_uid);
-        res.redirect('/');
+        res.redirect(redirectTo || '/');
     } catch (err) {
         console.error('Error removing song:', err);
         res.status(500).send('Error removing song');
@@ -111,14 +113,12 @@ router.get('/song/:id', async (req, res) => {
     }
 });
 
-// Route to handle ZIP file upload
 router.post('/upload-book', upload.single('bookFile'), async (req, res) => {
     const zipPath = req.file.path;
     try {
         const zip = new AdmZip(zipPath);
         const zipEntries = zip.getEntries();
 
-        // Function to find a specific file recursively, no matter where it is in the ZIP
         function findFileByName(entries, filename) {
             return entries.find(entry => entry.entryName.endsWith(`/${filename}`) || entry.entryName === filename);
         }
@@ -132,27 +132,38 @@ router.post('/upload-book', upload.single('bookFile'), async (req, res) => {
         const bookJson = JSON.parse(bookJsonEntry.getData().toString('utf8'));
         const { name: bookName, book_uuid } = bookJson;
 
-        // Add the book to the database
-        await addBook(bookName, book_uuid);
+        const existingBook = await getBooksByUUID(book_uuid);
+
+        if (existingBook.length === 0) {
+            await addBook(bookName, book_uuid);
+        }
+
+        // Retrieve existing songs for this book
+        const existingSongs = await getSongsByBookUUID(book_uuid);
+        const existingSongsSet = new Set(existingSongs.map(song => 
+            `${song.title || ''}|${song.artist || ''}|${song.number || ''}`
+        ));
 
         // Filter for song entries
         const songEntries = zipEntries.filter(entry => entry.entryName.startsWith('lyrics/') && entry.entryName.endsWith('.lyric'));
-        console.log('Found song entries:', songEntries.length);
 
         for (const songEntry of songEntries) {
-            const song_uid = uuidv4();
             const songData = JSON.parse(songEntry.getData().toString('utf8'));
             const { ATTR_TITLE, ATTR_ARTIST, ATTR_NUMBER, ATTR_LYRICS, ATTR_ORDER } = songData;
 
-            // Process the parts (lyrics parts)
-            const parts = (ATTR_LYRICS || []).map((lyric, index) => ({
-                type: lyric.TYPE || '',
-                lyrics: lyric.LYRIC || '',
-                order: ATTR_ORDER ? ATTR_ORDER[index] : index + 1  // Ensure order is preserved
-            }));
+            // Create a unique identifier for the song based on its attributes and book_uuid
+            const songIdentifier = `${ATTR_TITLE || ''}|${ATTR_ARTIST || ''}|${ATTR_NUMBER || ''}`;
 
-            // Pass the parts to the addSong function
-            await addSong(ATTR_TITLE, ATTR_ARTIST, book_uuid, song_uid, parts, ATTR_NUMBER);
+            // Check if the song already exists
+            if (!existingSongsSet.has(songIdentifier)) {
+                const parts = (ATTR_LYRICS || []).map((lyric, index) => ({
+                    type: lyric.TYPE || '',
+                    lyrics: lyric.LYRIC || '',
+                    order: ATTR_ORDER ? ATTR_ORDER[index] : index + 1  // Ensure order is preserved
+                }));
+
+                await addSong(ATTR_TITLE || '', ATTR_ARTIST || '', book_uuid, uuidv4(), parts, ATTR_NUMBER || '');
+            }
         }
 
         // Clean up the uploaded file
@@ -164,7 +175,6 @@ router.post('/upload-book', upload.single('bookFile'), async (req, res) => {
         res.status(500).send('Error processing ZIP file');
     }
 });
-
 
 // Route to handle searching lyrics
 router.get('/search', async (req, res) => {
@@ -222,8 +232,9 @@ router.get('/search', async (req, res) => {
 router.get('/song-view/:id', async (req, res) => {
     try {
         const song = await getSongById(req.params.id);
+        const requestURL = req.originalUrl;
         if (song) {
-            res.render('song-view', { song: song, userRole: res.locals.userRole, activePage: 'songs' }); // Ensure song data is being passed
+            res.render('song-view', { song: song, userRole: res.locals.userRole, requestURL, activePage: 'songs' }); // Ensure song data is being passed
         } else {
             res.status(404).send('Song not found');
         }

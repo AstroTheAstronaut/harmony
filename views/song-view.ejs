@@ -57,6 +57,11 @@
                                         <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
                                         <button type="submit" class="btn btn-warning btn-sm"><%= t('general.request') %></button>
                                     </form>
+                                    <form action="/remove-song" method="POST" class="d-inline ms-2">
+                                        <input type="hidden" name="redirectTo" value="<%= decodeURIComponent (requestURL) %>">
+                                        <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                        <button type="submit" class="btn btn-danger btn-sm"><%= t('general.remove') %></button>
+                                    </form>
                                 </div>
                             </div>
                             <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>

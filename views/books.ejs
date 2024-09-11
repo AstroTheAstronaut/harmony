@@ -101,6 +101,11 @@
                                         </div>
                                     </div>
                                 </form>
+                                <div id="filePreview" style="display:none;">
+                                    <p><strong>Book Name:</strong> <span id="bookNamePreview"></span></p>
+                                    <p><strong>Book UID (Unique Identifier):</strong> <span id="bookUIDPreview"></span></p>
+                                    <p><strong>Number of Songs:</strong> <span id="songCountPreview"></span></p>
+                                  </div>
                             </div>
                         </div>
                         
@@ -126,6 +131,7 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/scripts/script.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
     <script>
         // Add event listeners to filter songs by book
         document.querySelectorAll('.list-group-item').forEach(item => {
@@ -181,7 +187,75 @@
             });
         });
 
+        document.getElementById('bookFile').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const zip = new JSZip();
 
+                    // Load the ZIP file
+                    zip.loadAsync(e.target.result).then(function(zip) {
+                        // Check if 'book.json' exists in the ZIP file
+                        const bookJsonFile = zip.file('book.json');
+                        if (!bookJsonFile) {
+                            throw new Error('book.json file is missing in the ZIP archive.');
+                        }
+                    
+                    // Read 'book.json'
+                    return bookJsonFile.async('string');
+                    }).then(function(bookJsonContent) {
+                        // Parse 'book.json' to extract book name and UUID
+                        let bookData;
+                        try {
+                            bookData = JSON.parse(bookJsonContent);
+                        } catch (e) {
+                            throw new Error('Error parsing book.json: ' + e.message);
+                        }
+
+                    const bookName = bookData.name || 'Unknown';
+                    const bookUID = bookData.book_uuid || 'Unknown';
+
+                    // Count '.lyric' files in the 'lyrics' folder
+                    const lyricFiles = [];
+                    Object.keys(zip.files).forEach(function(filename) {
+                        if (filename.startsWith('lyrics/') && filename.endsWith('.lyric')) {
+                            lyricFiles.push(filename);
+                        }
+                    });
+                    const songCount = lyricFiles.length;
+
+                    // Ensure the preview section elements exist
+                    const bookNameElement = document.getElementById('bookNamePreview');
+                    const bookUIDElement = document.getElementById('bookUIDPreview');
+                    const songCountElement = document.getElementById('songCountPreview');
+                    const filePreviewElement = document.getElementById('filePreview');
+
+                    if (bookNameElement && bookUIDElement && songCountElement && filePreviewElement) {
+                        // Update the preview section with book name, UID, and song count
+                        bookNameElement.textContent = `${bookName}`;
+                        bookUIDElement.textContent = `${bookUID}`;
+                        songCountElement.textContent = `${songCount}`;
+                        filePreviewElement.style.display = 'block';
+                    } else {
+                        console.error('One or more preview section elements are missing.');
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Error reading ZIP file:', error);
+                    alert('Failed to read the ZIP file. Please ensure it contains a valid book.json file and .lyric files.');
+                });
+        };
+
+        // Read the file as ArrayBuffer (required for ZIP files)
+        reader.readAsArrayBuffer(file);
+            } else {
+                const filePreviewElement = document.getElementById('filePreview');
+                if (filePreviewElement) {
+                    filePreviewElement.style.display = 'none';
+                }
+            }
+        });
     </script>
 
     <div class="fade modal" role="dialog" aria-hidden="true" aria-labelledby="deleteBookModalLabel" id="deleteBookModal"
