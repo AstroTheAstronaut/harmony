@@ -7,10 +7,18 @@ function normalizeText(text) {
 
 async function getUser(role, passwd) {
     let conn;
-    try{
+    try {
         conn = await pool.getConnection();
+        // First, check if the user exists and the password matches
         const [user] = await conn.query('SELECT * FROM users WHERE role = ? AND password = ?', [role, passwd]);
-        return user;
+
+        if (user.length > 0) {
+            // Update the last_connected timestamp
+            await conn.query('UPDATE users SET last_connected = NOW() WHERE id = ?', [user[0].id]);
+            return user;
+        } else {
+            return [];
+        }
     } catch (err) {
         return Promise.reject(err);
     } finally {
@@ -20,17 +28,24 @@ async function getUser(role, passwd) {
 
 async function getUserWithoutPassword(role) {
     let conn;
-    try{
+    try {
         conn = await pool.getConnection();
+        // First, check if the user exists
         const [user] = await conn.query('SELECT * FROM users WHERE role = ?', [role]);
-        return user;
+
+        if (user.length > 0) {
+            // Update the last_connected timestamp
+            await conn.query('UPDATE users SET last_connected = NOW() WHERE id = ?', [user[0].id]);
+            return user;
+        } else {
+            return [];
+        }
     } catch (err) {
         return Promise.reject(err);
     } finally {
         if (conn) conn.release();
     }
 }
-
 
 async function getBooks() {
     let conn;
@@ -181,10 +196,6 @@ async function getSongsByBookUUID(book_uuid) {
         if (conn) conn.release();
     }
 }
-
-
-
-
 
 async function getSongsWithPagination(offset = 0, limit = 10) {
     let conn;

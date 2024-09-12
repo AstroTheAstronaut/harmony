@@ -53,7 +53,8 @@
         "bridge": "Bridge",
         "coda": "Coda",
         "intro": "Intro",
-        "outro": "Outro"
+        "outro": "Outro",
+        "unknown": "Unknown"
     },
     "book": {
         "book": "Book",

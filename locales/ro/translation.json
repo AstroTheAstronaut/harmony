@@ -47,12 +47,13 @@
     },
     "song_parts": {
         "title": "Părți ale Cântecului",
-        "verse": "Verset",
+        "verse": "Strofă",
         "chorus": "Refren",
         "bridge": "Pod",
         "coda": "Codă",
         "intro": "Intro",
-        "outro": "Outro"
+        "outro": "Outro",
+        "unknown": "Necunoscut"
     },
     "book": {
         "book": "Carte",

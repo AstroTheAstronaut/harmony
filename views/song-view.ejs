@@ -81,12 +81,28 @@
                             <ul class="list-group">
                                 <% song.parts.forEach(part => { %>
                                     <li class="list-group-item">
-                                        <strong><%= part.part_type %>:</strong>
+                                        <strong>
+                                            <% if (part.part_type === "CHORUS" || part.part_type === "Chorus") { %>
+                                                <%= t('song_parts.chorus') %>:
+                                            <% } else if (part.part_type === "VERSE" || part.part_type === "Verse") { %>
+                                                <%= t('song_parts.verse') %>:
+                                            <% } else if (part.part_type === "BRIDGE" || part.part_type === "BRIDGE") { %>
+                                                <%= t('song_parts.bridge') %>:
+                                            <% } else if (part.part_type === "CODA" || part.part_type === "Coda") { %>
+                                                <%= t('song_parts.coda') %>:
+                                            <% } else if (part.part_type === "OUTRO" || part.part_type === "Outro") { %>
+                                                <%= t('song_parts.outro') %>:
+                                            <% } else if (part.part_type === 'INTRO' || part.part_type === "Intro") { %>
+                                                <%= t('song_parts.intro') %>:
+                                            <% } else { %>
+                                                <%= t('song_parts.unknown') %>:
+                                            <% } %>
+                                        </strong>
                                         <pre id="part-<%= part.id %>" class="part-text" contenteditable="false"><%= part.lyrics %></pre>
                                     </li>
                                 <% }) %>
                             </ul>
-                        </div>
+                        </div>                        
                     </div>
                 </div>
             </div>
