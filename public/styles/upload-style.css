@@ -41,11 +41,11 @@
     border-left: 1px solid #ddd;
     padding-left: 20px;
   }
-  .preview-title {
+  .previewTitleContainer {
     font-size: 2rem;
     font-weight: bold;
   }
-  .preview-artist {
+  .previewArtist {
     font-size: 1.2rem;
     color: #6c757d;
   }

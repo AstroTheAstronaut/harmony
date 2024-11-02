@@ -19,6 +19,7 @@ router.get('/', async (req, res) => {
 
 // POST route to handle the upload form submission
 router.post('/upload-song', upload.single('file'), async (req, res) => {
+  console.log(req.body);
   const { title, artist, book, bookSongNumber, parts } = req.body;
   const bookId = book || null;
   const songNumber = bookSongNumber ? parseInt(bookSongNumber) : null;

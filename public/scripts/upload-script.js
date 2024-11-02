@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const lyricsPartInput = document.getElementById('lyricsPart');
     const addPartButton = document.getElementById('addPart');
     const partsContainer = document.getElementById('partsContainer');
-    const previewDiv = document.getElementById('preview');
+    const previewDiv = document.getElementById('previewContainer');
     const partsInput = document.getElementById('parts');
     const bookSelect = document.getElementById('book');
     const bookSongNumberInput = document.getElementById('bookSongNumber');
@@ -13,33 +13,63 @@ document.addEventListener('DOMContentLoaded', function () {
     const importButton = document.getElementById('importButton');
     const typeDropdown = document.getElementById('typeDropdown');
 
+    const previewTitleContainer = document.getElementById('previewTitleContainer');
+    const previewTitle = document.getElementById('previewTitle');
+    const previewSongNumber = document.getElementById('previewSongNumber');
+    const previewArtist = document.getElementById('previewArtist');
+    const previewBook = document.getElementById('previewBook');
+    const previewPartsContainer = document.getElementById('previewPartsContainer');
+
     let parts = [];
     let isFirstPartAdded = false;
 
-    function updatePreview() {
-        const title = titleInput.value.trim();
-        const artist = artistInput.value.trim();
-        const bookId = bookSelect.value;
-        const bookSongNumber = bookSongNumberInput.value.trim();
+    function updatePreviewTitle() {
+        const title = titleInput.value.trim() || '';
+        previewTitle.innerText = title;
+    }
+    titleInput.addEventListener('input', updatePreviewTitle);
+
+    function updatePreviewArtist() {
+        const artist = artistInput.value.trim() || '';
+        previewArtist.innerText = artist;
+    }
+    artistInput.addEventListener('input', updatePreviewArtist);
+
+    function updatePreviewBook() {
+        let bookId = bookSelect.value;
         const bookName = bookId ? Array.from(bookSelect.options).find(option => option.value == bookId)?.text : '';
+        previewBook.innerText = bookName;
+    }
+    bookSelect.addEventListener('change', updatePreviewBook);
+
+    function updatePreviewSongNumber() {
+        const bookSongNumber = bookSongNumberInput.value.trim();
+        if(bookSongNumber == '') 
+            previewSongNumber.innerText = '';
+        else previewSongNumber.innerText = bookSongNumber + '.';
+    }
+    bookSongNumberInput.addEventListener('input', updatePreviewSongNumber);
+
+    // document.srtfx = Sortable.create(document.getElementById('previewPartsContainer'), {
+    //     animation: 150,
+    //     onEnd: function (evt) {
+    //         console.log('newlist', evt.to);
+    //         // const movedPart = parts.splice(evt.oldIndex, 1)[0];
+    //         // parts.splice(evt.newIndex, 0, movedPart);
+    //         // //updatePreview();
+    //         // partsInput.value = JSON.stringify(parts);
+    //     },
+    // });
+
+    document.songParts = [];
+
+    function renderParts() {
+        
+    }
+
+    function updatePreview() {
+        console.log(parts);
         let previewContent = '';
-
-        if (title) {
-            let titleContent = `<h1 class="preview-title">`;
-            if (bookSongNumber) {
-                titleContent += `<span class="preview-song-number">${bookSongNumber}. </span>`;
-            }
-            titleContent += `${title}</h1>`;
-            previewContent += titleContent;
-        }
-
-        if (artist) {
-            previewContent += `<h3 class="preview-artist">Artist: ${artist}</h3>`;
-        }
-
-        if (bookName) {
-            previewContent += `<p>${bookName}</p>`;
-        }
 
         if (parts.length > 0) {
             parts.forEach((part, index) => {
@@ -61,17 +91,9 @@ document.addEventListener('DOMContentLoaded', function () {
             previewContent += '<p>No parts added yet.</p>';
         }
 
-        previewDiv.innerHTML = previewContent;
+        previewPartsContainer.innerHTML = previewContent;
         addDragAndDropEvents(); 
-        Sortable.create(document.getElementById('preview'), {
-            animation: 150,
-            onEnd: function (evt) {
-                const movedPart = parts.splice(evt.oldIndex, 1)[0];
-                parts.splice(evt.newIndex, 0, movedPart);
-                updatePreview();
-                partsInput.value = JSON.stringify(parts);
-            }
-        });
+
     }
 
     function renderParts() {
@@ -92,21 +114,18 @@ document.addEventListener('DOMContentLoaded', function () {
         addDragAndDropEvents();
     }
 
-    titleInput.addEventListener('input', updatePreview);
-    artistInput.addEventListener('input', updatePreview);
-    bookSelect.addEventListener('change', updatePreview);
-    bookSongNumberInput.addEventListener('input', updatePreview);
     partTypeSelect.addEventListener('change', updatePreview);
 
     addPartButton.addEventListener('click', function () {
         const type = partTypeSelect.value;
+        console.log(type);
         const lyrics = lyricsPartInput.value.trim();
 
         if (lyrics) {
             parts.push({ type, lyrics });
             lyricsPartInput.value = '';
             updatePreview();
-            partsInput.value = JSON.stringify(parts);
+            partsInput.value = JSON.stringify(parts); //TODO UPDATE HERE
 
             // Make sure the parts input is no longer required after the first part
             if (!isFirstPartAdded) {

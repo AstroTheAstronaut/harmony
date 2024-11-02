@@ -12,8 +12,9 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
   <link rel="stylesheet" href="/styles/upload-style.css">
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-
+  <script src="
+  https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js
+  "></script>  
 </head>
 
 <body id="page-top">
@@ -82,9 +83,17 @@
               <!-- Preview Column (Interactive) -->
               <div class="col-md-6">
                 <h2 class="mt-4 fst-italic"><%= t('general.preview') %></h2>
-                <div id="preview" class="preview-container">
+                <div id="previewContainer" class="preview-container">
+                  <div id="previewTitleContainer" class="previewTitleContainer">
+                    <span id="previewSongNumber"></span>
+                    <span id="previewTitle"></span>
+                  </div>
+                  <p id="previewBook"></p>
+                  <div id="previewArtist" class="previewArtist"></div>
+                  <div id="previewPartsContainer">
+
+                  </div>
                 </div>
-                
               </div>
             </div>
           </form>
