@@ -1,0 +1,37 @@
+<div class="modal fade" id="deleteBookModal" tabindex="-1" aria-labelledby="deleteBookModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteBookModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close close" data-dismiss="modal" aria-label="Close"></button>
+
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this book?</p>
+                    <p>This action has two options:</p>
+                    <ul>
+                        <li><strong>Delete Only Book:</strong> This will remove the book entry but keep associated
+                            songs.</li>
+                        <li><strong>Delete Book with Songs:</strong> This will remove the book entry along with all
+                            associated songs.</li>
+                    </ul>
+                    <p><strong>Book UUID:</strong> <span id="bookUUIDDisplay"></span></p>
+                    <div class="form-group">
+                        <label for="confirmBookUUID">Type the Book UUID to confirm:</label>
+                        <input type="text" class="form-control" id="confirmBookUUID" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <form action="/delete-book" method="POST" class="d-inline" id="deleteOnlyForm">
+                        <input name="book_uuid" type="hidden" id="hiddenDeleteOnlyUUID">
+                        <button type="submit" class="btn btn-secondary" disabled>Delete Only Book</button>
+                    </form>
+                    <form action="/delete-book-with-songs" method="POST" class="d-inline" id="deleteWithSongsForm">
+                        <input name="book_uuid" type="hidden" id="hiddenDeleteWithSongsUUID">
+                        <button type="submit" class="btn btn-danger" disabled>Delete Book with Songs</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,32 @@
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="text-primary fw-bold m-0"><%= t('general.books') %></h6>
+    </div>
+    <div class="card-body">
+        <ul class="list-group">
+            <% books.forEach(book=> { %>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col">
+                            <h4 class="small fw-bold"
+                                style="color: var(--bs-emphasis-color); font-size: 16px;">
+                                <%= book.bo_name %>
+                            </h4>
+                            <!-- Placeholder for number of songs -->
+                            <span
+                                class="float-start"><!-- Number of songs will be inserted here later --></span>
+                        </div>
+                        <% if(userRole === 'Viewer' || userRole === 'Moderator' || userRole === 'Editor') {} else { %>
+                        <div class="col-auto align-self-center">
+                            <button class="btn btn-danger btn-sm"
+                                data-book-id="<%= book.bo_uid %>"
+                                data-target="#deleteBookModal" data-toggle="modal"
+                                type="button"><%= t('general.delete') %></button>
+                        </div>
+                        <% } %>
+                    </div>
+                </li>
+                <% }) %>
+        </ul>
+    </div>
+</div>

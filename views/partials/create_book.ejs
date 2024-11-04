@@ -1,0 +1,21 @@
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="text-primary fw-bold m-0"><%= t('general.create_a_book') %></h6>
+    </div>
+    <div class="card-body">
+        <form action="/add-book" method="POST">
+            <div class="form-group">
+                <label for="bookName"><%= t('book.name') %></label>
+                <input type="text" class="form-control" id="bookName" name="book_name" required>
+            </div>
+            <div class="form-group">
+                <label for="bookUUID"><%= t('book.uid') %></label>
+                <input type="text" class="form-control" id="bookUUID" name="book_uuid" required>
+            </div>
+            <br>
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary"><%= t('general.add_book') %></button>
+            </div>
+        </form>
+    </div>
+</div>

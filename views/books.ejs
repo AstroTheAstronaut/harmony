@@ -26,89 +26,15 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-6 mb-4">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="text-primary fw-bold m-0"><%= t('general.books') %></h6>
-                                </div>
-                                <div class="card-body">
-                                    <ul class="list-group">
-                                        <% books.forEach(book=> { %>
-                                            <li class="list-group-item">
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <h4 class="small fw-bold"
-                                                            style="color: var(--bs-emphasis-color); font-size: 16px;">
-                                                            <%= book.bo_name %>
-                                                        </h4>
-                                                        <!-- Placeholder for number of songs -->
-                                                        <span
-                                                            class="float-start"><!-- Number of songs will be inserted here later --></span>
-                                                    </div>
-                                                    <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
-                                                    <div class="col-auto align-self-center">
-                                                        <button class="btn btn-danger btn-sm"
-                                                            data-book-id="<%= book.bo_uid %>"
-                                                            data-target="#deleteBookModal" data-toggle="modal"
-                                                            type="button"><%= t('general.delete') %></button>
-                                                    </div>
-                                                    <% } %>
-                                                </div>
-                                            </li>
-                                            <% }) %>
-                                    </ul>
-                                </div>
-                            </div>
+                            <%- include('partials/books', { userRole: userRole }) %>
                         </div>
                         <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
                         <div class="col">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="text-primary fw-bold m-0"><%= t('general.create_a_book') %></h6>
-                                </div>
-                                <div class="card-body">
-                                    <form action="/add-book" method="POST">
-                                        <div class="form-group">
-                                            <label for="bookName"><%= t('book.name') %></label>
-                                            <input type="text" class="form-control" id="bookName" name="book_name" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="bookUUID"><%= t('book.uid') %></label>
-                                            <input type="text" class="form-control" id="bookUUID" name="book_uuid" required>
-                                        </div>
-                                        <br>
-                                        <div class="text-end">
-                                            <button type="submit" class="btn btn-primary"><%= t('general.add_book') %></button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>                       
+                            <%- include('partials/create_book') %>
+                        </div>                 
                     </div>
                     <div class="row-auto">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="text-primary fw-bold m-0"><%= t('upload.upload_a_book') %></h6>
-                            </div>
-                            <div class="card-body">
-                                <form action="/upload-book" method="POST" enctype="multipart/form-data">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="form-group mb-0">
-                                            <label for="bookFile" class="me-2"><%= t('upload.upload_zip') %></label>
-                                            <input type="file" class="form-control-file" id="bookFile" name="bookFile" accept=".zip" required>
-                                        </div>
-                                        <div>
-                                            <button type="submit" class="btn btn-primary"><%= t('upload.upload_book') %></button>
-                                        </div>
-                                    </div>
-                                </form>
-                                <div id="filePreview" style="display:none;">
-                                    <p><strong>Book Name:</strong> <span id="bookNamePreview"></span></p>
-                                    <p><strong>Book UID (Unique Identifier):</strong> <span id="bookUIDPreview"></span></p>
-                                    <p><strong>Number of Songs:</strong> <span id="songCountPreview"></span></p>
-                                  </div>
-                            </div>
-                        </div>
-                        
+                        <%- include('partials/upload_book') %>
                     </div>
                     <% } %>
                 </div>

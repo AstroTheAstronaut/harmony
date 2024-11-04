@@ -1,0 +1,23 @@
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="text-primary fw-bold m-0"><%= t('upload.upload_a_book') %></h6>
+    </div>
+    <div class="card-body">
+        <form action="/upload-book" method="POST" enctype="multipart/form-data">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="form-group mb-0">
+                    <label for="bookFile" class="me-2"><%= t('upload.upload_zip') %></label>
+                    <input type="file" class="form-control-file" id="bookFile" name="bookFile" accept=".zip" required>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary"><%= t('upload.upload_book') %></button>
+                </div>
+            </div>
+        </form>
+        <div id="filePreview" style="display:none;">
+            <p><strong>Book Name:</strong> <span id="bookNamePreview"></span></p>
+            <p><strong>Book UID (Unique Identifier):</strong> <span id="bookUIDPreview"></span></p>
+            <p><strong>Number of Songs:</strong> <span id="songCountPreview"></span></p>
+          </div>
+    </div>
+</div>

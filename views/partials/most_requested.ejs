@@ -1,0 +1,49 @@
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="text-primary fw-bold m-0"><%= t('messages.most_requested_songs') %>:</h6>
+    </div>
+    <ul class="list-group list-group-flush">
+        <% if (mostRequestedSongs.length> 0) { %>
+            <% mostRequestedSongs.forEach(song=> { %>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-auto align-self-center me-2">
+                            <a class="link-dark text-decoration-none"
+                                href="/song-view/<%= song.song_uid %>">
+                                <strong>
+                                    <% if(song.book_song_number) { %>
+                                        <%= song.book_song_number %>. <%= song.title
+                                                %>
+                                                <% } else { %>
+                                                    <%= song.title %>
+                                                        <% } %>
+                                </strong>
+                            </a>
+                            <% if (song.artist) { %> - <%= song.artist %>
+                                    <% } %>
+                                        <span class="text-xs ms-2">
+                                            <%= song.request_time %>
+                                        </span>
+                                        <% if (song.book_song_number) { %>
+                                            <span
+                                                class="badge rounded-pill bg-primary ms-2">
+                                                <%= t('book.book') %>: <%= song.bo_name %>
+                                            </span>
+                                            <% } else { %>
+                                                <span
+                                                    class="badge rounded-pill bg-primary ms-2"><%= t('book.book') %>:
+                                                    <%= t('none') %></span>
+                                            <% } %>
+                        </div>
+                        <div class="col-auto me-2 text-end ms-auto">
+                            <span class="badge bg-primary"><%= t('general.requests') %> <%=
+                                    song.request_count %></span>
+                        </div>
+                    </div>
+                </li>
+                <% }) %>
+                    <% } else { %>
+                        <p class="text-center"><%= t('messages.no_requests_yet') %>.</p>
+                        <% } %>
+    </ul>
+</div>
