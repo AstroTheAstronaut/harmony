@@ -1,3 +1,5 @@
 node_modules/
 .VSCodeCounter/
 uploads/
+.vscode/settings.json
+.env
