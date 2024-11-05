@@ -1,16 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
-const AdmZip = require('adm-zip');
-const fs = require('fs');
-const { v4: uuidv4 } = require('uuid');
 const {
     getBooks,
     getSongs,
     getMostRequestedSongs,
     getRequestedSongs,
-} = require('../functions/db'); // Adjust the path to your db file
+} = require('../functions/db');
 
 // Route for the homepage
 router.get('/', async (req, res) => {

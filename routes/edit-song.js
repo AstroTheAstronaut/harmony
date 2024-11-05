@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getSongById, getBooks } = require('../functions/db'); // Adjust path as needed
+const { getSongById, getBooks } = require('../functions/db');
 
 // Route to render the edit page with pre-filled song data
 router.get('/edit-song/:id', async (req, res) => {

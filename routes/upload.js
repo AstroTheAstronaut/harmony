@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getBooks, getBooksByUUID, createBook, addSong } = require('../functions/db');
+const { getBooks, addSong } = require('../functions/db');
 const multer = require('multer');
 // Temporary storage
 const upload = multer({ dest: 'uploads/' });

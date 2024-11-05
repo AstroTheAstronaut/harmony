@@ -482,6 +482,19 @@ async function editSong(song_uid, song_title, song_artist, book_uuid, book_song_
     }
 }
 
+async function getNotifications () {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const [rows] = await conn.query('SELECT * FROM notifications');
+        return rows;
+    } catch (err) {
+        return Promise.reject(err);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
 module.exports = {
     getBooks,
     deleteBook,
@@ -505,5 +518,6 @@ module.exports = {
     editSong,
     getUser,
     getUserWithoutPassword,
-    getSongsByBookUUID
+    getSongsByBookUUID,
+    getNotifications
 };

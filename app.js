@@ -18,7 +18,7 @@ app.use(session({
   secret: 'secret_key', // Replace with a strong, unique secret
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // Set to true if you're using HTTPS
+  cookie: { secure: false }
 }));
 
 // Middleware

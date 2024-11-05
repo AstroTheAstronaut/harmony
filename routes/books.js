@@ -4,10 +4,6 @@ const { body, validationResult } = require('express-validator');
 const validator = require('validator');
 const {getBooks, deleteBook, addBook} = require('../functions/db');
 
-function sanitizeInput(input) {
-    return validator.escape(input);
-  }
-
 router.get('/', async (req, res) => {
     try {
         const books = await getBooks();
