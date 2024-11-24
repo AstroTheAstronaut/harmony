@@ -80,10 +80,7 @@
                                 <!-- Share button -->
                                 <a href="/song/<%= song.song_uid %>/public" id="share-button-mobile" class="btn btn-sm ms-2">
                                     <i class="fa-regular fa-share-from-square"></i>
-                                </a>                                
-                                <button id="share-test-button" class="btn btn-primary">
-                                    <i class="fa-regular fa-share-from-square"></i> Test Share
-                                </button>
+                                </a>
                             </div>
                             <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
                             <!-- Mobile admin/mod buttons -->
@@ -145,17 +142,13 @@
     <script src="/scripts/script.min.js"></script>
 
     <script>
-        document.getElementById('share-button').addEventListener('click', function(event) {
-            event.preventDefault();  // Prevent the default action of the link (navigation)
-
-            const shareUrl = window.location.origin + this.getAttribute('href');  // Get the link to share
-
-            // Check if Web Share API is supported and if we're on a mobile device
-            if (navigator.canShare && navigator.canShare({ url: shareUrl })) {
-                // Use the Web Share API on mobile devices
+        function handleShare(event, buttonId) {
+            event.preventDefault();
+            const shareUrl = window.location.origin + document.getElementById(buttonId).getAttribute('href');
+            if (navigator.share) {
                 navigator.share({
-                    title: 'Check out this song!',
-                    text: 'Here\'s a song you might like:',
+                    title: buttonId === 'share-button' ? 'Check out this song!' : '',
+                    text: buttonId === 'share-button' ? 'Here\'s a song you might like:' : '',
                     url: shareUrl
                 }).then(() => {
                     console.log('Successfully shared');
@@ -163,35 +156,23 @@
                     console.error('Error sharing', error);
                 });
             } else {
-                // Fall back to copying the URL to the clipboard on desktop
-                navigator.clipboard.writeText(shareUrl).then(function () {
+                // Fallback to copying URL to clipboard if Web Share API isn't supported
+                navigator.clipboard.writeText(shareUrl).then(() => {
                     alert('Link copied to clipboard!');
-                }).catch(function (error) {
-                    console.error('Error copying the text: ', error);
+                }).catch((error) => {
+                    console.error('Error copying text', error);
                 });
             }
+        }
+
+        document.getElementById('share-button').addEventListener('click', function(event) {
+            handleShare(event, 'share-button');
         });
 
         document.getElementById('share-button-mobile').addEventListener('click', function(event) {
-            event.preventDefault();  // Prevent the default action (navigation)
-
-            const shareUrl = window.location.origin + this.getAttribute('href');  // Get the link to share
-
-            // Check if the Web Share API is supported and we're on a mobile device
-            if (navigator.share) {
-                // Use the Web Share API to open the system's share dialog
-                navigator.share({
-                    url: shareUrl
-                }).then(() => {
-                    console.log('Successfully shared');
-                }).catch((error) => {
-                    console.error('Error sharing', error);
-                });
-            } else {
-                // Optionally, you can provide a fallback here if Web Share API isn't supported
-                alert('Sharing is not supported on this device.');
-            }
+            handleShare(event, 'share-button-mobile');
         });
+
 
         document.addEventListener('DOMContentLoaded', () => {
             const editButton = document.getElementById('edit-button');
