@@ -244,6 +244,17 @@ router.get('/song-view/:id', async (req, res) => {
     }
 });
 
+router.get('/song/:song_uid/public', async (req, res) => {
+    const songUid = req.params.song_uid;
+    const song = await getSongById(songUid);  // Fetch song data by UID from your database
+    
+    if (!song) {
+        return res.status(404).send('Song not found');
+    }
+
+    res.render('public-view', { song, isPublic: true });
+});
+
 // Route to update a song
 router.post('/update-song', async (req, res) => {
     const { song_uid, title, artist, book_name, ...parts } = req.body;

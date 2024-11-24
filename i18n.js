@@ -9,11 +9,11 @@ i18next
     fallbackLng: 'en',
     preload: ['en', 'ro'], // List all the languages you want to preload
     backend: {
-      loadPath: './locales/{{lng}}/translation.json',
+      loadPath: './locales/{{lng}}/translation.json', // Path to your translation files
     },
     detection: {
-      order: ['querystring', 'cookie', 'header', 'session', 'localStorage', 'navigator'],
-      caches: ['cookie']
+      order: ['navigator', 'querystring', 'cookie', 'header', 'session', 'localStorage'], // Prioritize navigator
+      caches: ['cookie'], // Store the detected language in cookies
     }
   });
 

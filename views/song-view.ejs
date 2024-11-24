@@ -53,6 +53,16 @@
                                         <button id="save-button" type="submit" class="btn btn-primary btn-sm d-none"><%= t('messages.save_song') %></button>
                                         <% } %>
                                     </form>
+
+                                    <!-- Share button -->
+                                    <a href="/song/<%= song.song_uid %>/public" id="share-button" class="btn btn-sm ms-2">
+                                        <i class="fa-regular fa-share-from-square"></i>
+                                    </a>                       
+                                    
+                                    <!-- Desktop buttons container -->
+                                    <% if(userRole === 'Viewer' || userRole === 'Moderator') {
+                                        
+                                    } else { %>
                                     <form action="/request-song" method="POST" class="mb-0 me-2">
                                         <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
                                         <button type="submit" class="btn btn-warning btn-sm"><%= t('general.request') %></button>
@@ -62,10 +72,21 @@
                                         <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
                                         <button type="submit" class="btn btn-danger btn-sm"><%= t('general.remove') %></button>
                                     </form>
+                                    <% } %>
                                 </div>
                             </div>
+                            <!-- Mobile buttons-->
+                            <div class="d-md-none mt-3 d-flex justify-content-end">
+                                <!-- Share button -->
+                                <a href="/song/<%= song.song_uid %>/public" id="share-button-mobile" class="btn btn-sm ms-2">
+                                    <i class="fa-regular fa-share-from-square"></i>
+                                </a>
+                                <button id="share-test-button" class="btn btn-primary">
+                                    <i class="fa-regular fa-share-from-square"></i> Test Share
+                                </button>
+                            </div>
                             <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
-                            <!-- Mobile buttons container -->
+                            <!-- Mobile admin/mod buttons -->
                             <div class="d-md-none mt-3">
                                 <form action="/request-song" method="POST" class="mb-2">
                                     <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
@@ -124,6 +145,70 @@
     <script src="/scripts/script.min.js"></script>
 
     <script>
+        document.getElementById('share-button').addEventListener('click', function(event) {
+            event.preventDefault();  // Prevent the default action of the link (navigation)
+
+            const shareUrl = window.location.origin + this.getAttribute('href');  // Get the link to share
+
+            // Check if Web Share API is supported and if we're on a mobile device
+            if (navigator.canShare && navigator.canShare({ url: shareUrl })) {
+                // Use the Web Share API on mobile devices
+                navigator.share({
+                    title: 'Check out this song!',
+                    text: 'Here\'s a song you might like:',
+                    url: shareUrl
+                }).then(() => {
+                    console.log('Successfully shared');
+                }).catch((error) => {
+                    console.error('Error sharing', error);
+                });
+            } else {
+                // Fall back to copying the URL to the clipboard on desktop
+                navigator.clipboard.writeText(shareUrl).then(function () {
+                    alert('Link copied to clipboard!');
+                }).catch(function (error) {
+                    console.error('Error copying the text: ', error);
+                });
+            }
+        });
+
+        function triggerShare(event) {
+            event.preventDefault();  // Prevents the default action (navigation)
+
+            const shareUrl = window.location.href;  // Get the current page URL to share
+
+            // Check if the Web Share API is supported
+            if (navigator.share) {
+                // Use Web Share API for mobile devices
+                navigator.share({
+                    title: 'Check out this page!',
+                    text: 'Here\'s an interesting page I found:',
+                    url: shareUrl
+                }).then(() => {
+                    console.log('Successfully shared');
+                }).catch((error) => {
+                    console.error('Error sharing:', error);
+                });
+            } else {
+                // Fallback: Copy the URL to the clipboard for desktops
+                navigator.clipboard.writeText(shareUrl).then(function () {
+                    alert('Link copied to clipboard!');
+                }).catch(function (error) {
+                    console.error('Error copying the text:', error);
+                });
+            }
+        }
+
+        // Add event listeners for both mobile touch and click
+        document.getElementById('share-test-button').addEventListener('touchstart', function(event) {
+            triggerShare(event);  // Trigger share on mobile touchstart
+        });
+
+        document.getElementById('share-test-button').addEventListener('click', function(event) {
+            triggerShare(event);  // Trigger share on click (for desktop or fallback)
+        });
+
+
         document.addEventListener('DOMContentLoaded', () => {
             const editButton = document.getElementById('edit-button');
             const saveButton = document.getElementById('save-button');

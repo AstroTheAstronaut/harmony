@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Harmony</title>
+    <!-- Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/styles/bootstrap.min.css">
+    <!-- Font Awesome CSS from CDN -->
+    <script src="https://kit.fontawesome.com/d3b482db3e.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+</head>
+<body id="page-top">
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper">
+        </br>
+        </br>
+            <div id="content">
+                <div class="container-fluid">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <div class="row align-items-center">
+                                <!-- Text content column -->
+                                <div class="col-md-8">
+                                    <h2 id="song-title" class="text-dark fw-bold m-0" contenteditable="false">
+                                        <% if(song.book_song_number) { %>
+                                            <%= song.book_song_number %>. <%= song.title %>
+                                        <% } else { %>
+                                            <%= song.title %>
+                                        <% } %>
+                                    </h2>
+                                    <% if(song.artist) { %>
+                                        <h5 id="song-artist" class="mt-2" contenteditable="false"><%= t('song.artist') %>: <%= song.artist %></h5>
+                                    <% } %>
+                                    <% if (song.book_name ) { %>
+                                        <h5 id="song-book-name" class="mt-2" contenteditable="false"><%= song.book_name %></h5>
+                                    <% } %>
+                                </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <% song.parts.forEach(part => { %>
+                                    <li class="list-group-item">
+                                        <strong>
+                                            <% if (part.part_type === "CHORUS" || part.part_type === "Chorus") { %>
+                                                <%= t('song_parts.chorus') %>:
+                                            <% } else if (part.part_type === "VERSE" || part.part_type === "Verse") { %>
+                                                <%= t('song_parts.verse') %>:
+                                            <% } else if (part.part_type === "BRIDGE" || part.part_type === "BRIDGE") { %>
+                                                <%= t('song_parts.bridge') %>:
+                                            <% } else if (part.part_type === "CODA" || part.part_type === "Coda") { %>
+                                                <%= t('song_parts.coda') %>:
+                                            <% } else if (part.part_type === "OUTRO" || part.part_type === "Outro") { %>
+                                                <%= t('song_parts.outro') %>:
+                                            <% } else if (part.part_type === 'INTRO' || part.part_type === "Intro") { %>
+                                                <%= t('song_parts.intro') %>:
+                                            <% } else { %>
+                                                <%= t('song_parts.unknown') %>:
+                                            <% } %>
+                                        </strong>
+                                        <pre id="part-<%= part.id %>" class="part-text" contenteditable="false"><%= part.lyrics %></pre>
+                                    </li>
+                                <% }) %>
+                            </ul>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            <%- include('partials/public-footer') %>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/scripts/script.min.js"></script>
+</body>
+</html>

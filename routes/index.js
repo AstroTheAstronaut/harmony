@@ -5,6 +5,7 @@ const {
     getSongs,
     getMostRequestedSongs,
     getRequestedSongs,
+    getSongById
 } = require('../functions/db');
 
 // Route for the homepage
