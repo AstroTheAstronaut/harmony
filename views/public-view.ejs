@@ -3,7 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Harmony</title>
+    <title>
+        <% if(song.book_song_number) { %>
+            <% if(song.book_name) { %>
+                <%= song.book_song_number %>. <%= song.title %> - <%= song.book_name %>
+            <% } else { %>
+                <%= song.book_song_number %>. <%= song.title %>
+            <% } %>
+        <% } else { %>
+            <%= song.title %>
+        <% } %>
+    </title>
     <!-- Bootstrap CSS from CDN -->
     <link rel="stylesheet" href="/styles/bootstrap.min.css">
     <!-- Font Awesome CSS from CDN -->
