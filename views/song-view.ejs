@@ -80,7 +80,7 @@
                                 <!-- Share button -->
                                 <a href="/song/<%= song.song_uid %>/public" id="share-button-mobile" class="btn btn-sm ms-2">
                                     <i class="fa-regular fa-share-from-square"></i>
-                                </a>
+                                </a>                                
                                 <button id="share-test-button" class="btn btn-primary">
                                     <i class="fa-regular fa-share-from-square"></i> Test Share
                                 </button>
@@ -172,42 +172,26 @@
             }
         });
 
-        function triggerShare(event) {
-            event.preventDefault();  // Prevents the default action (navigation)
+        document.getElementById('share-button-mobile').addEventListener('click', function(event) {
+            event.preventDefault();  // Prevent the default action (navigation)
 
-            const shareUrl = window.location.href;  // Get the current page URL to share
+            const shareUrl = window.location.origin + this.getAttribute('href');  // Get the link to share
 
-            // Check if the Web Share API is supported
+            // Check if the Web Share API is supported and we're on a mobile device
             if (navigator.share) {
-                // Use Web Share API for mobile devices
+                // Use the Web Share API to open the system's share dialog
                 navigator.share({
-                    title: 'Check out this page!',
-                    text: 'Here\'s an interesting page I found:',
                     url: shareUrl
                 }).then(() => {
                     console.log('Successfully shared');
                 }).catch((error) => {
-                    console.error('Error sharing:', error);
+                    console.error('Error sharing', error);
                 });
             } else {
-                // Fallback: Copy the URL to the clipboard for desktops
-                navigator.clipboard.writeText(shareUrl).then(function () {
-                    alert('Link copied to clipboard!');
-                }).catch(function (error) {
-                    console.error('Error copying the text:', error);
-                });
+                // Optionally, you can provide a fallback here if Web Share API isn't supported
+                alert('Sharing is not supported on this device.');
             }
-        }
-
-        // Add event listeners for both mobile touch and click
-        document.getElementById('share-test-button').addEventListener('touchstart', function(event) {
-            triggerShare(event);  // Trigger share on mobile touchstart
         });
-
-        document.getElementById('share-test-button').addEventListener('click', function(event) {
-            triggerShare(event);  // Trigger share on click (for desktop or fallback)
-        });
-
 
         document.addEventListener('DOMContentLoaded', () => {
             const editButton = document.getElementById('edit-button');
