@@ -166,7 +166,8 @@
             // Check if the Web Share API is supported
             if (navigator.share) {
                 navigator.share({
-                    title: songTitle,  // Dynamic title from the data attribute
+                    title: songTitle,
+                    text: songTitle,
                     url: shareUrl
                 }).then(() => {
                     console.log('Successfully shared');
