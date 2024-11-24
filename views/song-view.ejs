@@ -161,7 +161,7 @@
 
             const shareUrl = window.location.origin + document.getElementById(buttonId).getAttribute('href');  // Get the link to share
             const songTitle = document.getElementById(buttonId).getAttribute('data-song-title');  // Get the song title from the data attribute
-            const songText = `${songTitle}\n\n${shareUrl}`;
+            const songText = `${songTitle}\n`;
 
             // Check if the Web Share API is supported
             if (navigator.share) {
