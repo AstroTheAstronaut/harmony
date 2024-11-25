@@ -47,7 +47,6 @@
                                         <h5 id="song-book-name" class="mt-2" contenteditable="false"><%= song.book_name %></h5>
                                     <% } %>
                                 </div>
-                                
                                 <!-- Buttons column -->
                                 <div class="col-md-4 d-flex justify-content-end d-none d-md-flex">
                                     <form id="song-form" action="/update-song" method="POST" class="mb-0 me-2">
@@ -63,13 +62,11 @@
                                         <button id="save-button" type="submit" class="btn btn-primary btn-sm d-none"><%= t('messages.save_song') %></button>
                                         <% } %>
                                     </form>
-
                                     <!-- Share button -->
                                     <a href="/song/<%= song.song_uid %>/public" id="share-button" class="btn btn-sm ms-2"
                                         data-song-title="<% if(song.book_song_number) { %><% if(song.book_name) { %><%= song.book_song_number %>. <%= song.title %> - <%= song.book_name %><% } else { %><%= song.book_song_number %>. <%= song.title %><% } %><% } else { %><%= song.title %><% } %>">
                                          <i class="fa-regular fa-share-from-square"></i>
-                                     </a>                                                                                                                                    
-                                    
+                                    </a>
                                     <!-- Desktop buttons container -->
                                     <% if(userRole === 'Viewer' || userRole === 'Moderator') {
                                         
@@ -92,8 +89,7 @@
                                 <a href="/song/<%= song.song_uid %>/public" id="share-button-mobile" class="btn btn-sm ms-2"
                                     data-song-title="<% if(song.book_song_number) { %><% if(song.book_name) { %><%= song.book_song_number %>. <%= song.title %> - <%= song.book_name %><% } else { %><%= song.book_song_number %>. <%= song.title %><% } %><% } else { %><%= song.title %><% } %>">
                                      <i class="fa-regular fa-share-from-square"></i>
-                                 </a>                                 
-                                 
+                                 </a>
                             </div>
                             <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
                             <!-- Mobile admin/mod buttons -->
@@ -140,7 +136,6 @@
             <%- include('partials/footer') %>
         </div>
     </div>
-
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -153,9 +148,7 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/scripts/script.min.js"></script>
-
     <script>
-
         function handleShare(event, buttonId) {
             event.preventDefault();  // Prevent the default action (navigation)
 

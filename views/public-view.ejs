@@ -47,11 +47,32 @@
                                         <h5 id="song-book-name" class="mt-2" contenteditable="false"><%= song.book_name %></h5>
                                     <% } %>
                                 </div>
+                                <!-- Buttons desktop-->
+                                <div class="col-md-4 d-flex justify-content-end d-none d-md-flex"> 
+                                    <a href="/song/<%= song.song_uid %>/public" id="share-button" class="btn btn-sm ms-2"
+                                        data-song-title="<% if(song.book_song_number) { %><% if(song.book_name) { %><%= song.book_song_number %>. <%= song.title %> - <%= song.book_name %><% } else { %><%= song.book_song_number %>. <%= song.title %><% } %><% } else { %><%= song.title %><% } %>">
+                                         <i class="fa-regular fa-share-from-square"></i>
+                                    </a>
+                                    <a id="copy-button" class="btn btn-sm ms-2" data-bs-toggle="tooltip" title="<%= t('general.copy') %>">
+                                        <i class="fa-regular fa-copy"></i>
+                                    </a>
+                                </div>
+                                <!-- Share button mobile-->
+                                <div class="d-md-none mt-3 d-flex justify-content-end">
+                                    <a href="/song/<%= song.song_uid %>/public" id="share-button-mobile" class="btn btn-sm ms-2"
+                                        data-song-title="<% if(song.book_song_number) { %><% if(song.book_name) { %><%= song.book_song_number %>. <%= song.title %> - <%= song.book_name %><% } else { %><%= song.book_song_number %>. <%= song.title %><% } %><% } else { %><%= song.title %><% } %>">
+                                         <i class="fa-regular fa-share-from-square"></i>
+                                    </a>
+                                    <a id="copy-button-mobile" class="btn btn-sm ms-2" data-bs-toggle="tooltip" title="<%= t('general.copy') %>">
+                                        <i class="fa-regular fa-copy"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <ul class="list-group">
                                 <% song.parts.forEach(part => { %>
-                                    <li class="list-group-item">
+                                    <li class="list-group-item lyrics-text">
                                         <strong>
                                             <% if (part.part_type === "CHORUS" || part.part_type === "Chorus") { %>
                                                 <%= t('song_parts.chorus') %>:
@@ -93,5 +114,63 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/scripts/script.min.js"></script>
+
+    <script>
+        function handleShare(event, buttonId) {
+            event.preventDefault();  // Prevent the default action (navigation)
+
+            const shareUrl = window.location.origin + document.getElementById(buttonId).getAttribute('href');  // Get the link to share
+            const songTitle = document.getElementById(buttonId).getAttribute('data-song-title');  // Get the song title from the data attribute
+            const songText = `${songTitle}\n`;
+
+            // Check if the Web Share API is supported
+            if (navigator.share) {
+                navigator.share({
+                    title: songTitle,
+                    text: songText,
+                    url: shareUrl
+                }).then(() => {
+                    console.log('Successfully shared');
+                }).catch((error) => {
+                    console.error('Error sharing', error);
+                });
+            } else {
+                // Fallback to copying URL to clipboard if Web Share API isn't supported
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert('Link copied to clipboard!');
+                }).catch((error) => {
+                    console.error('Error copying text', error);
+                });
+            }
+        }
+
+        document.getElementById('share-button').addEventListener('click', function(event) {
+            handleShare(event, 'share-button');
+        });
+
+        document.getElementById('share-button-mobile').addEventListener('click', function(event) {
+            handleShare(event, 'share-button-mobile');
+        });
+
+        function copyLyricsToClipboard() {
+            const songParts = document.querySelectorAll('.lyrics-text');
+            let formattedLyrics = '';
+            songParts.forEach(item=>{
+                const partLabel = item.querySelector('strong').innerText.trim();
+                const partLyrics = item.querySelector('.part-text').innerText.trim();
+                formattedLyrics += `${partLabel}\n${partLyrics}\n\n`;
+            });
+
+            navigator.clipboard.writeText(formattedLyrics).then(() => {
+                alert('Lyrics copied to clipboard!');
+                console.log(formattedLyrics);
+            }).catch((error) => {
+                console.error('Error copying text', error);
+            });
+        }
+
+        document.getElementById('copy-button').addEventListener('click', copyLyricsToClipboard);
+        document.getElementById('copy-button-mobile').addEventListener('click', copyLyricsToClipboard);
+    </script>
 </body>
 </html>
