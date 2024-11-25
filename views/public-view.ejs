@@ -20,6 +20,26 @@
     <script src="https://kit.fontawesome.com/d3b482db3e.js" crossorigin="anonymous"></script>
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <style>
+        .animate-icon i {
+            animation: pop 0.3s ease-in-out;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 <body id="page-top">
     <div id="wrapper">
@@ -162,8 +182,13 @@
             });
 
             navigator.clipboard.writeText(formattedLyrics).then(() => {
-                alert('Lyrics copied to clipboard!');
-                console.log(formattedLyrics);
+                const copyButton = document.getElementById('copy-button', 'copy-button-mobile');
+                copyButton.innerHTML = '<i class="fa-solid fa-heart"></i>';
+                copyButton.classList.add('animate-icon');
+                setTimeout(() => {
+                    copyButton.innerHTML = '<i class="fa-regular fa-copy"></i>';
+                    copyButton.classList.remove('animate-icon');
+                }, 1000);
             }).catch((error) => {
                 console.error('Error copying text', error);
             });
