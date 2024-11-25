@@ -63,11 +63,11 @@
                                         <% } %>
                                     </form>
                                     <!-- Desktop buttons button -->
-                                    <a href="/song/<%= song.song_uid %>/public" id="share-button" class="btn btn-sm ms-2"
+                                    <a href="/song/<%= song.song_uid %>/public" id="share-button" class="btn btn-sm ms-2 share-button"
                                         data-song-title="<% if(song.book_song_number) { %><% if(song.book_name) { %><%= song.book_song_number %>. <%= song.title %> - <%= song.book_name %><% } else { %><%= song.book_song_number %>. <%= song.title %><% } %><% } else { %><%= song.title %><% } %>">
                                          <i class="fa-regular fa-share-from-square"></i>
                                     </a>
-                                    <a id="copy-button" class="btn btn-sm ms-2" data-bs-toggle="tooltip" title="<%= t('general.copy') %>">
+                                    <a id="copy-button" class="btn btn-sm ms-2 copy-clipboard-button" data-bs-toggle="tooltip" title="<%= t('general.copy') %>">
                                         <i class="fa-regular fa-copy"></i>
                                     </a>
                                     <!-- Desktop buttons container -->
@@ -89,11 +89,11 @@
                             <!-- Mobile buttons-->
                             <div class="d-md-none mt-3 d-flex justify-content-end">
                                 <!-- Share button -->
-                                <a href="/song/<%= song.song_uid %>/public" id="share-button-mobile" class="btn btn-sm ms-2"
+                                <a href="/song/<%= song.song_uid %>/public" id="share-button-mobile" class="btn btn-sm ms-2 share-button"
                                     data-song-title="<% if(song.book_song_number) { %><% if(song.book_name) { %><%= song.book_song_number %>. <%= song.title %> - <%= song.book_name %><% } else { %><%= song.book_song_number %>. <%= song.title %><% } %><% } else { %><%= song.title %><% } %>">
                                      <i class="fa-regular fa-share-from-square"></i>
                                  </a>
-                                <a id="copy-button-mobile" class="btn btn-sm ms-2" data-bs-toggle="tooltip" title="<%= t('general.copy') %>">
+                                <a id="copy-button-mobile" class="btn btn-sm ms-2 copy-clipboard-button" data-bs-toggle="tooltip" title="<%= t('general.copy') %>">
                                     <i class="fa-regular fa-copy"></i>
                                 </a>
                             </div>
@@ -113,7 +113,7 @@
                         <div class="card-body">
                             <ul class="list-group">
                                 <% song.parts.forEach(part => { %>
-                                    <li class="list-group-item">
+                                    <li class="list-group-item lyrics-text">
                                         <strong>
                                             <% if (part.part_type === "CHORUS" || part.part_type === "Chorus") { %>
                                                 <%= t('song_parts.chorus') %>:
@@ -183,12 +183,10 @@
             }
         }
 
-        document.getElementById('share-button').addEventListener('click', function(event) {
-            handleShare(event, 'share-button');
-        });
-
-        document.getElementById('share-button-mobile').addEventListener('click', function(event) {
-            handleShare(event, 'share-button-mobile');
+        document.querySelectorAll('.share-button').forEach(button => {
+            button.addEventListener('click', function(event) {
+                handleShare(event, button.id);
+            });
         });
 
         function copyLyricsToClipboard() {
@@ -199,22 +197,28 @@
                 const partLyrics = item.querySelector('.part-text').innerText.trim();
                 formattedLyrics += `${partLabel}\n${partLyrics}\n\n`;
             });
+            console.log(formattedLyrics);
 
             navigator.clipboard.writeText(formattedLyrics).then(() => {
-                const copyButton = document.getElementById('copy-button', 'copy-button-mobile');
-                copyButton.innerHTML = '<i class="fa-solid fa-heart"></i>';
-                copyButton.classList.add('animate-icon');
-                setTimeout(() => {
-                    copyButton.innerHTML = '<i class="fa-regular fa-copy"></i>';
-                    copyButton.classList.remove('animate-icon');
-                }, 1000);
+                const copyButtons = document.querySelectorAll('.copy-clipboard-button');
+                copyButtons.forEach(button => {
+                    button.innerHTML = '<i class="fa-solid fa-heart"></i>';
+                    button.classList.add('animate-icon');
+                    setTimeout(() => {
+                        button.innerHTML = '<i class="fa-regular fa-copy"></i>';
+                        button.classList.remove('animate-icon');
+                    }, 1000);
+                });
             }).catch((error) => {
                 console.error('Error copying text', error);
             });
         }
 
-        document.getElementById('copy-button').addEventListener('click', copyLyricsToClipboard);
-        document.getElementById('copy-button-mobile').addEventListener('click', copyLyricsToClipboard);
+        document.querySelectorAll('.copy-clipboard-button').forEach(button => {
+            button.addEventListener('click', function() {
+                copyLyricsToClipboard();
+            });
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
             const editButton = document.getElementById('edit-button');
