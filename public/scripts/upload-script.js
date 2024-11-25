@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const bookSongNumberInput = document.getElementById('bookSongNumber');
     const titleInput = document.getElementById('title');
     const artistInput = document.getElementById('artist');
+    const chordInput = document.getElementById('chord');
     const fileInput = document.getElementById('fileInput');
     const importButton = document.getElementById('importButton');
     const typeDropdown = document.getElementById('typeDropdown');
@@ -16,6 +17,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const previewTitleContainer = document.getElementById('previewTitleContainer');
     const previewTitle = document.getElementById('previewTitle');
     const previewSongNumber = document.getElementById('previewSongNumber');
+    const previewChordContainer = document.getElementById('previewChordContainer');
+    const previewChord = document.getElementById('previewChord');
     const previewArtist = document.getElementById('previewArtist');
     const previewBook = document.getElementById('previewBook');
     const previewPartsContainer = document.getElementById('previewPartsContainer');
@@ -42,6 +45,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     bookSelect.addEventListener('change', updatePreviewBook);
 
+    function updatePreviewChord() {
+        let chord = chordInput.value.trim() || '';
+        const previewChordContainer = document.getElementById("previewChordContainer");
+        const previewChord = document.getElementById("previewChord");
+        if (chord && chord.trim() !== "") {
+            previewChord.innerText = chord;
+            previewChordContainer.style.display = "block"; // Show container
+        } else {
+            previewChordContainer.style.display = "none"; // Hide container
+            previewChord.textContent = ""; // Clear content
+        }
+    }
+    chordInput.addEventListener('input', updatePreviewChord);
+
     function updatePreviewSongNumber() {
         const bookSongNumber = bookSongNumberInput.value.trim();
         if(bookSongNumber == '') 
@@ -62,10 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // });
 
     document.songParts = [];
-
-    function renderParts() {
-        
-    }
 
     function updatePreview() {
         console.log(parts);

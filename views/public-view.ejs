@@ -60,6 +60,9 @@
                                             <%= song.title %>
                                         <% } %>
                                     </h2>
+                                    <% if(song.chord) { %>
+                                        <h4 class="mt-2" contenteditable="false"><%= t('song.chord') %>: <%= song.chord %></h4>
+                                    <% } %>
                                     <% if(song.artist) { %>
                                         <h5 id="song-artist" class="mt-2" contenteditable="false"><%= t('song.artist') %>: <%= song.artist %></h5>
                                     <% } %>
@@ -171,6 +174,21 @@
         function copyLyricsToClipboard() {
             const songParts = document.querySelectorAll('.lyrics-text');
             let formattedLyrics = '';
+            const songTitle = document.getElementById('song-title')?.innerText.trim() || '';
+            const songBookName = document.getElementById('song-book-name')?.innerText.trim() || '';
+            const songArtist = document.getElementById('song-artist')?.innerText.trim() || '';
+            // Add song info to the copied text
+            if (songTitle) {
+                formattedLyrics += `${songTitle}\n`;
+                if (songArtist) {
+                    formattedLyrics += `${songArtist}\n`;
+                }
+                if (songBookName) {
+                    formattedLyrics += `- ${songBookName} -\n`;
+                }
+                formattedLyrics += '\n';
+            }
+            // Add each part of the song to the copied text
             songParts.forEach(item=>{
                 const partLabel = item.querySelector('strong').innerText.trim();
                 const partLyrics = item.querySelector('.part-text').innerText.trim();
@@ -191,7 +209,7 @@
                 console.error('Error copying text', error);
             });
         }
-        
+
         document.querySelectorAll('.copy-clipboard-button').forEach(button => {
             button.addEventListener('click', function() {
                 copyLyricsToClipboard();

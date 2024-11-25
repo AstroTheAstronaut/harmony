@@ -37,29 +37,39 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
-  .preview-container {
-    border-left: 1px solid #ddd;
-    padding-left: 20px;
-  }
-  .previewTitleContainer {
-    font-size: 2rem;
-    font-weight: bold;
-  }
-  .previewArtist {
-    font-size: 1.2rem;
-    color: #6c757d;
-  }
-  .preview-part {
-    margin-bottom: 10px;
-  }
-  .dragging {
-    opacity: 0.5;
-  }
-  .song-title {
-    font-size: 1.3rem;
-    font-weight: bold;
-  }
-  .book-info {
-    font-size: 1rem;
-    color: #4d4d4d;
-  }
+.preview-container {
+  border-left: 1px solid #ddd;
+  padding-left: 20px;
+}
+
+.previewTitleContainer {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.previewChordContainer {
+  font-size: 1.1rem;
+}
+
+.previewArtist {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.preview-part {
+  margin-bottom: 10px;
+}
+
+.dragging {
+  opacity: 0.5;
+}
+
+.song-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.book-info {
+  font-size: 1rem;
+  color: #4d4d4d;
+}

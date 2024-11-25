@@ -41,18 +41,11 @@
                   <input type="text" id="artist" name="artist" class="form-control">
                 </div>
                 <div class="form-group">
-                  <label for="partType"><%= t('song.part_type') %></label>
-                  <select id="partType" class="form-control" required>
-                    <option value="Verse"><%= t('song_parts.verse') %></option>
-                    <option value="Chorus"><%= t('song_parts.chorus') %></option>
-                    <option value="Bridge"><%= t('song_parts.bridge') %></option>
-                    <option value="Coda"><%= t('song_parts.coda') %></option>
-                    <option value="Intro"><%= t('song_parts.intro') %></option>
-                    <option value="Outro"><%= t('song_parts.outro') %></option>
-                  </select>
+                  <label for="chord"><%= t('song.chord') %></label>
+                  <select id="chord" name="chord" class="form-control"></select>
                 </div>
                 <div class="form-group">
-                  <label for="book">Book</label>
+                  <label for="book"><%= t('book.book') %></label>
                   <select id="book" name="book" class="form-control">
                     <option value=""><%= t('general.select_book_opt') %></option>
                     <% books.forEach(book => { %>
@@ -67,6 +60,17 @@
                   <input type="number" id="bookSongNumber" name="bookSongNumber" class="form-control">
                 </div>
                 <div class="form-group">
+                  <label for="partType"><%= t('song.part_type') %></label>
+                  <select id="partType" class="form-control" required>
+                    <option value="Verse"><%= t('song_parts.verse') %></option>
+                    <option value="Chorus"><%= t('song_parts.chorus') %></option>
+                    <option value="Bridge"><%= t('song_parts.bridge') %></option>
+                    <option value="Coda"><%= t('song_parts.coda') %></option>
+                    <option value="Intro"><%= t('song_parts.intro') %></option>
+                    <option value="Outro"><%= t('song_parts.outro') %></option>
+                  </select>
+                </div>
+                <div class="form-group">
                   <label for="lyricsPart"><%= t('song.lyrics') %></label>
                   <textarea id="lyricsPart" name="lyricsPart" class="form-control" rows="4" required></textarea>
                 </div>
@@ -77,7 +81,6 @@
                 <input type="hidden" id="parts" name="parts">
                 <br>
                 <button type="submit" class="btn btn-success mt-4"><%= t('upload.upload') %></button>
-                
               </div>
       
               <!-- Preview Column (Interactive) -->
@@ -88,10 +91,12 @@
                     <span id="previewSongNumber"></span>
                     <span id="previewTitle"></span>
                   </div>
-                  <p id="previewBook"></p>
                   <div id="previewArtist" class="previewArtist"></div>
+                  <div id="previewChordContainer" class="previewChordContainer" style="display: none;">
+                    <strong><%= t('song.chord') %>: </strong><span id="previewChord"></span>
+                  </div>
+                  <div id="previewBook"></div>
                   <div id="previewPartsContainer">
-
                   </div>
                 </div>
               </div>
@@ -124,6 +129,28 @@
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
   <script src="/scripts/upload-script.js"></script>
+  <script>
+    const chords = [
+    "C", "Cm", "C#", "C#m", "D", "Dm", "D#", "D#m",
+    "E", "Em", "F", "Fm", "F#", "F#m", "G", "Gm",
+    "G#", "G#m", "A", "Am", "A#", "A#m", "B", "Bm"
+  ];
+    const chordSelect = document.getElementById("chord");
+    // Placeholder
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = "<%= t('upload.select_chord_opt') %>";
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    chordSelect.appendChild(placeholder);
+    // Add the actual chord options
+    chords.forEach(chord => {
+      const option = document.createElement("option");
+      option.value = chord;
+      option.textContent = chord;
+      chordSelect.appendChild(option);
+    });
+  </script>
 </body>
 
 </html>

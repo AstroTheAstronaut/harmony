@@ -40,15 +40,27 @@
                                             <%= song.title %>
                                         <% } %>
                                     </h2>
+                                    <% if(song.chord) { %>
+                                        <h4 class="mt-2" contenteditable="false"><%= t('song.chord') %>: <%= song.chord %></h4>
+                                    <% } %>
                                     <% if(song.artist) { %>
                                         <h5 id="song-artist" class="mt-2" contenteditable="false"><%= t('song.artist') %>: <%= song.artist %></h5>
                                     <% } %>
                                     <% if (song.book_name ) { %>
                                         <h5 id="song-book-name" class="mt-2" contenteditable="false"><%= song.book_name %></h5>
                                     <% } %>
+                                    
                                 </div>
                                 <!-- Buttons column -->
                                 <div class="col-md-4 d-flex justify-content-end d-none d-md-flex">
+                                    <!-- Desktop buttons button -->
+                                    <a href="/song/<%= song.song_uid %>/public" id="share-button" class="btn btn-sm ms-2 share-button"
+                                        data-song-title="<% if(song.book_song_number) { %><% if(song.book_name) { %><%= song.book_song_number %>. <%= song.title %> - <%= song.book_name %><% } else { %><%= song.book_song_number %>. <%= song.title %><% } %><% } else { %><%= song.title %><% } %>">
+                                         <i class="fa-regular fa-share-from-square"></i>
+                                    </a>
+                                    <a id="copy-button" class="btn btn-sm ms-2 copy-clipboard-button" data-bs-toggle="tooltip" title="<%= t('general.copy') %>">
+                                        <i class="fa-regular fa-copy"></i>
+                                    </a>
                                     <form id="song-form" action="/update-song" method="POST" class="mb-0 me-2">
                                         <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
                                         <input type="hidden" name="title" id="hidden-title" value="<%= song.title %>">
@@ -62,18 +74,8 @@
                                         <button id="save-button" type="submit" class="btn btn-primary btn-sm d-none"><%= t('messages.save_song') %></button>
                                         <% } %>
                                     </form>
-                                    <!-- Desktop buttons button -->
-                                    <a href="/song/<%= song.song_uid %>/public" id="share-button" class="btn btn-sm ms-2 share-button"
-                                        data-song-title="<% if(song.book_song_number) { %><% if(song.book_name) { %><%= song.book_song_number %>. <%= song.title %> - <%= song.book_name %><% } else { %><%= song.book_song_number %>. <%= song.title %><% } %><% } else { %><%= song.title %><% } %>">
-                                         <i class="fa-regular fa-share-from-square"></i>
-                                    </a>
-                                    <a id="copy-button" class="btn btn-sm ms-2 copy-clipboard-button" data-bs-toggle="tooltip" title="<%= t('general.copy') %>">
-                                        <i class="fa-regular fa-copy"></i>
-                                    </a>
                                     <!-- Desktop buttons container -->
-                                    <% if(userRole === 'Viewer' || userRole === 'Moderator') {
-                                        
-                                    } else { %>
+                                    <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
                                     <form action="/request-song" method="POST" class="mb-0 me-2">
                                         <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
                                         <button type="submit" class="btn btn-warning btn-sm"><%= t('general.request') %></button>
@@ -192,12 +194,26 @@
         function copyLyricsToClipboard() {
             const songParts = document.querySelectorAll('.lyrics-text');
             let formattedLyrics = '';
+            const songTitle = document.getElementById('song-title')?.innerText.trim() || '';
+            const songBookName = document.getElementById('song-book-name')?.innerText.trim() || '';
+            const songArtist = document.getElementById('song-artist')?.innerText.trim() || '';
+            // Add song info to the copied text
+            if (songTitle) {
+                formattedLyrics += `${songTitle}\n`;
+                if (songArtist) {
+                    formattedLyrics += `${songArtist}\n`;
+                }
+                if (songBookName) {
+                    formattedLyrics += `- ${songBookName} -\n`;
+                }
+                formattedLyrics += '\n';
+            }
+            // Add each part of the song to the copied text
             songParts.forEach(item=>{
                 const partLabel = item.querySelector('strong').innerText.trim();
                 const partLyrics = item.querySelector('.part-text').innerText.trim();
                 formattedLyrics += `${partLabel}\n${partLyrics}\n\n`;
             });
-            console.log(formattedLyrics);
 
             navigator.clipboard.writeText(formattedLyrics).then(() => {
                 const copyButtons = document.querySelectorAll('.copy-clipboard-button');

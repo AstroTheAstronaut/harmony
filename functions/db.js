@@ -99,7 +99,7 @@ async function addBook(bookName, book_uuid) {
     }
 }
 
-async function addSong(title, artist, bookId, song_uid, parts, bookSongNumber, manageTransaction = true) {
+async function addSong(title, artist, bookId, song_uid, chord, parts, bookSongNumber, manageTransaction = true) {
     let conn;
     
     try {
@@ -124,6 +124,11 @@ async function addSong(title, artist, bookId, song_uid, parts, bookSongNumber, m
         if (song_uid) {
             insertSongQuery += ', song_uid';
             insertSongValues.push(song_uid);
+        }
+
+        if(chord) {
+            insertSongQuery += ', chord';
+            insertSongValues.push(chord);
         }
 
         insertSongQuery += ') VALUES (' + insertSongValues.map(() => '?').join(', ') + ')';

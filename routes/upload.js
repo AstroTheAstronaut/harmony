@@ -20,7 +20,9 @@ router.get('/', async (req, res) => {
 // POST route to handle the upload form submission
 router.post('/upload-song', upload.single('file'), async (req, res) => {
   console.log(req.body);
-  const { title, artist, book, bookSongNumber, parts } = req.body;
+  const { title, artist, book, chord, bookSongNumber, parts } = req.body;
+  console.log('Title: '+ title);
+  console.log('Chord: '+ chord);
   const bookId = book || null;
   const songNumber = bookSongNumber ? parseInt(bookSongNumber) : null;
   const song_uid = uuidv4();
@@ -37,7 +39,7 @@ router.post('/upload-song', upload.single('file'), async (req, res) => {
     }
 
     // Rest of the logic for checking book existence and adding the song
-    await addSong(title, artist, bookId, song_uid, parsedParts, songNumber);
+    await addSong(title, artist, bookId, song_uid, chord, parsedParts, songNumber);
 
     res.redirect('/');
   } catch (err) {

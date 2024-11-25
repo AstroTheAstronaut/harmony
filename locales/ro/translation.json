@@ -32,8 +32,8 @@
         "logout": "Deconectare",
         "login": "Conectare",
         "admin": "Administrator",
-        "dev_things": "Lucruri de dezvoltare",
-        "show_hidden_inputs": "Afișați câmpurile ascunse",
+        "dev_things": "Funcţii pentru dezvoltatori",
+        "show_hidden_inputs": "Arată câmpurile ascunse",
         "actions": "Acțiuni",
         "no": "Nr.",
         "footer_verse": "Slujiți Domnului cu bucurie, veniți cu veselie înaintea Lui!",
@@ -46,10 +46,10 @@
         "admin": "Administrator"
     },
     "song_parts": {
-        "title": "Părți ale Cântecului",
+        "title": "Titlu",
         "verse": "Strofă",
         "chorus": "Refren",
-        "bridge": "Pod",
+        "bridge": "Bridge",
         "coda": "Codă",
         "intro": "Intro",
         "outro": "Outro",
@@ -64,8 +64,9 @@
     "song": {
         "title": "Titlu",
         "artist": "Artist",
+        "chord": "Acord",
         "part_type": "Tip Parte",
-        "song_no_in_bo": "Număr Cântec în Carte",
+        "song_no_in_bo": "Numărul cântecului în carte",
         "lyrics": "Versuri"
     },
     "upload": {
@@ -77,7 +78,8 @@
         "upload_zip": "Încărcați un fișier ZIP",
         "upload_book": "Încărcați cartea",
         "upload_a_book": "Încărcați o carte",
-        "upload_song": "Încărcați un cântec"
+        "upload_song": "Încărcați un cântec",
+        "select_chord_opt": "Selectați un acord (Opțional)"
     },
     "messages": {
         "show": "Afișează",
@@ -103,7 +105,7 @@
         "most_requested_songs": "Cântece cele mai solicitate",
         "search_results": "Rezultatele căutării pentru:",
         "page_not_found": "Pagina nu a fost gasită",
-        "back_to_dashboard": "Înapoi la Tabloul de Bord",
+        "back_to_dashboard": "Înapoi la panoul de control",
         "lost": "Se pare că te-ai rătăcit. Nu-i nimic, hai să te ducem înapoi la tabloul de bord.",
         "showing_songs_for": "Afișând cântece din",
         "auto_delete_requests": "Șterge automat cererile",
