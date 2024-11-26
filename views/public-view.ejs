@@ -203,7 +203,10 @@
             songParts.forEach(item=>{
                 const partLabel = item.querySelector('strong').innerText.trim();
                 const partLyrics = item.querySelector('.part-text').innerText.trim();
-                formattedLyrics += `${partLabel}\n${partLyrics}\n\n`;
+                formattedLyrics += `${partLabel}\n${partLyrics}`;
+                if (index < songParts.length - 1) {
+                    formattedLyrics += '\n\n';
+                }
             });
             // Copy to clipboard
             navigator.clipboard.writeText(formattedLyrics).then(() => {
