@@ -221,6 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
             reader.onload = function (e) {
                 try {
                     const data = JSON.parse(e.target.result);
+                    console.log(data);
                     if (Array.isArray(data)) {
                         parts = data;
                         updatePreview();
