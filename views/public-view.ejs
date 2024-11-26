@@ -200,7 +200,7 @@
                 formattedLyrics += '\n';
             }
             // Add each part of the song to the copied text
-            songParts.forEach(item=>{
+            songParts.forEach((item, index) => {
                 const partLabel = item.querySelector('strong').innerText.trim();
                 const partLyrics = item.querySelector('.part-text').innerText.trim();
                 formattedLyrics += `${partLabel}\n${partLyrics}`;
