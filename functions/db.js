@@ -305,34 +305,34 @@ async function removeSong(id) {
     }
 }
 
-async function searchLyrics(term) {
-    let conn;
-    const normalizedQuery = `%${normalizeText(term)}%`;
-    try {
-        conn = await pool.getConnection();
-        const [rows] = await conn.query(`
-            SELECT 
-                s.id AS song_id, 
-                s.title, 
-                s.artist, 
-                s.book_song_number,
-                s.song_uid,
-                s.id,
-                b.bo_name,
-                sp.part_type, 
-                sp.lyrics
-            FROM song_parts sp
-            JOIN songs s ON sp.song_uid = s.song_uid
-            LEFT JOIN books_db b ON s.book_uuid = b.bo_uid
-            WHERE sp.lyrics LIKE ?`, [`%${normalizedQuery}%`]);
-        return rows;
+// async function searchLyrics(term) {
+//     let conn;
+//     const normalizedQuery = `%${normalizeText(term)}%`;
+//     try {
+//         conn = await pool.getConnection();
+//         const [rows] = await conn.query(`
+//             SELECT 
+//                 s.id AS song_id, 
+//                 s.title, 
+//                 s.artist, 
+//                 s.book_song_number,
+//                 s.song_uid,
+//                 s.id,
+//                 b.bo_name,
+//                 sp.part_type, 
+//                 sp.lyrics
+//             FROM song_parts sp
+//             JOIN songs s ON sp.song_uid = s.song_uid
+//             LEFT JOIN books_db b ON s.book_uuid = b.bo_uid
+//             WHERE sp.lyrics LIKE ?`, [`%${normalizedQuery}%`]);
+//         return rows;
         
-    } catch (err) {
-        return Promise.reject(err);
-    } finally {
-        if (conn) conn.release();
-    }
-}
+//     } catch (err) {
+//         return Promise.reject(err);
+//     } finally {
+//         if (conn) conn.release();
+//     }
+// }
 
 async function searchLyrics(term) {
     let conn;
@@ -366,9 +366,7 @@ async function searchLyrics(term) {
             ...searchTerms.flatMap(term => [term, term]),  // Populate LOCATE placeholders
             `+${searchTerms.join(' +')}`  // Again, use the search terms for the WHERE clause
         ]);
-
         return rows;
-        
     } catch (err) {
         return Promise.reject(err);
     } finally {
