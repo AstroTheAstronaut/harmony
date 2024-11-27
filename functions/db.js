@@ -334,6 +334,49 @@ async function searchLyrics(term) {
     }
 }
 
+async function searchLyrics(term) {
+    let conn;
+    const normalizedQuery = `%${normalizeText(term)}%`; // Normalize query and wrap in `%` for LIKE searches
+    const searchTerms = normalizedQuery.toLowerCase().split(' '); // Split query into words
+
+    try {
+        conn = await pool.getConnection();
+        
+        const [rows] = await conn.query(`
+            SELECT 
+                s.id AS song_id, 
+                s.title, 
+                s.artist, 
+                s.book_song_number,
+                s.song_uid,
+                b.bo_name,
+                sp.part_type, 
+                sp.lyrics,
+                MATCH(sp.lyrics) AGAINST (? IN BOOLEAN MODE) AS relevance,
+                ${searchTerms.map((term, idx) => `LOCATE(?, sp.lyrics) AS term_${idx}_pos`).join(', ')},
+                ${searchTerms.length > 1 ? `ABS(${searchTerms.map(() => `LOCATE(?, sp.lyrics)`).join(' - ')}) AS word_distance` : ''}
+            FROM song_parts sp
+            JOIN songs s ON sp.song_uid = s.song_uid
+            LEFT JOIN books_db b ON s.book_uuid = b.bo_uid
+            WHERE MATCH(sp.lyrics) AGAINST (? IN BOOLEAN MODE)
+            HAVING relevance > 0
+            ORDER BY word_distance ASC, relevance DESC;
+        `, [
+            `+${searchTerms.join(' +')}`,  // Use the joined search terms for MATCH() clause
+            ...searchTerms.flatMap(term => [term, term]),  // Populate LOCATE placeholders
+            `+${searchTerms.join(' +')}`  // Again, use the search terms for the WHERE clause
+        ]);
+
+        return rows;
+        
+    } catch (err) {
+        return Promise.reject(err);
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+
 
 async function requestSong(songUid, req_id) {
     let conn;
