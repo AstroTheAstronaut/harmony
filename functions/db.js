@@ -215,10 +215,19 @@ async function searchLyrics(term) {
             {
                 $search: {
                     index: 'songcontent',
-                    phrase: {
+                    // phrase: {
+                    //     query: term,
+                    //     path: 'lyrics',
+                    //     slop: 1
+                    // },
+                    text: {
                         query: term,
                         path: 'lyrics',
-                        slop: 2
+                        fuzzy: {
+                            maxEdits: 2.0
+                        },
+                        score: { boost: { value: 0.1 } },
+                        matchCriteria: "all"
                     }
                 }
             },
