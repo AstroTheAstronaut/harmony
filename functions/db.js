@@ -226,7 +226,7 @@ async function searchLyrics(term) {
                         fuzzy: {
                             maxEdits: 2.0
                         },
-                        score: { boost: { value: 0.1 } },
+                        score: { boost: { value: 2 } },
                         matchCriteria: "all"
                     }
                 }
