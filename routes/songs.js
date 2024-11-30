@@ -26,13 +26,13 @@ router.get('/', async (req, res) => {
             songs = await getSongsByBook(bookId, offset, limit); // Get songs with pagination and filter by book
 
             // Fetch the book name based on the bookId
-            bookName = await getBookNameById(bookId); // Replace with actual function to get book name
+            bookName = await getBookNameById(bookId);
+            console.log(bookName); // Replace with actual function to get book name
         } else {
             songs = await getSongsWithPagination(offset, limit); // Get songs with pagination
         }
 
         const totalSongs = bookId && bookId !== 'all' ? await getTotalSongsByBook(bookId) : await getTotalSongs();
-        // Get the total number of songs
 
         const totalPages = Math.ceil(totalSongs / limit); // Calculate total pages
 

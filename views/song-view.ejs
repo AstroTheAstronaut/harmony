@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>
         <% if(song.book_song_number) { %>
-            <% if(song.book_name) { %>
-                <%= song.book_song_number %>. <%= song.title %> - <%= song.book_name %>
+            <% if(song.book_details.bo_name) { %>
+                <%= song.book_song_number %>. <%= song.title %> - <%= song.book_details.bo_name %>
             <% } else { %>
                 <%= song.book_song_number %>. <%= song.title %>
             <% } %>
@@ -58,8 +58,8 @@
                                     <% if(song.artist) { %>
                                         <h5 id="song-artist" class="mt-2" contenteditable="false"><%= t('song.artist') %>: <%= song.artist %></h5>
                                     <% } %>
-                                    <% if (song.book_name ) { %>
-                                        <h5 id="song-book-name" class="mt-2" contenteditable="false"><%= song.book_name %></h5>
+                                    <% if (song.book_details.bo_name) { %>
+                                        <h5 id="song-book-name" class="mt-2" contenteditable="false"><%= song.book_details.bo_name %></h5>
                                     <% } %>
                                     
                                 </div>
@@ -77,7 +77,7 @@
                                         <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
                                         <input type="hidden" name="title" id="hidden-title" value="<%= song.title %>">
                                         <input type="hidden" name="artist" id="hidden-artist" value="<%= song.artist %>">
-                                        <input type="hidden" name="book_name" id="hidden-book-name" value="<%= song.book_name %>">
+                                        <input type="hidden" name="book_name" id="hidden-book-name" value="<%= song.book_details.bo_name %>">
                                         <% song.parts.forEach(part => { %>
                                             <input type="hidden" name="part_<%= part.id %>" id="hidden-part-<%= part.id %>" value="<%= part.lyrics %>">
                                         <% }) %>

@@ -13,7 +13,7 @@ router.post('/login-user', async (req, res) => {
         } else {
             user = await getUser(role, password);
         }
-
+        
         if (user.length > 0) {
             req.session.user = user[0];
             req.session.role = role;

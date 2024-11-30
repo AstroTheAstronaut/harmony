@@ -1,3 +1,5 @@
+const dotenv = require('dotenv');
+dotenv.config();
 const express = require('express');
 const favicon = require('serve-favicon');
 const path = require('path');
@@ -7,6 +9,20 @@ const cookieParser = require('cookie-parser'); // For handling cookies
 const session = require('express-session');
 const { checkAuth, attachUserRole } = require('./middleware/authers'); // Import the auth check middleware
 const checkRole = require('./middleware/roleCheck');
+
+const mongoose = require('mongoose');
+const startdb = async () => {
+  try {
+    await mongoose.connect(process.env.CONNECTION_STRING, {
+      retryWrites: true,
+      dbName: process.env.MONGODB_DBNAME,
+    });
+    console.log('Connected to MongoDB');
+  } catch (err) {
+    console.error('Error connecting to MongoDB:', err);
+  }
+}
+startdb();
 
 // Import the setupDatabase function
 const setupDatabase = require('./functions/db-creator');
@@ -62,12 +78,16 @@ const settingsRoute = require('./routes/settings');
 const editSongRoute = require('./routes/edit-song');
 const authRoute = require('./routes/helpers/auth');
 const actionsRoute = require('./routes/helpers/actions');
+const setupRoute = require('./routes/setup');
 
 // Run the database setup function before starting the server
 (async () => {
   try {
     await setupDatabase();
     console.log('Database setup complete. Starting the main app...');
+
+    // Setup route 
+    app.use('/setup', setupRoute);
 
     // Public routes (No authentication required)
     app.use('/auth', authRoute); // Public routes for authentication

@@ -18,6 +18,7 @@
         "remove": "Șterge",
         "title": "Titlu",
         "remove_request": "Șterge cererea",
+        "remove_all_requests": "Șterge toate cererile",
         "create_a_book": "Creează o carte",
         "add_book": "Adaugă carte",
         "add_part": "Adaugă parte",
@@ -35,6 +36,7 @@
         "dev_things": "Funcţii pentru dezvoltatori",
         "show_hidden_inputs": "Arată câmpurile ascunse",
         "actions": "Acțiuni",
+        "first_setup": "Configurare inițială",
         "no": "Nr.",
         "footer_verse": "Slujiți Domnului cu bucurie, veniți cu veselie înaintea Lui!",
         "devinfo": "2024 Harmony App by Matteo"

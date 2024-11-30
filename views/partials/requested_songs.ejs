@@ -1,8 +1,11 @@
 <%if (userRole === 'Viewer'){} else { %>
     <div class="col">
         <div class="card shadow mb-4">
-            <div class="card-header py-3">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
                 <h6 class="text-primary fw-bold m-0"><%= t('messages.requested_songs') %>:</h6>
+                <form action="/remove-all-requests" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger btn-sm"><%= t('general.remove_all_requests') %></button>
+                </form>
             </div>
             <ul class="list-group list-group-flush">
                 <% if (requestedSongs.length> 0) { %>
@@ -14,8 +17,7 @@
                                         href="/song-view/<%= song.song_uid %>">
                                         <strong>
                                             <% if(song.book_song_number) { %>
-                                                <%= song.book_song_number %>. <%= song.title
-                                                        %>
+                                                <%= song.book_song_number %>. <%= song.title%>
                                                         <% } else { %>
                                                             <%= song.title %>
                                                                 <% } %>
@@ -58,4 +60,26 @@
             </ul>
         </div>
     </div>
+    <script>
+        async function removeAllRequests() {
+        try {
+            const response = await fetch('/remove-all-requests', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                window.location.href = '/'; // Redirect after success
+            } else {
+                console.error('Error removing all requests');
+                alert('Error removing all requests');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error removing all requests');
+        }
+    }
+    </script>
     <% } %>

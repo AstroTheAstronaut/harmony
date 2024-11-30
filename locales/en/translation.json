@@ -18,6 +18,7 @@
         "remove": "Remove",
         "title": "Title",
         "remove_request": "Remove Request",
+        "remove_all_requests": "Remove All Requests",
         "create_a_book": "Create a book",
         "add_book": "Add Book",
         "add_part": "Add Part",
@@ -36,6 +37,7 @@
         "show_hidden_inputs": "Show hidden inputs",
         "current_language": "Current Language",
         "actions": "Actions",
+        "first_setup": "First time setup",
         "no": "No.",
         "footer_verse": "Serve the Lord with gladness; come before him with joyful songs",
         "devinfo": "2024 Harmony App by Matteo"

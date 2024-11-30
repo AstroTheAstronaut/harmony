@@ -43,6 +43,9 @@
                                         <% if (result.bo_name) { %>
                                             <h5 class="mt-2"><%= result.bo_name %></h6>
                                         <% } %>
+                                        <% if (result.chord) { %>
+                                            <h5 class="mt-2"><%= t('song.chord') %>: <%= result.chord %></h5>
+                                        <% } %>
                                     </div>
                                     <% if(userRole === 'Viewer' || userRole === 'Editor') {} else { %>
                                     <div class="col-md-4 d-flex justify-content-end d-none d-md-flex">
