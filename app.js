@@ -60,7 +60,7 @@ app.get('/change-language/:lng', (req, res) => {
     res.cookie('i18next', lng); // Save the selected language in a cookie
     i18next.changeLanguage(lng);
   }
-  res.redirect('back'); // Redirect back to the previous page
+  res.redirect(req.get("Referrer")); // Redirect back to the previous page
 });
 
 // View engine setup
