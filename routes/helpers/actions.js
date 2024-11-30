@@ -62,11 +62,10 @@ router.post('/add-book', async (req, res) => {
 
 // Route to handle song removal
 router.post('/remove-song', async (req, res) => {
-    const { song_uid } = req.body;
-    const redirectTo = req.get('Referer') || '/';
+    const { song_uid, redirectTo  } = req.body;
     try {
         await removeSong(song_uid);
-        res.redirect(redirectTo);
+        res.redirect('/songs' || '/search' || '/');
     } catch (err) {
         console.error('Error removing song:', err);
         res.status(500).send('Error removing song');
