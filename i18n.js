@@ -7,7 +7,7 @@ i18next
   .use(i18nextMiddleware.LanguageDetector)
   .init({
     fallbackLng: 'en',
-    preload: ['en', 'ro'], // List all the languages you want to preload
+    preload: ['en', 'ro', 'es', 'it'], // List all the languages you want to preload
     backend: {
       loadPath: './locales/{{lng}}/translation.json', // Path to your translation files
     },

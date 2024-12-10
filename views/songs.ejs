@@ -55,13 +55,28 @@
                                 
                             </p>
                             <div class="d-flex flex-column flex-md-row justify-content-end align-items-start align-items-md-center" style="gap: 1rem;">
+                                <!-- Order by Selection -->
+                                <form id="orderByForm" class="d-flex align-items-center mb-0 me-3">
+                                    <label for="orderBySelect" class="me-2" style="white-space: nowrap;">Order by:</label>
+                                    <select class="form-select form-select-sm" id="orderBySelect">
+                                        <option value="titleAsc" selected>Title: A-Z</option>
+                                        <option value="titleDesc">Title: Z-A</option>
+                                        <option value="noAsc">Number: Low to High</option>
+                                        <option value="noDesc">Number: High to Low</option>
+                                        <option value="artistAsc">Artist: A-Z</option>
+                                        <option value="artistDesc">Artist: Z-A</option>
+                                        <option value="bookAsc">Book: A-Z</option>
+                                        <option value="bookDesc">Book: Z-A</option>
+                                    </select>
+                                </form>
                                 <!-- Page Size Selection -->
                                 <form id="pageSizeForm" class="d-flex align-items-center mb-0 me-3">
                                     <label for="itemsPerPage" class="me-2" style="white-space: nowrap;"><%= t('messages.show') %>:</label>
                                     <select class="form-select form-select-sm" id="pageSizeSelect">
-                                        <option value="10" <% if (limit === 10) { %> selected <% } %>>10</option>
+                                        <option value="10" default <% if (limit === 10) { %> selected <% } %>>10</option>
                                         <option value="25" <% if (limit === 25) { %> selected <% } %>>25</option>
                                         <option value="50" <% if (limit === 50) { %> selected <% } %>>50</option>
+                                        <option value="100" <% if (limit === 100) { %> selected <% } %>>100</option>
                                     </select>
                                 </form>
                                 <!-- Filter by Book -->

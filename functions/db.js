@@ -1,4 +1,5 @@
 const pool = require('../connectors/db-connector');
+const fs = require('fs');
 //Goose models
 const User = require('../models/User');
 const SongPart = require('../models/SongPart');
@@ -200,6 +201,15 @@ async function getTotalSongs() {
     }
 }
 
+async function getSongsWithLimit (limit) {
+    try {
+        var songs = await Song.find().limit(limit);
+        return songs;
+    } catch (err) {
+        return Promise.reject(err);
+    }
+}
+
 async function removeSong(id) {
     try {
         await SongPart.deleteMany({ song_uid: id });
@@ -215,20 +225,21 @@ async function searchLyrics(term) {
             {
                 $search: {
                     index: 'songcontent',
-                    // phrase: {
-                    //     query: term,
-                    //     path: 'lyrics',
-                    //     slop: 1
-                    // },
-                    text: {
+                    phrase: {
                         query: term,
                         path: 'lyrics',
-                        fuzzy: {
-                            maxEdits: 2.0
-                        },
-                        score: { boost: { value: 2 } },
-                        matchCriteria: "all"
+                        slop: 1
                     }
+                    // text: {
+                    //     query: term,
+                    //     path: 'lyrics',
+                    //     fuzzy: {
+                    //         maxEdits: 2.0,
+                    //         prefixLength: 0,
+                    //         maxExpansions: 15
+                    //     },
+                    //     matchCriteria: "all"
+                    // }
                 }
             },
             {
@@ -263,10 +274,19 @@ async function searchLyrics(term) {
                     book_name: '$book_info.bo_name',
                     chord: '$song_info.chord',
                     part_type: 1,
-                    lyrics: 1
+                    lyrics: 1,
+                    score: { $meta: 'searchScore' }
                 }
             }
         ]);
+
+        // Write to file
+        fs.writeFile('lyricsResults.json', JSON.stringify(lyricsResults, null, 4), (err) => {
+            if (err) {
+                console.error('Error writing search results to file:', err);
+            }
+        });
+
 
         return lyricsResults;
     } catch (err) {
@@ -342,8 +362,6 @@ async function getMostRequestedSongs() {
                 $limit: 5
             }
         ]);
-
-        console.log(result); // Log the final result for debugging
         return result;
     } catch (err) {
         console.error('Error fetching most requested songs:', err);
@@ -501,6 +519,7 @@ module.exports = {
     getTotalSongs,
     getSongsByBook,
     getTotalSongsByBook,
+    getSongsWithLimit,
     getBookNameById,
     editSong,
     getUser,

@@ -67,8 +67,20 @@
             <li class="nav-item dropdown no-arrow">
                 <div class="nav-item dropdown no-arrow">
                     <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
-                        <span class="d-none d-lg-inline me-2 text-gray-600 small"><%= userRole %></span>
-                        <img class="border rounded-circle img-profile" src="/img/admin-icon.svg">
+                        <span class="d-none d-lg-inline me-2 text-gray-600 small">
+                            <%= t('messages.logged_in_as') %>
+                            <% if(userRole === 'Viewer') { %>
+                                <%= t('login_page.viewer') %> <% } else if(userRole === 'Moderator') { %>
+                                    <%= t('login_page.moderator') %> <% } else if(userRole === 'Editor') { %>
+                                        <%= t('login_page.editor') %> <% } else if(userRole === 'Admin') { %>
+                                            <%= t('login_page.admin') %> <% } %>
+
+                        </span>
+                        <% if(userRole === 'Viewer') { %>
+                            <img class="border rounded-circle img-profile" src="/img/viewer-icon.jpg"> <% } else if(userRole === 'Moderator') { %>
+                                <img class="border rounded-circle img-profile" src="/img/moderator-icon.jpg"> <% } else if(userRole === 'Editor') { %>
+                                    <img class="border rounded-circle img-profile" src="/img/editor-icon.jpg"> <% } else if(userRole === 'Admin') { %>
+                                        <img class="border rounded-circle img-profile" src="/img/admin-icon.jpg"> <% } %>
                     </a>
                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
                         <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
@@ -86,10 +98,16 @@
                         <!-- Language Dropdown Added Here -->
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item selected-language" id="lang-en-mobile" href="/change-language/en">
-                            <span class="flag-icon flag-icon-gb"></span> English
+                            <span class="flag-icon flag-icon-gb"></span> <%= t('messages.english') %>
                         </a>
                         <a class="dropdown-item" id="lang-ro-mobile" href="/change-language/ro">
-                            <span class="flag-icon flag-icon-ro"></span> Romanian
+                            <span class="flag-icon flag-icon-ro"></span> <%= t('messages.romanian') %>
+                        </a>
+                        <a class="dropdown-item" id="lang-it-mobile" href="/change-language/it">
+                            <span class="flag-icon flag-icon-it"></span> <%= t('messages.italian') %>
+                        </a>
+                        <a class="dropdown-item" id="lang-es-mobile" href="/change-language/es">
+                            <span class="flag-icon flag-icon-es"></span> <%= t('messages.spanish') %>
                         </a>
                     </div>
                 </div>
