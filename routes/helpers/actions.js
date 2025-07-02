@@ -111,7 +111,6 @@ router.post('/request-song', async (req, res) => {
             `/song-view/${song_uid}`
         );
 
-        console.log('Requesting song:', song_uid, req_id);
         await requestSong(song_uid, req_id, user_uid);
         res.redirect('/');
     } catch (err) {
@@ -124,7 +123,6 @@ router.post('/request-song', async (req, res) => {
 router.post('/remove-requested', async (req, res) => {
     const { request_id } = req.body;
     try {
-        console.log('Removing requested song:', request_id);
         await removeRequestedSong(request_id);
         res.redirect('/');
     } catch (err) {
@@ -272,10 +270,10 @@ router.get('/search', async (req, res) => {
 
         // Group results by song UID and detect repeated parts
         const results = {};
+
         rawResults.forEach(result => {
             // Use book + title as unique identifier if song_uid is missing
             const songKey = result.song_uid || `${result.book_uid}_${result.title}`;
-
             if (!results[songKey]) {
                 results[songKey] = {
                     title: result.title || 'Unknown Title',
@@ -310,14 +308,6 @@ router.get('/search', async (req, res) => {
 
         // Convert the results object to an array
         const groupedResults = Object.values(results);
-        console.log('Grouped Results with expanded parts:', groupedResults);
-        // Expand the parts array in console log
-        groupedResults.forEach(song => {
-            song.parts.forEach(part => {
-                console.log(`Part Type: ${part.part_type}, Lyrics: ${part.lyrics}, Repetitions: ${part.repetitions}`);
-            });
-        });
-        
         res.render('search-results', { results: groupedResults, query, activePage: 'home', session: req.session });
     } catch (err) {
         console.error('Error searching lyrics:', err);
@@ -345,10 +335,9 @@ router.get('/song-view/:id', async (req, res) => {
 router.get('/song/:song_uid/public', async (req, res) => {
     const songUid = req.params.song_uid;
     const song = await getSongById(songUid);
-    console.log(song);
-        if (!song) {
-            return res.status(404).send('Song not found!');
-        }
+    if (!song) {
+        return res.status(404).send('Song not found!');
+    }
 
     res.render('public-view', { song, isPublic: true });
 });

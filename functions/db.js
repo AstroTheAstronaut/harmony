@@ -151,7 +151,6 @@ async function getBooks() {
 async function getBookNameById(bookId) {
     try {
         var book = await Book.findOne({ bo_uid: bookId });
-        console.log('Book found:', book);
         return book ? book.bo_name : 'Unknown Book';
     } catch (err) {
         return 'Unknown Book';
@@ -418,6 +417,7 @@ async function searchLyrics(term) {
                     title: 1,
                     artist: 1,
                     parts: 1,
+                    song_uid: 1,
                     book_song_number: 1,
                     book_name: "$book.bo_name",   // ← get the book name
                     book_uid: "$book.bo_uid",     // optional: if you want the uid too
@@ -432,7 +432,6 @@ async function searchLyrics(term) {
             }
         ]);
 
-        console.log("Search results:", results);
         return results;
     } catch (error) {
         console.error("Error searching lyrics:", error);
