@@ -1,0 +1,15 @@
+.note-content {
+    flex: 1; /* Pushes the content to take up available space */
+}
+
+.icon-group {
+    display: flex;
+    justify-content: flex-end; /* Align icons to the right */
+}
+
+.icon-link {
+    margin-left: 10px; /* Adjust spacing between icons */
+    text-decoration: none;
+    color: inherit;
+    vertical-align: middle;
+}

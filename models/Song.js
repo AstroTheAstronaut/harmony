@@ -8,7 +8,7 @@ const songSchema = new mongoose.Schema({
     },
     artist: {
         type: String,
-        required: true
+        required: false
     },
     book_uuid: {
         type: String,
@@ -25,9 +25,20 @@ const songSchema = new mongoose.Schema({
     chord: {
         type:String
     },
+    scripture: {
+        type: String
+    },
+    tags: {
+        type: [String],
+        default: []
+    },
     request_count: {
         type: Number,
         default: 0
+    },
+    parts : {
+        type: [Object],
+        default: []
     }
 }, {
     collection: 'songs'

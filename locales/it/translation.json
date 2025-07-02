@@ -7,6 +7,7 @@
         "books": "Libri",
         "settings": "Impostazioni",
         "activity_log": "Registro Attività",
+        "audit_log": "Registro di Controllo",
         "notifications": "Notifiche",
         "search": "Cerca",
         "dashboard": "Pannello di Controllo",
@@ -40,13 +41,36 @@
         "first_setup": "Prima configurazione",
         "no": "N°",
         "footer_verse": "Servite il Signore con gioia; venite davanti a lui con canti gioiosi",
-        "devinfo": "App Harmony 2024 di Matteo"
+        "devinfo": "App Harmony 2025 di Matteo",
+        "schedule": "Programma",
+        "click_here": "Clicca qui"
     },
     "login_page": {
         "viewer": "Visualizzatore",
         "moderator": "Moderatore",
         "editor": "Editor",
-        "admin": "Amministratore"
+        "admin": "Amministratore",
+        "username": "Nome Utente",
+        "password": "Password",
+        "register_message": "Hai un codice di registrazione?",
+        "login_user": "Accedi come utente",
+        "remember_me": "Ricordami",
+        "login_as": "Accedi come",
+        "user_registered_success": "Utente registrato con successo! Ora puoi accedere.",
+        "user_registered_error": "Registrazione utente fallita. Controlla il tuo codice di registrazione e riprova.",
+        "logout_success": "Sei stato disconnesso con successo."
+    },
+    "register_page": {
+        "confirm_password": "Conferma password",
+        "email": "Email",
+        "register": "Registrati",
+        "friendly_message": "Crea un account",
+        "register_code": "Codice di registrazione",
+        "register_message": "Inserisci il tuo codice di registrazione per creare un account",
+        "register_success": "Registrazione completata! Ora puoi accedere.",
+        "register_error": "Registrazione fallita. Controlla il codice di registrazione e riprova.",
+        "already_account": "Hai già un account?",
+        "login_instead": "Accedi"
     },
     "song_parts": {
         "title": "Parti della Canzone",
@@ -62,7 +86,8 @@
         "book": "Libro",
         "title": "Libro",
         "name": "Nome del Libro",
-        "uid": "ID Libro"
+        "uid": "ID Libro",
+        "no_book": "Nessun Libro"
     },
     "song": {
         "title": "Titolo",
@@ -70,7 +95,8 @@
         "chord": "Accordo",
         "part_type": "Tipo di Parte",
         "song_no_in_bo": "Numero della Canzone nel Libro",
-        "lyrics": "Testo"
+        "lyrics": "Testo",
+        "scripture": "Bibbia"
     },
     "upload": {
         "choose_file": "Scegli File",

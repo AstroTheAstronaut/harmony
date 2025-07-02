@@ -1,0 +1,226 @@
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="text-primary fw-bold m-0">Accounts</h6>
+  </div>
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h6 class="fw-bold m-0">Active Accounts:</h6>
+    </div>
+    <% if (activeAccounts.length === 0) { %>
+        <p class="text-muted">No active accounts.</p>
+    <% } else { %>
+        <% activeAccounts.forEach((account, index) => { %>
+            <% if (account.username === 'viewer' && account.role === 'viewer') {} else { %>
+                <div class="card my-2">
+                    <div class="card-header d-flex justify-content-between align-items-center" 
+                        data-bs-toggle="collapse" 
+                        href="#collapseActiveUser<%= index %>" 
+                        role="button" aria-expanded="false" 
+                        aria-controls="collapseActiveUser<%= index %>">
+                        <div class="d-flex align-items-center">
+                            <strong><%= account.username %></strong>
+                            <span class="badge bg-info text-white ms-3 d-none d-md-inline" style="font-size: 0.75rem;">Last connected: <%= new Date(account.last_connected).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %></span>
+                        </div>
+                        <span class="badge bg-success">Active</span>
+                    </div>
+                    <div class="collapse" id="collapseActiveUser<%= index %>">
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>Role:</strong> <%= account.role %></li>
+                                <li class="list-group-item"><strong>User UID:</strong> <%= account.user_uid %></li>
+                                <li class="list-group-item"><strong>Email:</strong> <%= account.email %></li>
+                                <li class="list-group-item"><strong>Previous offenses:</strong> None</li>
+                                <li class="list-group-item"><strong>Created At:</strong> <%= new Date(account.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %></li>
+                                <!-- Only on mobile:-->
+                                <li class="list-group-item d-block d-md-none"><strong>Last connected:</strong> <%= new Date(account.last_connected).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %></li>
+                                <li class="list-group-item d-flex gap-2">
+                                    <% if (account.role !== 'Superuser') { %>
+                                        <button 
+                                            class="btn btn-danger btn-sm flex-fill"
+                                            onclick="openUserActionModal(this)"
+                                            data-user-id="<%= account.user_uid %>"
+                                            data-username="<%= account.username %>"
+                                            data-action="suspended">
+                                            Suspend
+                                        </button>
+                                        <button 
+                                            class="btn btn-warning btn-sm flex-fill"
+                                            onclick="openUserActionModal(this)"
+                                            data-user-id="<%= account.user_uid %>"
+                                            data-username="<%= account.username %>"
+                                            data-action="banned">
+                                            Ban
+                                        </button>
+                                        <button 
+                                            class="btn btn-secondary btn-sm flex-fill"
+                                            onclick="openUserActionModal(this)"
+                                            data-user-id="<%= account.user_uid %>"
+                                            data-username="<%= account.username %>"
+                                            data-action="deleted">
+                                            Delete
+                                        </button>
+                                    <% } %>
+                                    <button class="btn btn-primary btn-sm flex-fill" onclick="editUser('<%= account.user_uid %>')">Edit</button>
+                                    <button class="btn btn-info btn-sm flex-fill text-white">Reset password</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        <% }) %>
+    <% } %>
+
+    
+    <% if (inactiveAccounts.length > 0) { %>
+        <hr>
+        <h6 class="fw-bold mt-3 mb-2">Banned / Suspended Accounts:</h6>
+        <% inactiveAccounts.forEach((account, index) => { %>
+            <div class="card my-2">
+            <div class="card-header d-flex justify-content-between align-items-center" 
+                data-bs-toggle="collapse" 
+                href="#collapseSuspendedUser<%= index %>" 
+                role="button" aria-expanded="false" 
+                aria-controls="collapseSuspendedUser<%= index %>">
+                <div class="d-flex align-items-center">
+                    <strong><%= account.username %></strong>
+                    <% if(account.status === 'suspended' || account.status === 'banned') { %>
+                        <span class="badge bg-info text-white ms-3" style="font-size: 0.75rem;">
+                            <%= account.status === 'suspended' ? 'Suspended' : 'Banned' %> on: <%= new Date(account.punishmentDate).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+                        </span>
+                    <% } else if (account.status === 'deleted') { %>
+                        <span class="badge bg-info text-white ms-3" style="font-size: 0.75rem;">
+                            Marked for deletion on: <%= new Date(account.deleteDate).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+                        </span>
+                    <% } %>
+                </div>
+                <% let statusText, statusClass; %>
+                <% if (account.status === 'suspended') { %>
+                    <% statusText = 'Suspended'; statusClass = 'bg-warning'; %>
+                <% } else if (account.status === 'banned') { %>
+                    <% statusText = 'Banned'; statusClass = 'bg-danger'; %>
+                <% } else if (account.status === 'deleted') { %>
+                    <% statusText = 'Deleted'; statusClass = 'bg-dark'; %>
+                <% } else { %>
+                    <% statusText = 'Unknown'; statusClass = 'bg-secondary'; %>
+                <% } %>
+                <span class="badge <%= statusClass %>"><%= statusText %></span>
+            </div>
+            <div class="collapse" id="collapseSuspendedUser<%= index %>">
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Role:</strong> <%= account.role %></li>
+                        <li class="list-group-item"><strong>User UID:</strong> <%= account.user_uid %></li>
+                        <li class="list-group-item"><strong>Email:</strong> <%= account.email %></li>
+                        <li class="list-group-item"><strong>Previous offenses:</strong> Temporary ban for spam; 24h suspension for exceeding rate limit</li>
+                        <li class="list-group-item"><strong>Created At:</strong> <%= new Date(account.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %></li>
+                        <% if (account.status === 'deleted') { %>
+                        <li class="list-group-item"><strong>Delete date:</strong> <%= new Date(account.deleteDate).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %></li>
+                        <% } %>
+                        <% if (account.status === 'banned' || account.status === 'suspended') { %>
+                        <li class="list-group-item"><strong>Punishment reason:</strong> <%= account.punishmentReason || 'No reason provided' %></li>
+                        
+                        <% } %>
+                        <li class="list-group-item d-flex gap-2">
+                            <% if (account.role !== 'Superuser' && (account.status != 'deleted')) { %>
+                                <% if (account.status === 'suspended') { %>
+                                <button 
+                                    class="btn btn-warning btn-sm flex-fill"
+                                    onclick="openUserActionModal(this)"
+                                    data-user-id="<%= account.user_uid %>"
+                                    data-username="<%= account.username %>"
+                                    data-action="unsuspend">
+                                    Unsuspend
+                                </button>
+                                <% } %>
+                                <% if (account.status === 'banned') { %>
+                                <button 
+                                    class="btn btn-danger btn-sm flex-fill"
+                                    onclick="openUserActionModal(this)"
+                                    data-user-id="<%= account.user_uid %>"
+                                    data-username="<%= account.username %>"
+                                    data-action="unban">
+                                    Unban
+                                </button>
+                                <% } %>
+                                <button 
+                                    class="btn btn-secondary btn-sm flex-fill"
+                                    onclick="openUserActionModal(this)"
+                                    data-user-id="<%= account.user_uid %>"
+                                    data-username="<%= account.username %>"
+                                    data-action="delete">
+                                    Delete
+                                </button>
+                            <% } %>
+                            <% if (!account.status === 'deleted') { %>
+                                <button class="btn btn-primary btn-sm flex-fill" onclick="editUser('<%= account.user_uid %>')">Edit</button>
+                                <button class="btn btn-info btn-sm flex-fill text-white">Reset password</button>
+                            <% } else if (account.status === 'deleted') { %>
+                                <button 
+                                    class="btn btn-dark btn-sm flex-fill"
+                                    onclick="openUserActionModal(this)"
+                                    data-user-id="<%= account.user_uid %>"
+                                    data-username="<%= account.username %>"
+                                    data-action="undelete">
+                                    Un-delete
+                                </button>
+                            <% } %>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <% }) %>
+    <% } %>
+    <!-- Suspended account example -->
+    
+
+    <div class="text-end mt-3">
+      <a href="/superuser/users" class="text-decoration-none small">View all users</a>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="manageUserModal" tabindex="-1" role="dialog" aria-labelledby="manageUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="manageUserModalLabel">Confirm User Action</h5>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to <strong id="userActionType">perform this action</strong> on this user?</p>
+        <p>This action cannot be undone easily.</p>
+        <p>Please type the username below to confirm:</p>
+
+        <div class="card uuid-card my-2">
+          <div class="card-body text-center">
+            <div><strong>User UID:</strong> <span id="userUIDDisplay"></span></div>
+            <div><strong>Username:</strong> <span id="usernameDisplay"></span></div>
+          </div>
+        </div>
+
+        <!-- Reason input -->
+        <div class="form-group mb-3">
+          <label for="punishmentReason">Reason for action:</label>
+          <textarea class="form-control" id="punishmentReason" rows="3" placeholder="Enter reason (optional)"></textarea>
+        </div>
+
+        <!-- Duration input, hidden by default -->
+        <div class="form-group mb-3" id="punishmentDurationGroup" style="display:none;">
+          <label for="punishmentDuration">Duration (days):</label>
+          <label for="banDurationClause" id ="banDurationClause" style="display:none;">If you don't enter a ban duration, it will be permanent.</label>
+          <input type="number" min="1" class="form-control" id="punishmentDuration" placeholder="Enter number of days">
+        </div>
+
+        <div class="form-group">
+          <label for="confirmUserUID">Type the username to confirm:</label>
+          <input type="text" class="form-control" id="confirmUsername" required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="confirmUserActionBtn" class="btn btn-danger" disabled>Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+

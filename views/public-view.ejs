@@ -71,14 +71,22 @@
                                             <%= song.title %>
                                         <% } %>
                                     </h2>
-                                    <% if(song.chord) { %>
-                                        <h4 class="mt-2" contenteditable="false"><%= t('song.chord') %>: <%= song.chord %></h4>
+                                    <% if(song.chord!="Nan") { %>
+                                        <h4 id="song-chord" class="mt-2" contenteditable="false"><%= t('song.chord') %>: <%= song.chord %></h4>
                                     <% } %>
-                                    <% if(song.artist) { %>
+                                    <% if(song.artist!="Nan") { %>
                                         <h5 id="song-artist" class="mt-2" contenteditable="false"><%= t('song.artist') %>: <%= song.artist %></h5>
+                                    <% } %>
+                                    <% if(song.scripture!="NaN") { %>
+                                        <h5 id="song-scripture" class="mt-2" contenteditable="false"><%= t('song.scripture') %>: <%= song.scripture %></h5>
                                     <% } %>
                                     <% if (song.book_details.bo_name) { %>
                                         <h5 id="song-book-name" class="mt-2" contenteditable="false"><%= song.book_details.bo_name%></h5>
+                                    <% } %>
+                                    <% if(song.tags && song.tags.length > 0) { %>
+                                        <% for (let i = 0; i < song.tags.length; i++) { %>
+                                            <span id="tag" class="badge rounded-pill bg-primary"><%= song.tags[i] %></span>
+                                        <% } %>
                                     <% } %>
                                 </div>
                                 <!-- Buttons desktop-->
@@ -188,14 +196,34 @@
             const songTitle = document.getElementById('song-title')?.innerText.trim() || '';
             const songBookName = document.getElementById('song-book-name')?.innerText.trim() || '';
             const songArtist = document.getElementById('song-artist')?.innerText.trim() || '';
+            const songChord = document.getElementById('song-chord')?.innerText.trim() || '';
+            const songScripture = document.getElementById('song-scripture')?.innerText.trim() || '';
+            const tags = document.querySelectorAll('#tag');
             // Add song info to the copied text
             if (songTitle) {
                 formattedLyrics += `${songTitle}\n`;
                 if (songArtist) {
-                    formattedLyrics += `${songArtist}\n`;
+                    if (songArtist !== 'NaN' || songArtist !== 'Nan') {
+                        formattedLyrics += `Artist: ${songArtist}\n`;
+                    }
+                }
+                if (songChord) {
+                    if (songChord !== 'NaN' || songChord !== 'Nan') {
+                        formattedLyrics += `${songChord}\n`;
+                    }
+                }
+                if (songScripture) {
+                    if (songScripture !== 'NaN' || songScripture !== 'Nan') {
+                        formattedLyrics += `${songScripture}\n`;
+                    }
+                }
+                if (tags.length > 0) {
+                    formattedLyrics += `Tags: ${Array.from(tags).map(tag => tag.innerText).join(', ')}\n`;
                 }
                 if (songBookName) {
-                    formattedLyrics += `- ${songBookName} -\n`;
+                    if (songBookName !== 'NaN' || songBookName !== 'Nan') {
+                        formattedLyrics += `Book: ${songBookName}\n`;
+                    }
                 }
                 formattedLyrics += '\n';
             }

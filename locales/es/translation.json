@@ -7,6 +7,7 @@
         "books": "Libros",
         "settings": "Configuración",
         "activity_log": "Registro de Actividades",
+        "audit_log": "Registro de Auditoría",
         "notifications": "Notificaciones",
         "search": "Buscar",
         "dashboard": "Panel de Control",
@@ -40,13 +41,35 @@
         "first_setup": "Primera Configuración",
         "no": "N°",
         "footer_verse": "Sirvan al Señor con alegría; vengan ante él con cantos de júbilo",
-        "devinfo": "App Harmony 2024 de Matteo"
+        "devinfo": "App Harmony 2025 de Matteo",
+        "schedule": "Horario",
+        "click_here": "Haz clic aquí"
     },
     "login_page": {
         "viewer": "Visor",
         "moderator": "Moderador",
         "editor": "Editor",
-        "admin": "Administrador"
+        "admin": "Administrador",
+        "username": "Nombre de Usuario",
+        "password": "Contraseña",
+        "register_message": "¿Tienes un código de registro?",
+        "login_user": "Iniciar sesión como usuario",
+        "remember_me": "Recuérdame",
+        "login_as": "Iniciar sesión como",
+        "user_registered_success": "¡Usuario registrado exitosamente! Ahora puedes iniciar sesión.",
+        "user_registered_error": "Error al registrar el usuario. Por favor, verifica tu código",
+        "logout_success": "Has cerrado sesión exitosamente."
+    },
+    "register_page": {
+        "friendly_message": "Crea una cuenta",
+        "confirm_password": "Confirmar Contraseña",
+        "email": "Correo Electrónico",
+        "register": "Registrarse",
+        "register_code": "Código de Registro",
+        "register_message": "¿Tienes un código de registro?",
+        "register_user": "Registrar Usuario",
+        "already_account": "¿Ya tienes una cuenta?",
+        "login_instead": "Inicia sesión"
     },
     "song_parts": {
         "title": "Partes de la Canción",
@@ -62,7 +85,8 @@
         "book": "Libro",
         "title": "Libro",
         "name": "Nombre del Libro",
-        "uid": "ID del Libro"
+        "uid": "ID del Libro",
+        "no_book": "Sin Libro"
     },
     "song": {
         "title": "Título",
@@ -70,7 +94,8 @@
         "chord": "Acorde",
         "part_type": "Tipo de Parte",
         "song_no_in_bo": "Número de la Canción en el Libro",
-        "lyrics": "Letras"
+        "lyrics": "Letras",
+        "scripture": "Escritura"
     },
     "upload": {
         "choose_file": "Elegir Archivo",

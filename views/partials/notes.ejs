@@ -1,113 +1,34 @@
+<link rel="stylesheet" type="text/css" href="/styles/notes.css" />
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="text-primary fw-bold m-0">Informatii de la Matteo</h6>
+        <div class="d-flex justify-content-between align-items-center">
+            <h6 class="text-primary fw-bold m-0">Notes</h6>
+            <a href="#"><i class="fas fa-plus fa-fw"></i></a>
+        </div>
     </div>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-            <div class="row g-0 align-items-center">
-                <div class="col me-2">
-                    <h6 class="mb-0"><strong><del>Momentan cautatul nu merge pe mobile.</del></strong></h6><span
-                        class="text-xs">12:39 AM</span>
+    <ul class="list-group list-group-flush" id="notes-list">
+        <li class="list-group-item list-group-item-action">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="note-content">
+                    <h6 class="mb-0 note-text d-inline">
+                        <strong>Momentan cautatul nu merge pe mobile.</strong>
+                    </h6>
+                    <span class="text-xs note-timestamp d-inline">XX:XX</span>
                 </div>
-                <div class="col-auto">
-                    
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item">
-            <div class="row g-0 align-items-center">
-                <div class="col me-2">
-                    <h6 class="mb-0">
-                        <strong>De ce se numeste aplicatia "Harmony"?</strong>
-                        </br>
-                        <strong>Oficial? Pentru ca aceasta aplicatie trebuie sa ne usureze munca, contribuind astfel la armonia la statie.</strong>
-                        </br>
-                        <strong>Neoficial? Nu stiam ce nume sa-i pun si asta mi s-a parut interesant.</strong>
-                    </h6><span
-                        class="text-xs">12:39 AM</span>
-                </div>
-                <div class="col-auto">
-                    
+                <div class="icon-group">
+                    <a href="#" class="icon-link"><i class="fa-regular fa-square fa-fw"></i></a>
+                    <a href="#" class="icon-link"><i class="fas fa-trash-can fa-fw"></i></a>
+                    <a href="#" class="icon-link"><i class="fas fa-thumbtack fa-fw"></i></a>
                 </div>
             </div>
         </li>
-        <li class="list-group-item">
+        <li class="list-group-item list-group-item-action">
             <div class="row g-0 align-items-center">
                 <div class="col me-2">
-                    <h6 class="mb-0"><strong>Ce inseamna logo-ul/sigla? Nimic. E o sinusoida. Asa arata si o unda sonora. Unda sonora, sunet, cantari, versuri. Te-ai prins tu.</strong></h6><span
-                        class="text-xs">1:00 AM</span>
-                </div>
-                <div class="col-auto">
-                    
+                    <input type="text" id="add-note-input" class="form-control" placeholder="Start typing to add a note ..." />
                 </div>
             </div>
         </li>
-        <li class="list-group-item">
-            <div class="row g-0 align-items-center">
-                <div class="col me-2">
-                    <h6 class="mb-0"><strong>Trebuie facuta treaba asta sa mearga. Treaba asta adica cardul asta cu informatii. Trebuie sa devina un To-Do list.</strong></h6><span
-                        class="text-xs">1:00 AM</span>
-                </div>
-                <div class="col-auto">
-                    
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item">
-            <div class="row g-0 align-items-center">
-                <div class="col me-2">
-                    <h6 class="mb-0"><strong>Trebuie numaidecat reparat sidebar-ul pentru ca sa se inchida de pe mobile daca apesi oriunde pe ecran</strong></h6><span
-                        class="text-xs">1:00 AM</span>
-                </div>
-                <div class="col-auto">
-                    
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item">
-            <div class="row g-0 align-items-center">
-                <div class="col me-2">
-                    <h6 class="mb-0"><strong>Trebuie facute notificarile functionale. Momentan doar se lauda la noi cat de frumoase sunt.</strong></h6><span
-                        class="text-xs">1:21 AM</span>
-                </div>
-                <div class="col-auto">
-                    
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item">
-            <div class="row g-0 align-items-center">
-                <div class="col me-2">
-                    <h6 class="mb-0"><strong>Pagina de upload, pe ecrane cu touchscreen, e stricata. Merge doar daca nu mutati partile cantarii deloc.</strong></h6><span
-                        class="text-xs">10:01 PM</span>
-                </div>
-                <div class="col-auto">
-                    
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item">
-            <div class="row g-0 align-items-center">
-                <div class="col me-2">
-                    <h6 class="mb-0"><strong>Trebuie ajustate anumite pagini pentru mobile (index, de exemplu)</strong></h6><span
-                        class="text-xs">10:19 AM</span>
-                </div>
-                <div class="col-auto">
-                
-                </div>
-            </div>
-        </li>
-        <li class="list-group-item">
-            <div class="row g-0 align-items-center">
-                <div class="col me-2">
-                    <h6 class="mb-0"><strong>Pentru anumite motive necunoscute mie cantarile cerute recent nu se sterg automat</strong></h6><span
-                        class="text-xs">10:21 PM</span>
-                </div>
-                <div class="col-auto">
-                
-                </div>
-            </div>
-        </li>
-        
     </ul>
 </div>
+<script src="/scripts/notes.js"></script>

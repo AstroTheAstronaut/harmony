@@ -8,13 +8,21 @@
             <li class="nav-item"><a class="nav-link <%= activePage === 'home' ? 'active' : '' %>" href="/"><i class="fas fa-tachometer-alt" style="font-size: 15px;"></i><span style="font-size: 15px;"><%= t('general.home') %></span></a></li>
             <li class="nav-item"><a class="nav-link <%= activePage === 'songs' ? 'active' : '' %>" href="/songs"><i class="fas fa-music" style="width: 15.6016px;font-size: 15px;"></i><span style="font-size: 15px;"><%= t('general.songs') %></span></a></li>
             <li class="nav-item"><a class="nav-link <%= activePage === 'books' ? 'active' : '' %>" href="/books"><i class="fas fa-book" style="font-size: 15px;"></i><span style="font-size: 15px;"><%= t('general.books') %></span></a></li>
-            <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
+            <% if (hasPermission('access_schedule')) { %>
+                <li class="nav-item"><a class="nav-link <%= activePage === 'schedule' ? 'active' : '' %>" href="/schedule"><i class="fas fa-clipboard-list" style="font-size: 19px;"></i><span style="font-size: 15px;"><%= t('general.schedule') %></span></a></li>
+            <% } %>
+            <% if(hasPermission('upload_song')){ %>
             <li class="nav-item"><a class="nav-link <%= activePage === 'upload' ? 'active' : '' %>" href="/upload"><i class="fas fa-upload" style="font-size: 15px;"></i><span style="font-size: 15px;"><%= t('upload.upload_song') %></span></a></li>
-            <% if(userRole === 'Editor') {} else{ %>
-            <li class="nav-item"><a class="nav-link <%= activePage === 'settings' ? 'active' : '' %>" href="/settings"><i class="fas fa-cog" style="font-size: 15px;"></i><span style="font-size: 15px;"><%= t('general.settings') %></span></a></li>
+            <% if(hasPermission('access_settings')){ %>
+            <li class="nav-item"><a class="nav-link <%= activePage === 'settings' ? 'active' : '' %>" href="/settings"><i class="fas fa-cog" style="font-size: 15px;"></i><span style="font-size:1rem;"><%= t('general.settings') %></span></a></li>
             <% } %>
             <% } %>
-            <li class="nav-item"></li>
+            <% if(hasPermission('view_notifications')){ %>
+                <li class="nav-item"><a class="nav-link <%= activePage === 'notifications' ? 'active' : '' %>" href="/notifications"><i class="fas fa-bell" style="font-size: 15px;"></i><span style="font-size: 15px;"><%= t('general.notifications') %></span></a></li>
+            <% } %>
+            <% if(hasPermission('superuser_access')){ %>
+                <li class="nav-item"><a class="nav-link <%= activePage === 'superuser' ? 'active' : '' %>" href="/superuser"><i class="fa-brands fa-superpowers" style="font-size: 15px;"></i><span style="font-size: 15px;">Superuser</span></a></li>
+            <% } %>
         </ul>
         <!-- <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div> -->
     </div>

@@ -1,3 +1,4 @@
+const { request } = require('express');
 const mongoose = require('mongoose');
 
 const requestSchema = new mongoose.Schema({
@@ -16,6 +17,10 @@ const requestSchema = new mongoose.Schema({
     expires_in: {
         type: Number, // TTL in seconds
         default: 14400 // Default to 1 day (86400 seconds)
+    },
+    requested_by: {
+        type: String,
+        required: true
     },
     expire_at: {
         type: Date, 

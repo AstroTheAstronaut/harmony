@@ -1,10 +1,17 @@
-<%if (userRole === 'Viewer'){} else { %>
+<style>
+    .text-smaller-responsive {
+        font-size: 0.8rem;
+    }
+</style>
+<%if (hasPermission('view_requested_songs')){ %>
     <div class="col">
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
                 <h6 class="text-primary fw-bold m-0"><%= t('messages.requested_songs') %>:</h6>
                 <form action="/remove-all-requests" method="post" style="display: inline;">
-                    <button type="submit" class="btn btn-danger btn-sm"><%= t('general.remove_all_requests') %></button>
+                    <a href="#" onclick="this.closest('form').submit(); return false;" class="text-danger text-smaller-responsive text-decoration-none">
+                        <%= t('general.remove_all_requests') %>
+                    </a>
                 </form>
             </div>
             <ul class="list-group list-group-flush">
@@ -12,74 +19,123 @@
                     <% requestedSongs.forEach(song=> { %>
                         <li class="list-group-item">
                             <div class="row">
-                                <div class="col-auto align-self-center me-2">
-                                    <a class="link-dark text-decoration-none"
-                                        href="/song-view/<%= song.song_uid %>">
-                                        <strong>
-                                            <% if(song.book_song_number) { %>
-                                                <%= song.book_song_number %>. <%= song.title%>
+                                <div class="col">
+                                    <div class="d-flex flex-column">
+                                        <!-- Desktop: Single row layout -->
+                                        <div class="d-none d-sm-flex justify-content-between align-items-center py-2">
+                                            <!-- Left side: Title, Artist, and Book badge -->
+                                            <div class="d-flex align-items-center">
+                                                <a class="link-dark text-decoration-none me-3"
+                                                    href="/song-view/<%= song.song_uid %>">
+                                                    <strong>
+                                                        <% if(song.book_song_number) { %>
+                                                            <%= song.book_song_number %>. <%= song.title %>
                                                         <% } else { %>
                                                             <%= song.title %>
-                                                                <% } %>
-                                        </strong>
-                                    </a>
-                                    <% if (song.artist) { %> - <%= song.artist %>
-                                            <% } %>
-                                                <span class="text-xs ms-2">
-                                                    <%= song.request_time %>
-                                                </span>
+                                                        <% } %>
+                                                    </strong>
+                                                </a>
+                                                <% if (song.artist) { %>
+                                                    <span class="text-muted me-3">
+                                                        <%= t('song.artist') %>: <%= song.artist %>
+                                                    </span>
+                                                <% } %>
+                                                <!-- Book badge stuck to the left group -->
                                                 <% if (song.book_song_number) { %>
-                                                    <span
-                                                        class="badge rounded-pill bg-primary ms-2">
+                                                    <span class="badge rounded-pill bg-info">
                                                         <%= t('book.book') %>: <%= song.bo_name %>
                                                     </span>
-                                                    <% } else { %>
-                                                        <span
-                                                            class="badge rounded-pill bg-primary ms-2">
-                                                            <%= t('book.book') %>: <%= t('none') %>
-                                                        </span>
+                                                <% } else { %>
+                                                    <span class="badge rounded-pill bg-info">
+                                                        <%= t('book.book') %>: <%= t('none') %>
+                                                    </span>
+                                                <% } %>
+                                            </div>
+                                            
+                                            <!-- Right side: Remove link -->
+                                            <div class="d-flex align-items-center">
+                                                <% if(hasPermission('remove_requested_song')){ %>
+                                                    <form action="/remove-requested" method="post" style="display: inline;">
+                                                        <input type="hidden" name="request_id" value="<%= song.request_id %>">
+                                                        <a href="#" onclick="this.closest('form').submit(); return false;" class="text-danger text-smaller-responsive text-decoration-none">
+                                                            <%= t('general.remove_request') %>
+                                                        </a>
+                                                    </form>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Mobile: Stacked layout -->
+                                        <div class="d-sm-none">
+                                            <!-- Title -->
+                                            <div class="mb-1">
+                                                <a class="link-dark text-decoration-none"
+                                                    href="/song-view/<%= song.song_uid %>">
+                                                    <strong>
+                                                        <% if(song.book_song_number) { %>
+                                                            <%= song.book_song_number %>. <%= song.title %>
+                                                        <% } else { %>
+                                                            <%= song.title %>
                                                         <% } %>
+                                                    </strong>
+                                                </a>
+                                            </div>
+                                            
+                                            <!-- Artist -->
+                                            <% if (song.artist) { %>
+                                                <div class="mb-2">
+                                                    <span class="text-muted">
+                                                        <%= t('song.artist') %>: <%= song.artist %>
+                                                    </span>
+                                                </div>
+                                            <% } %>
+                                            
+                                            <!-- Book badge and Remove link row -->
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <% if (song.book_song_number) { %>
+                                                    <span class="badge rounded-pill bg-info">
+                                                        <%= t('book.book') %>: <%= song.bo_name %>
+                                                    </span>
+                                                <% } else { %>
+                                                    <span class="badge rounded-pill bg-info">
+                                                        <%= t('book.book') %>: <%= t('none') %>
+                                                    </span>
+                                                <% } %>
+                                                <% if(hasPermission('remove_requested_song')){ %>
+                                                    <form action="/remove-requested" method="post" style="display: inline;">
+                                                        <input type="hidden" name="request_id" value="<%= song.request_id %>">
+                                                        <a href="#" onclick="this.closest('form').submit(); return false;" class="text-danger text-smaller-responsive text-decoration-none">
+                                                            <%= t('general.remove_request') %>
+                                                        </a>
+                                                    </form>
+                                                <% } %>
+                                            </div>
+                                            
+                                            <!-- Time on mobile -->
+                                            <div class="mt-2">
+                                                <span class="text-xs text-muted">
+                                                    <%= song.request_time %>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Time on desktop only -->
+                                        <div class="d-none d-sm-block">
+                                            <span class="text-xs text-muted">
+                                                <%= song.request_time %>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <% if(userRole === 'Editor') {} else{ %>
-                                <div class="col-auto me-2 text-end ms-auto">
-                                    <form action="/remove-requested" method="post"
-                                        style="display: inline;">
-                                        <input type="hidden" name="request_id"
-                                            value="<%= song.request_id %>">
-                                        <button type="submit"
-                                            class="btn btn-danger btn-sm"><%= t('general.remove_request') %></button>
-                                    </form>
-                                </div>
-                                <% } %>
                             </div>
                         </li>
-                        <% }) %>
-                            <% } else { %>
-                                <p class="text-center"><%= t('messages.no_requests_yet') %></p>
-                                <% } %>
+                    <% }) %>
+                <% } else { %>
+                    <li class="list-group-item d-flex justify-content-center align-items-center">
+                        <p class="text-center text-muted m-0"><%= t('messages.no_requests_yet') %></p>
+                    </li>
+                <% } %>
             </ul>
         </div>
     </div>
-    <script>
-        async function removeAllRequests() {
-        try {
-            const response = await fetch('/remove-all-requests', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (response.ok) {
-                window.location.href = '/'; // Redirect after success
-            } else {
-                console.error('Error removing all requests');
-                alert('Error removing all requests');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error removing all requests');
-        }
-    }
-    </script>
-    <% } %>
+<% } %>

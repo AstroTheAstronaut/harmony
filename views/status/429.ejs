@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>429 - <%= t('general.harmony'); %></title>
+    <!-- Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="/styles/bootstrap.min.css">
+    <!-- Font Awesome CSS from CDN -->
+    <script src="https://kit.fontawesome.com/d3b482db3e.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <!-- Custom CSS -->
+     <style>
+       body, html {
+            height: 100%;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        #wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .error {
+            font-size: 7rem;
+            position: relative;
+        }
+        
+        .error:before {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            color: #e3e6f0;
+            font-size: 7rem;
+            z-index: -1;
+        }
+        
+        .sticky-footer {
+            margin-top: auto;
+        }
+        
+        .scroll-to-top {
+            position: fixed;
+            right: 1rem;
+            bottom: 1rem;
+            display: none;
+            width: 2.75rem;
+            height: 2.75rem;
+            text-align: center;
+            color: #fff;
+            background: rgba(90, 92, 105, 0.5);
+            line-height: 46px;
+        }
+        
+        .scroll-to-top:focus,
+        .scroll-to-top:hover {
+            color: white;
+        }
+        
+        .scroll-to-top:hover {
+            background: #5a5c69;
+        }
+        
+        .scroll-to-top i {
+            font-weight: 800;
+        }
+        footer {
+            width: 100%;
+        }
+     </style>
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <div class="container-fluid">
+                    <div class="text-center mt-5">
+                        <div class="error mx-auto" data-text="404">
+                            <p class="m-0">429</p>
+                        </div>
+                        <p class="text-dark mb-5 lead"><%= t('messages.slow_down'); %></p>
+                        <p class="text-black-50 mb-0"><%= t('messages.too_fast'); %></p><a href="/">← <%= t('messages.back_to_dashboard'); %></a>
+                    </div>
+                </div>
+            </div>
+            <%- include('partials/footer') %>
+        </div>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>

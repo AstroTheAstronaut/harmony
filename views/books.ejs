@@ -12,6 +12,11 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <!-- Custom CSS -->
+    <style>
+        .text-smaller-responsive {
+            font-size: 0.8rem;
+        }
+    </style>
 </head>
 
 <body id="page-top">
@@ -28,7 +33,7 @@
                         <div class="col-lg-6 mb-4">
                             <%- include('partials/books', { userRole: userRole }) %>
                         </div>
-                        <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
+                        <% if(hasPermission('create_book') && hasPermission('upload_book')) { %>
                         <div class="col">
                             <%- include('partials/create_book') %>
                         </div>                 
@@ -36,7 +41,7 @@
                     <div class="row-auto">
                         <%- include('partials/upload_book') %>
                     </div>
-                    <% } %>
+                    <% } else {} %>
                 </div>
             </div>
             <%- include('partials/footer') %>
@@ -190,9 +195,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteBookModalLabel">Confirm Deletion</h5>
-                    <button class="close" type="button" aria-label="Close" data-dismiss="modal">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
                 <div class="modal-body">
                     <p>Are you sure you want to delete this book?</p>

@@ -92,6 +92,12 @@ body {
     font-size: 0.9rem;
 }
 
+footer {
+    width: 100%;
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
 
 
 .form-group label {

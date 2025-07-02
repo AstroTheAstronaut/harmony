@@ -1,0 +1,88 @@
+<div class="col-md-4 d-flex justify-content-end d-none d-md-flex">
+                                    <!-- Desktop buttons -->
+                                    <a href="/song/<%= song.song_uid %>/public" id="share-button" class="btn btn-sm ms-2 share-button"
+                                        data-song-title="<% if (song.book_song_number) { %>
+                                                        <% if (song.book_details && song.book_details.bo_name) { %>
+                                                            <%= song.book_song_number %>. <%= song.title %> - <%= song.book_details.bo_name %>
+                                                        <% } else { %>
+                                                            <%= song.book_song_number %>. <%= song.title %>
+                                                        <% } %>
+                                                    <% } else { %>
+                                                        <%= song.title %>
+                                                    <% } %>"
+                                    >
+                                         <i class="fa-regular fa-share-from-square"></i>
+                                    </a>
+                                    <a id="copy-button" class="btn btn-sm ms-2 copy-clipboard-button" data-bs-toggle="tooltip" title="<%= t('general.copy') %>">
+                                        <i class="fa-regular fa-copy"></i>
+                                    </a>
+                                    
+                                    
+                                    <% if (hasPermission('edit_song')) { %>
+                                        <button id="toggleEditButton" class="btn btn-primary btn-sm ms-2" onclick="toggleEditMode()">Edit song</button>
+                                        <div id="editActions" class="d-none mt-3">
+                                            <button form="editSongForm" type="submit" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Save</button>
+                                            <button type="button" class="btn btn-secondary btn-sm" onclick="toggleEditMode()"><i class="fa fa-times"></i> Cancel</button>
+                                        </div>
+                                    <% } %>
+                                    <% if (hasPermission('request_song')) { %>
+                                        <form action="/request-song" method="POST" class="mb-0 ms-2">
+                                            <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                            <button type="submit" id="requestSongButton" class="btn btn-warning btn-sm"><%= t('general.request') %></button>
+                                        </form>
+                                    <% } %>
+                                    <% if (hasPermission('remove_song')) { %>
+                                        <form action="/remove-song" method="POST" class="d-inline ms-2">
+                                            <input type="hidden" name="redirectTo" value="<%= decodeURIComponent (requestURL) %>">
+                                            <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                            <button type="submit" id="removeSongButton" class="btn btn-danger btn-sm"><%= t('general.remove') %></button>
+                                        </form>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <!-- Mobile buttons-->
+                            <div class="d-md-none mt-3 d-flex justify-content-end">
+                                <!-- Share button -->
+                                <a href="/song/<%= song.song_uid %>/public" id="share-button-mobile" class="btn btn-sm ms-2 share-button"
+                                    data-song-title="<% if (song.book_song_number) { %>
+                                    <% if (song.book_details && song.book_details.bo_name) { %>
+                                        <%= song.book_song_number %>. <%= song.title %> - <%= song.book_details.bo_name %>
+                                    <% } else { %>
+                                        <%= song.book_song_number %>. <%= song.title %>
+                                    <% } %>
+                                <% } else { %>
+                                    <%= song.title %>
+                                <% } %>"
+                                >
+                                     <i class="fa-regular fa-share-from-square"></i>
+                                 </a>
+                                <a id="copy-button-mobile" class="btn btn-sm ms-2 copy-clipboard-button" data-bs-toggle="tooltip" title="<%= t('general.copy') %>">
+                                    <i class="fa-regular fa-copy"></i>
+                                </a>
+                            </div>
+                            <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
+                            <!-- Mobile admin/mod buttons -->
+                            <div class="d-md-none mt-3">
+                                <% if (hasPermission('edit_song')) { %>
+                                    <button id="toggleEditButtonMobile" class="btn btn-primary btn-sm w-100 mb-2" onclick="toggleEditMode()"><%= t('general.edit') %></button>
+                                    <div id="editActionsMobile" class="d-none">
+                                        <button type="submit" class="btn btn-success btn-sm w-100 mb-2"><i class="fa fa-check"></i> <%= t('general.save') %></button>
+                                        <button type="button"  class="btn btn-secondary btn-sm w-100 mb-2" onclick="toggleEditMode()"><i class="fa fa-times"></i> <%= t('general.cancel') %></button>
+                                    </div>
+                                <% } %>
+                                <% if (hasPermission('request_song')) { %>
+                                    <form action="/request-song" method="POST" class="mb-2">
+                                        <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                        <button type="submit" id="requestSongButtonMobile" class="btn btn-warning btn-sm w-100"><%= t('general.request') %></button>
+                                    </form>
+                                <% } %>
+                                <% if (hasPermission('remove_song')) { %>
+                                    <form action="/remove-song" method="POST">
+                                        <input type="hidden" name="redirectTo" value="<%= decodeURIComponent (requestURL) %>">
+                                        <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                        <button type="submit" id="removeSongButtonMobile" class="btn btn-danger btn-sm w-100"><%= t('general.remove') %></button>
+                                    </form>
+                                <% } %>
+                            </div>
+                            <% } %>
+                        </div>

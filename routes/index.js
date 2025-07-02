@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
         const songs = await getSongs();
         const mostRequestedSongs = await getMostRequestedSongs();
         const requestedSongs = await getRequestedSongs();
-        res.render('index', { books, songs, mostRequestedSongs, requestedSongs, userRole: res.locals.userRole, activePage: 'home' });
+        res.render('index', { books, songs, mostRequestedSongs, requestedSongs, userRole: res.locals.userRole, activePage: 'home', session: req.session });
     } catch (err) {
         console.error('Error fetching books or songs:', err);
         res.status(500).send('Error fetching data');

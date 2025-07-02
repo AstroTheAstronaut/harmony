@@ -29,6 +29,76 @@
         .form-label {
             font-weight: 600;
         }
+
+        /* Mobile responsiveness improvements */
+        @media (max-width: 768px) {
+            .mobile-filters {
+                gap: 0.5rem !important;
+            }
+            
+            .mobile-filters .form-select-sm {
+                font-size: 0.8rem;
+            }
+            
+            .mobile-filters label {
+                font-size: 0.8rem;
+                min-width: auto;
+            }
+            
+            /* Hide table and show mobile cards on small screens */
+            .table-responsive table {
+                display: none;
+            }
+            
+            .mobile-song-cards {
+                display: block;
+            }
+            
+            .song-card {
+                border: 1px solid #dee2e6;
+                border-radius: 0.375rem;
+                padding: 1rem;
+                margin-bottom: 1rem;
+                background: white;
+                transition: all 0.2s ease-in-out;
+                cursor: pointer;
+            }
+            
+            .song-card:hover {
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                transform: translateY(-2px);
+                border-color: #007bff;
+            }
+            
+            .song-card:active {
+                transform: translateY(0);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            .song-card h6 {
+                margin-bottom: 0.5rem;
+                color: #495057;
+            }
+            
+            .song-card .song-actions {
+                margin-top: 0.75rem;
+                padding-top: 0.75rem;
+                border-top: 1px solid #dee2e6;
+                position: relative;
+                z-index: 10;
+            }
+            
+            .song-card .song-actions button {
+                position: relative;
+                z-index: 11;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .mobile-song-cards {
+                display: none;
+            }
+        }
     </style>
     
 </head>
@@ -44,20 +114,19 @@
                 </br>
                 <div class="card shadow">
                     <div class="card-header py-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <p class="text-primary m-0 fw-bold">
+                        <div class="d-flex justify-content-between align-items-start align-items-lg-center flex-column flex-lg-row">
+                            <p class="text-primary m-0 fw-bold mb-2 mb-lg-0 text-nowrap">
                                 <% if (bookName === 'All Books') { %>
                                     <%= t('messages.showing_all_songs') %>
                                 <% } else { %>
-                                    <span class="d-block d-md-inline"><%= t('messages.showing_songs_for') %>:</span>
-                                    <span class="d-block d-md-inline"><%= bookName %></span>
+                                    <span><%= t('messages.showing_songs_for') %>:</span>
+                                    <span><%= bookName %></span>
                                 <% } %>
-                                
                             </p>
-                            <div class="d-flex flex-column flex-md-row justify-content-end align-items-start align-items-md-center" style="gap: 1rem;">
+                            <div class="d-flex flex-column flex-sm-row justify-content-start justify-content-lg-end align-items-stretch align-items-sm-center mobile-filters flex-shrink-0" style="gap: 0.75rem;">
                                 <!-- Order by Selection -->
-                                <form id="orderByForm" class="d-flex align-items-center mb-0 me-3">
-                                    <label for="orderBySelect" class="me-2" style="white-space: nowrap;">Order by:</label>
+                                <form id="orderByForm" class="d-flex align-items-center mb-0 flex-shrink-0">
+                                    <label for="orderBySelect" class="me-2 text-nowrap small">Order by:</label>
                                     <select class="form-select form-select-sm" id="orderBySelect">
                                         <option value="titleAsc" selected>Title: A-Z</option>
                                         <option value="titleDesc">Title: Z-A</option>
@@ -70,8 +139,8 @@
                                     </select>
                                 </form>
                                 <!-- Page Size Selection -->
-                                <form id="pageSizeForm" class="d-flex align-items-center mb-0 me-3">
-                                    <label for="itemsPerPage" class="me-2" style="white-space: nowrap;"><%= t('messages.show') %>:</label>
+                                <form id="pageSizeForm" class="d-flex align-items-center mb-0 flex-shrink-0">
+                                    <label for="itemsPerPage" class="me-2 text-nowrap small"><%= t('messages.show') %>:</label>
                                     <select class="form-select form-select-sm" id="pageSizeSelect">
                                         <option value="10" default <% if (limit === 10) { %> selected <% } %>>10</option>
                                         <option value="25" <% if (limit === 25) { %> selected <% } %>>25</option>
@@ -80,8 +149,8 @@
                                     </select>
                                 </form>
                                 <!-- Filter by Book -->
-                                <form id="filterForm" class="d-flex align-items-center mb-0">
-                                    <label class="form-label mb-0 me-2" for="bookFilterSelect"><%= t('messages.book') %>:</label>
+                                <form id="filterForm" class="d-flex align-items-center mb-0 flex-shrink-0">
+                                    <label class="form-label mb-0 me-2 text-nowrap small" for="bookFilterSelect"><%= t('messages.book') %>:</label>
                                     <select class="form-select form-select-sm" id="bookFilterSelect">
                                         <option value="all" <% if (bookName === 'All Books') { %> selected <% } %>> <%= t('messages.all_books') %></option>
                                         <% books.forEach(book => { %>
@@ -97,83 +166,141 @@
                     
                     <div class="card-body">
                         <% if (songs.length > 0) { %>
+                            <!-- Desktop Table View -->
                             <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th><%= t('general.no') %></th>
-                                        <th><%= t('song.title') %></th>
-                                        <th><%= t('song.artist') %></th>
-                                        <th><%= t('book.book') %></th>
-                                        <% if(userRole === 'Viewer') {} else { %>
-                                        <th><%= t('general.actions') %></th>
-                                        <% } %>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% songs.forEach((song, index) => { %>
+                                <table class="table">
+                                    <thead>
                                         <tr>
-                                            <td><%= song.book_song_number || (index + 1) %></td>
-                                            <td>
-                                                <a href="/song-view/<%= song.song_uid %>" class="text-decoration-none text-dark">
-                                                    <%= song.title %>
-                                                </a>
-                                            </td>
-                                            <td><%= song.artist || 'N/A' %></td>
-                                            <td><%= song.bo_name || 'N/A' %></td>
-                                            <td>
-                                                <% if(userRole === 'Viewer') {} else { %>
-                                                <!-- Desktop actions -->
-                                                <div class="d-none d-md-block">
-                                                    <% if(userRole === 'Editor') {} else{ %>
-                                                    <form action="/request-song" method="POST" class="d-inline">
-                                                        <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                                        <button type="submit" class="btn btn-warning btn-sm"><%= t('general.request') %></button>
-                                                    </form>
-                                                    <% } %>
-                                                    <% if(userRole === 'Moderator') {} else { %>
-                                                        <form action="/remove-song" method="POST" class="d-inline ms-2">
-                                                            <input type="hidden" name="redirectTo" value="<%= decodeURIComponent (requestURL) %>">
-                                                            <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                                            <button type="submit" class="btn btn-danger btn-sm"><%= t('general.remove') %></button>
-                                                        </form>                                                        
-                                                    <% } %>
-                                                </div>
-                                                <!-- Mobile dropdown for actions -->
-                                                <div class="dropdown d-md-none">
-                                                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
-                                                        id="actionsDropdown<%= song.song_uid %>" data-bs-toggle="dropdown"
-                                                        aria-haspopup="true" aria-expanded="false">
-                                                        <%= t('general.actions') %>
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="actionsDropdown<%= song.song_uid %>">
-                                                        <form action="/request-song" method="POST" class="px-3 py-2">
+                                            <th><%= t('general.no') %></th>
+                                            <th><%= t('song.title') %></th>
+                                            <th><%= t('song.artist') %></th>
+                                            <% if (bookName === 'All Books') { %>
+                                                <th><%= t('book.book') %></th>
+                                            <% } %>
+                                            <% if(userRole === 'Viewer') {} else { %>
+                                            <th><%= t('general.actions') %></th>
+                                            <% } %>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% songs.forEach((song, index) => { %>
+                                            <tr>
+                                                <td><%= song.book_song_number || (index + 1) %></td>
+                                                <td>
+                                                    <a href="/song-view/<%= song.song_uid %>" class="text-decoration-none text-dark">
+                                                        <%= song.title %>
+                                                    </a>
+                                                </td>
+                                                <td><%= song.artist || 'N/A' %></td>
+                                                <% if (bookName === 'All Books') { %>
+                                                    <td><%= (song.book_details || {}).bo_name || 'N/A' %></td>
+                                                <% } %>
+                                                
+                                                    <% if(userRole === 'Viewer') {} else { %><td>
+                                                    <!-- Desktop actions -->
+                                                    <div class="d-none d-md-block">
+                                                        <% if(userRole === 'Editor') {} else{ %>
+                                                        <form action="/request-song" method="POST" class="d-inline">
                                                             <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
                                                             <button type="submit" class="btn btn-warning btn-sm"><%= t('general.request') %></button>
                                                         </form>
-                                                        <form action="/remove-song" method="POST" class="px-3 py-2">
-                                                            <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                                            <button type="submit" class="btn btn-danger btn-sm"><%= t('general.remove') %></button>
-                                                        </form>
+                                                        <% } %>
+                                                        <% if(userRole === 'Moderator') {} else { %>
+                                                            <form action="/remove-song" method="POST" class="d-inline ms-2">
+                                                                <input type="hidden" name="redirectTo" value="<%= decodeURIComponent (requestURL) %>">
+                                                                <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                                                <button type="submit" class="btn btn-danger btn-sm"><%= t('general.remove') %></button>
+                                                            </form>                                                        
+                                                        <% } %>
                                                     </div>
-                                                </div>
-                                                <% } %>
-                                            </td>
+                                                    <!-- Mobile dropdown for actions -->
+                                                    <div class="dropdown d-md-none">
+                                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button"
+                                                            id="actionsDropdown<%= song.song_uid %>" data-bs-toggle="dropdown"
+                                                            aria-haspopup="true" aria-expanded="false">
+                                                            <%= t('general.actions') %>
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="actionsDropdown<%= song.song_uid %>">
+                                                            <form action="/request-song" method="POST" class="px-3 py-2">
+                                                                <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                                                <button type="submit" class="btn btn-warning btn-sm"><%= t('general.request') %></button>
+                                                            </form>
+                                                            <form action="/remove-song" method="POST" class="px-3 py-2">
+                                                                <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                                                <button type="submit" class="btn btn-danger btn-sm"><%= t('general.remove') %></button>
+                                                            </form>
+                                                        </div>
+                                                    </div></td>
+                                                    <% } %>
+                                                
+                                            </tr>
+                                        <% }) %>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th><%= t('general.no') %></th>
+                                            <th><%= t('song.title') %></th>
+                                            <th><%= t('song.artist') %></th>
+                                            <% if (bookName === 'All Books') { %>
+                                                <th><%= t('book.book') %></th>
+                                            <% } %>
+                                            <% if(userRole === 'Viewer') {} else { %>
+                                            <th><%= t('general.actions') %></th>
+                                            <% } %>
                                         </tr>
-                                    <% }) %>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th><%= t('general.no') %></th>
-                                        <th><%= t('song.title') %></th>
-                                        <th><%= t('song.artist') %></th>
-                                        <th><%= t('book.book') %></th>
-                                        <% if(userRole === 'Viewer') {} else { %>
-                                        <th><%= t('general.actions') %></th>
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                            <!-- Mobile Card View -->
+                            <div class="mobile-song-cards">
+                                <% songs.forEach((song, index) => { %>
+                                    <div class="song-card">
+                                        <a href="/song-view/<%= song.song_uid %>" class="text-decoration-none text-dark d-block">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <span class="badge bg-primary px-2"><%= song.book_song_number || (index + 1) %>.</span>
+                                                <h6 class="ms-1 mb-0 flex-grow-1 fw-bold">
+                                                    <%= song.title %>
+                                                </h6>
+                                            </div>
+                                            
+                                            <div class="text-muted small mb-1">
+                                                <strong><%= t('song.artist') %>:</strong> <%= song.artist || 'N/A' %>
+                                            </div>
+                                            
+                                            <% if (bookName === 'All Books') { %>
+                                                <div class="text-muted small mb-2">
+                                                    <strong><%= t('book.book') %>:</strong> <%= (song.book_details || {}).bo_name || 'N/A' %>
+                                                </div>
+                                            <% } %>
+                                        </a>
+                                        
+                                        <% if(userRole !== 'Viewer') { %>
+                                            <div class="song-actions">
+                                                <div class="d-flex gap-2 flex-wrap">
+                                                    <% if(userRole !== 'Editor') { %>
+                                                        <form action="/request-song" method="POST" class="d-inline">
+                                                            <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                                            <button type="submit" class="btn btn-warning btn-sm" onclick="event.stopPropagation();">
+                                                                <%= t('general.request') %>
+                                                            </button>
+                                                        </form>
+                                                    <% } %>
+                                                    <% if(userRole !== 'Moderator') { %>
+                                                        <form action="/remove-song" method="POST" class="d-inline">
+                                                            <input type="hidden" name="redirectTo" value="<%= decodeURIComponent (requestURL) %>">
+                                                            <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                                            <button type="submit" class="btn btn-danger btn-sm" onclick="event.stopPropagation();">
+                                                                <%= t('general.remove') %>
+                                                            </button>
+                                                        </form>
+                                                    <% } %>
+                                                </div>
+                                            </div>
                                         <% } %>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                                    </div>
+                                <% }) %>
+                            </div>
                         <% } else { %>
                             <p class="text-center"><%= t('messages.no_songs_available') %>!</p>
                         <% } %>

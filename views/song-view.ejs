@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>
-        <% if(song.book_song_number) { %>
-            <% if(song.book_details.bo_name) { %>
+        <% if (song.book_song_number) { %>
+            <% if (song.book_details && song.book_details.bo_name) { %>
                 <%= song.book_song_number %>. <%= song.title %> - <%= song.book_details.bo_name %>
             <% } else { %>
                 <%= song.book_song_number %>. <%= song.title %>
@@ -16,8 +16,13 @@
     </title>
     <!-- Bootstrap CSS from CDN -->
     <link rel="stylesheet" href="/styles/bootstrap.min.css">
+    <!-- Flag icon CSS for language flags -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/css/flag-icon.min.css" />
     <!-- Font Awesome CSS from CDN -->
     <script src="https://kit.fontawesome.com/d3b482db3e.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <style>
@@ -26,13 +31,166 @@
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
             -ms-overflow-style: none;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            font-family: "Nunito", sans-serif !important;
+            font-weight: 500;
+            font-optical-sizing: auto;
+            line-height: 1.6;
         }
 
         pre::-webkit-scrollbar {
             display: none;
         }
+        
+        /* Mobile responsive fixes for lyrics */
+        @media (max-width: 767.98px) {
+            .card-body {
+                padding: 0.5rem;
+            }
+            
+            .list-group-item {
+                padding: 0.75rem 0.5rem;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+            
+            .part-text {
+                line-height: 1.4;
+                white-space: pre-wrap;
+                word-break: break-word;
+                overflow-wrap: break-word;
+                max-width: 100%;
+                font-family: "Nunito", sans-serif !important;
+                font-weight: 500;
+                font-optical-sizing: auto;
+            }
+        }
+
+        .badge {
+            font-size: 0.8rem;
+        }
+        .song-inline-label {
+            white-space: nowrap;
+        }
+        
+        /* Fix for dropdown issues */
+        #wrapper,
+        #content-wrapper,
+        #content {
+            overflow: visible;
+        }
+        
+        .navbar {
+            overflow: visible;
+        }
+        
+        .dropdown-menu {
+            z-index: 1050;
+        }
+        
+        /* Enhanced inline editing styles */
+        #editSongForm input.form-control,
+        #editSongForm select {
+            all: unset;
+            font-family: inherit;
+            font-size: inherit;
+            font-weight: inherit;
+            line-height: inherit;
+            color: inherit;
+            background: transparent;
+            display: inline-block;
+            vertical-align: baseline;
+            cursor: text;
+            border-bottom: 1px solid transparent;
+            transition: border-bottom-color 0.2s ease;
+        }
+
+        /* Auto-sizing inputs */
+        #editSongForm input.form-control {
+            min-width: 20px;
+            max-width: 100%;
+        }
+        
+        /* Specific sizing for book number input */
+        #editSongForm input[name="book_song_number"] {
+            min-width: 30px;
+            width: auto;
+            text-align: center;
+        }
+        
+        /* Title input should expand */
+        #editSongForm input[name="title"] {
+            min-width: 200px;
+            flex: 1 1 0;
+        }
+
+        #editSongForm select {
+            padding: 0 1.5em 0 0;
+            border: none;
+            background: transparent;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            box-shadow: none;
+            font-size: inherit;
+            line-height: inherit;
+            height: auto;
+            vertical-align: baseline;
+            min-width: 50px;
+        }
+
+        #editSongForm input.form-control:focus,
+        #editSongForm select.form-control:focus {
+            outline: none;
+            border-bottom: 1px solid #0d6efd;
+            background: rgba(13, 110, 253, 0.05);
+        }
+        
+        /* Title edit container for proper layout */
+        .title-edit-container {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+        
+        .title-edit-container .dot {
+            font-weight: bold;
+            margin: 0 0.1rem;
+        }
+        
+        /* Dynamic font sizing for lyrics */
+        .lyrics-content {
+            font-size: var(--lyrics-font-size, 1rem);
+        }
+        
+        .lyrics-content strong {
+            font-size: calc(var(--lyrics-font-size, 1rem) * 1.1);
+        }
+        
+        .lyrics-content .part-text {
+            font-size: var(--lyrics-font-size, 1rem) !important;
+        }
+        
+        /* Font size override for mobile */
+        @media (max-width: 767.98px) {
+            .lyrics-content {
+                font-size: var(--lyrics-font-size-mobile, 1rem);
+            }
+            
+            .lyrics-content strong {
+                font-size: calc(var(--lyrics-font-size-mobile, 1rem) * 1.1);
+            }
+            
+            .lyrics-content .part-text {
+                font-size: var(--lyrics-font-size-mobile, 1rem) !important;
+            }
+        }
     </style>
 </head>
+
 <body id="page-top">
     <div id="wrapper">
         <%- include('partials/sidebar') %>
@@ -41,121 +199,312 @@
                 <%- include('partials/navbar') %>
                 <div class="container-fluid">
                     <div class="card shadow mb-4">
+                        <!-- Card Header with Song Metadata and Buttons -->
                         <div class="card-header py-3">
-                            <div class="row align-items-center">
-                                <!-- Text content column -->
+                            <div class="row align-items-start">
+                                <!-- Song Metadata Column -->
                                 <div class="col-md-8">
-                                    <h2 id="song-title" class="text-dark fw-bold m-0" contenteditable="false">
-                                        <% if(song.book_song_number) { %>
+                                    <form id="editSongForm" action="/edit-song/<%= song.song_uid %>/inline" method="POST">
+                                        <!-- Song Title -->
+                                        <div id="songTitleBlock">
+                                            <div id="titleView">
+                                                <h2 class="text-dark fw-bold m-0" id="song-title">
+                                                    <% if(song.book_song_number) { %>
+                                                        <%= song.book_song_number %>. <%= song.title %>
+                                                    <% } else { %>
+                                                        <%= song.title %>
+                                                    <% } %>
+                                                </h2>
+                                            </div>
+                                            <div id="titleEdit" class="d-none">
+                                                <h2 class="text-dark fw-bold m-0">
+                                                    <% if(song.book_song_number) { %>
+                                                        <div class="title-edit-container">
+                                                            <input name="book_song_number" type="text" class="form-control" value="<%= song.book_song_number %>" data-auto-resize />
+                                                            <span class="dot">.</span>
+                                                            <input name="title" type="text" class="form-control" value="<%= song.title %>" data-auto-resize />
+                                                        </div>
+                                                    <% } else { %>
+                                                        <input name="title" type="text" class="form-control" value="<%= song.title %>" data-auto-resize />
+                                                    <% } %>
+                                                </h2>
+                                            </div>
+                                        </div>
+
+                                        <!-- Song Chord -->
+                                        <div id="chordBlock">
+                                            <div id="chordView">
+                                                <% if(song.chord !== "NaN") { %>
+                                                    <h5 class="mt-2"><span class="song-inline-label"><%= t('song.chord') %>: <%= song.chord %></span></h5>
+                                                <% } %>
+                                            </div>
+                                            <div id="chordEdit" class="d-none">
+                                                <h5 class="mt-2"><span class="song-inline-label">
+                                                <%= t('song.chord') %>: 
+                                                <select name="chord">
+                                                    <option value=""><%= t('upload.select_chord_opt') %></option>
+                                                    <% ["C", "Cm", "C#", "C#m", "D", "Dm", "D#", "D#m", "E", "Em", "F", "Fm", "F#", "F#m", "G", "Gm", "G#", "G#m", "A", "Am", "A#", "A#m", "B", "Bm"].forEach(ch => { %>
+                                                    <option value="<%= ch %>" <%= song.chord === ch ? 'selected' : '' %>><%= ch %></option>
+                                                    <% }) %>
+                                                </select>
+                                                </span></h5>
+                                            </div>
+                                        </div>
+
+                                        <!-- Song Artist -->
+                                        <div id="artistBlock">
+                                            <div id="artistView">
+                                                <% if(song.artist !== "NaN") { %>
+                                                    <h5 class="mt-2" id="song-artist"><%= t('song.artist') %>: <%= song.artist %></h5>
+                                                <% } %>
+                                            </div>
+                                            <div id="artistEdit" class="d-none">
+                                                <h5 class="mt-2">
+                                                <%= t('song.artist') %>: <input name="artist" type="text" class="form-control" value="<%= song.artist %>" data-auto-resize>
+                                                </h5>
+                                            </div>
+                                        </div>
+
+                                        <!-- Song Scripture -->
+                                        <div id="scriptureBlock">
+                                            <div id="scriptureView">
+                                                <% if(song.scripture !== "NaN") { %>
+                                                    <h5 class="mt-2"><%= t('song.scripture') %>: <%= song.scripture %></h5>
+                                                <% } %>
+                                            </div>
+                                            <div id="scriptureEdit" class="d-none">
+                                                <h5 class="mt-2">
+                                                <%= t('song.scripture') %>: <input name="scripture" type="text" class="form-control" value="<%= song.scripture %>" data-auto-resize>
+                                                </h5>
+                                            </div>
+                                        </div>
+
+                                        <!-- Song Book -->
+                                        <div id="bookBlock">
+                                            <div id="bookNameView">
+                                                <% if(song.book_details && song.book_details.bo_name) { %>
+                                                    <h5 class="mt-2">
+                                                        <%= t('book.book') %>: <span id="song-book-name"><%= song.book_details.bo_name %></span>
+                                                    </h5>
+                                                <% } %>
+                                            </div>
+                                            <div id="bookNameEdit" class="d-none">
+                                                <h5 class="mt-2">
+                                                    <%= t('book.book') %>: 
+                                                    <select name="book_uuid">
+                                                    <option value="">No Book</option>
+                                                        <% books.forEach(book => { %>
+                                                            <option value="<%= book.bo_uid %>" <%= (song.book_uuid === book.bo_uid) ? 'selected' : '' %>><%= book.bo_name %></option>
+                                                        <% }) %>
+                                                    </select>
+                                                </h5>
+                                            </div>
+                                        </div>
+
+                                        <!-- Song Tags -->
+                                        <div id="tagsBlock">
+                                            <div id="tagsView">
+                                                <h5 class="mt-2"><%= t('song.tags') %>:
+                                                    <% if(song.tags && song.tags.length > 0) { %>
+                                                        <% for (let i = 0; i < song.tags.length; i++) { %>
+                                                            <span class="badge rounded-pill bg-primary"><%= song.tags[i] %></span>
+                                                        <% } %>
+                                                    <% } else { %>
+                                                        <span class="badge rounded-pill bg-secondary"><%= t('song.no_tags') %></span>
+                                                    <% } %>
+                                                </h5>
+                                            </div>
+                                            <div id="tagsEdit" class="d-none">
+                                                <h5 class="mt-2">
+                                                <%= t('song.tags') %>: <input name="tags" type="text" class="form-control" value="<%= song.tags ? song.tags.join(', ') : '' %>" data-auto-resize>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Action Buttons Column -->
+                                <div class="col-md-4">
+                                    <!-- Desktop Buttons -->
+                                    <div class="d-none d-md-flex justify-content-end flex-wrap gap-2">
+                                        <!-- Share and Copy Buttons (always visible) -->
+                                        <a href="/song/<%= song.song_uid %>/public" id="share-button" class="share-button text-secondary" style="text-decoration: none; padding: 0.375rem 0.5rem; display: inline-flex; align-items: center;"
+                                            data-song-title="<% if (song.book_song_number) { %>
+                                                            <% if (song.book_details && song.book_details.bo_name) { %>
+                                                                <%= song.book_song_number %>. <%= song.title %> - <%= song.book_details.bo_name %>
+                                                            <% } else { %>
+                                                                <%= song.book_song_number %>. <%= song.title %>
+                                                            <% } %>
+                                                        <% } else { %>
+                                                            <%= song.title %>
+                                                        <% } %>"
+                                        >
+                                             <i class="fa-regular fa-share-from-square"></i>
+                                        </a>
+                                        <button id="copy-button" class="copy-clipboard-button text-secondary" style="background: none; border: none; padding: 0.375rem 0.5rem; display: inline-flex; align-items: center; cursor: pointer;" data-bs-toggle="tooltip" title="<%= t('general.copy') %>">
+                                            <i class="fa-regular fa-copy"></i>
+                                        </button>
+                                        
+                                        <!-- Font Size Controls -->
+                                        <button id="decrease-font" class="text-secondary" style="background: none; border: none; padding: 0.375rem 0.5rem; display: inline-flex; align-items: center; cursor: pointer;" data-bs-toggle="tooltip" title="Decrease font size">
+                                            <i class="fa-solid fa-minus"></i>
+                                        </button>
+                                        <button id="increase-font" class="text-secondary" style="background: none; border: none; padding: 0.375rem 0.5rem; display: inline-flex; align-items: center; cursor: pointer;" data-bs-toggle="tooltip" title="Increase font size">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                        
+                                        <!-- Permission-based Action Buttons -->
+                                        <% if (hasPermission('edit_song')) { %>
+                                            <button id="toggleEditButton" class="btn btn-primary btn-sm" onclick="toggleEditMode()"><%= t('general.edit') %></button>
+                                        <% } %>
+                                        
+                                        <% if (hasPermission('request_song')) { %>
+                                            <form action="/request-song" method="POST" class="d-inline">
+                                                <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                                <button type="submit" id="requestSongButton" class="btn btn-warning btn-sm"><%= t('general.request') %></button>
+                                            </form>
+                                        <% } %>
+                                        
+                                        <% if (hasPermission('remove_song')) { %>
+                                            <form action="/remove-song" method="POST" class="d-inline">
+                                                <input type="hidden" name="redirectTo" value="<%= decodeURIComponent(requestURL) %>">
+                                                <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                                <button type="submit" id="removeSongButton" class="btn btn-danger btn-sm"><%= t('general.remove') %></button>
+                                            </form>
+                                        <% } %>
+                                    </div>
+
+                                    <!-- Edit Mode Actions (Desktop) -->
+                                    <div id="editButtons" class="d-none justify-content-end gap-2 mt-2">
+                                        <button form="editSongForm" type="submit" class="btn btn-success btn-sm">
+                                            <i class="fa fa-check"></i> <%= t('general.save') %>
+                                        </button>
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="toggleEditMode()">
+                                            <i class="fa fa-times"></i> <%= t('general.cancel') %>
+                                        </button>
+                                    </div>
+
+                                    <!-- Mobile Buttons -->
+                                    <div class="d-md-none mt-3">
+                                        <!-- Share and Copy (Mobile) -->
+                                        <div class="d-flex justify-content-end gap-2 mb-2">
+                                            <button type="button" id="share-button-mobile" class="share-button text-secondary" style="background: none; border: none; text-decoration: none; padding: 0.375rem 0.5rem; display: inline-flex; align-items: center; cursor: pointer;"
+                                            data-song-title="<% if (song.book_song_number) { %>
+                                            <% if (song.book_details && song.book_details.bo_name) { %>
+                                            <%= song.book_song_number %>. <%= song.title %> - <%= song.book_details.bo_name %>
+                                            <% } else { %>
                                             <%= song.book_song_number %>. <%= song.title %>
-                                        <% } else { %>
+                                            <% } %>
+                                            <% } else { %>
                                             <%= song.title %>
+                                            <% } %>"
+                                            data-share-url="/song/<%= song.song_uid %>/public"
+                                            >
+                                            <i class="fa-regular fa-share-from-square"></i>
+                                            </button>
+                                            <button id="copy-button-mobile" class="copy-clipboard-button text-secondary" style="background: none; border: none; padding: 0.375rem 0.5rem; display: inline-flex; align-items: center; cursor: pointer;" data-bs-toggle="tooltip" title="<%= t('general.copy') %>">
+                                                <i class="fa-regular fa-copy"></i>
+                                            </button>
+                                            
+                                            <!-- Font Size Controls (Mobile) -->
+                                            <button id="decrease-font-mobile" class="text-secondary" style="background: none; border: none; padding: 0.375rem 0.5rem; display: inline-flex; align-items: center; cursor: pointer;" data-bs-toggle="tooltip" title="Decrease font size">
+                                                <i class="fa-solid fa-minus"></i>
+                                            </button>
+                                            <button id="increase-font-mobile" class="text-secondary" style="background: none; border: none; padding: 0.375rem 0.5rem; display: inline-flex; align-items: center; cursor: pointer;" data-bs-toggle="tooltip" title="Increase font size">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </button>
+                                        </div>
+
+                                        <!-- Action Buttons (Mobile) -->
+                                        <% if (hasPermission('edit_song')) { %>
+                                            <button id="toggleEditButtonMobile" class="btn btn-primary btn-sm w-100 mb-2" onclick="toggleEditMode()"><%= t('general.edit') %></button>
                                         <% } %>
-                                    </h2>
-                                    <% if(song.chord) { %>
-                                        <h4 class="mt-2" contenteditable="false"><%= t('song.chord') %>: <%= song.chord %></h4>
-                                    <% } %>
-                                    <% if(song.artist) { %>
-                                        <h5 id="song-artist" class="mt-2" contenteditable="false"><%= t('song.artist') %>: <%= song.artist %></h5>
-                                    <% } %>
-                                    <% if (song.book_details.bo_name) { %>
-                                        <h5 id="song-book-name" class="mt-2" contenteditable="false"><%= song.book_details.bo_name %></h5>
-                                    <% } %>
-                                    
-                                </div>
-                                <!-- Buttons column -->
-                                <div class="col-md-4 d-flex justify-content-end d-none d-md-flex">
-                                    <!-- Desktop buttons button -->
-                                    <a href="/song/<%= song.song_uid %>/public" id="share-button" class="btn btn-sm ms-2 share-button"
-                                        data-song-title="<% if(song.book_song_number) { %><% if(song.book_name) { %><%= song.book_song_number %>. <%= song.title %> - <%= song.book_name %><% } else { %><%= song.book_song_number %>. <%= song.title %><% } %><% } else { %><%= song.title %><% } %>">
-                                         <i class="fa-regular fa-share-from-square"></i>
-                                    </a>
-                                    <a id="copy-button" class="btn btn-sm ms-2 copy-clipboard-button" data-bs-toggle="tooltip" title="<%= t('general.copy') %>">
-                                        <i class="fa-regular fa-copy"></i>
-                                    </a>
-                                    <form id="song-form" action="/update-song" method="POST" class="mb-0 me-2">
-                                        <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                        <input type="hidden" name="title" id="hidden-title" value="<%= song.title %>">
-                                        <input type="hidden" name="artist" id="hidden-artist" value="<%= song.artist %>">
-                                        <input type="hidden" name="book_name" id="hidden-book-name" value="<%= song.book_details.bo_name %>">
-                                        <% song.parts.forEach(part => { %>
-                                            <input type="hidden" name="part_<%= part.id %>" id="hidden-part-<%= part.id %>" value="<%= part.lyrics %>">
-                                        <% }) %>
-                                        <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
-                                        <button id="edit-button" type="button" class="btn btn-success btn-sm" data-edit="false"><%= t('messages.edit_song') %></button>
-                                        <button id="save-button" type="submit" class="btn btn-primary btn-sm d-none"><%= t('messages.save_song') %></button>
+                                        
+                                        <% if (hasPermission('request_song')) { %>
+                                            <form action="/request-song" method="POST" class="mb-2">
+                                                <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                                <button type="submit" id="requestSongButtonMobile" class="btn btn-warning btn-sm w-100"><%= t('general.request') %></button>
+                                            </form>
                                         <% } %>
-                                    </form>
-                                    <!-- Desktop buttons container -->
-                                    <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
-                                    <form action="/request-song" method="POST" class="mb-0 me-2">
-                                        <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                        <button type="submit" class="btn btn-warning btn-sm"><%= t('general.request') %></button>
-                                    </form>
-                                    <form action="/remove-song" method="POST" class="d-inline ms-2">
-                                        <input type="hidden" name="redirectTo" value="<%= decodeURIComponent (requestURL) %>">
-                                        <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                        <button type="submit" class="btn btn-danger btn-sm"><%= t('general.remove') %></button>
-                                    </form>
-                                    <% } %>
+                                        
+                                        <% if (hasPermission('remove_song')) { %>
+                                            <form action="/remove-song" method="POST" class="mb-2">
+                                                <input type="hidden" name="redirectTo" value="<%= decodeURIComponent(requestURL) %>">
+                                                <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
+                                                <button type="submit" id="removeSongButtonMobile" class="btn btn-danger btn-sm w-100"><%= t('general.remove') %></button>
+                                            </form>
+                                        <% } %>
+
+                                        <!-- Edit Mode Actions (Mobile) -->
+                                        <div id="editButtonsMobile" class="d-none">
+                                            <button form="editSongForm" type="submit" class="btn btn-success btn-sm w-100 mb-2">
+                                                <i class="fa fa-check"></i> <%= t('general.save') %>
+                                            </button>
+                                            <button type="button" class="btn btn-secondary btn-sm w-100 mb-2" onclick="toggleEditMode()">
+                                                <i class="fa fa-times"></i> <%= t('general.cancel') %>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <!-- Mobile buttons-->
-                            <div class="d-md-none mt-3 d-flex justify-content-end">
-                                <!-- Share button -->
-                                <a href="/song/<%= song.song_uid %>/public" id="share-button-mobile" class="btn btn-sm ms-2 share-button"
-                                    data-song-title="<% if(song.book_song_number) { %><% if(song.book_name) { %><%= song.book_song_number %>. <%= song.title %> - <%= song.book_name %><% } else { %><%= song.book_song_number %>. <%= song.title %><% } %><% } else { %><%= song.title %><% } %>">
-                                     <i class="fa-regular fa-share-from-square"></i>
-                                 </a>
-                                <a id="copy-button-mobile" class="btn btn-sm ms-2 copy-clipboard-button" data-bs-toggle="tooltip" title="<%= t('general.copy') %>">
-                                    <i class="fa-regular fa-copy"></i>
-                                </a>
-                            </div>
-                            <% if(userRole === 'Viewer' || userRole === 'Moderator') {} else { %>
-                            <!-- Mobile admin/mod buttons -->
-                            <div class="d-md-none mt-3">
-                                <form action="/request-song" method="POST" class="mb-2">
-                                    <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                    <button type="submit" class="btn btn-warning btn-sm w-100"><%= t('general.request') %></button>
-                                </form>
-                                <form action="" method="GET">
-                                    <button type="submit" class="btn btn-success btn-sm w-100"><%= t('messages.edit_song') %></button>
-                                </form>
-                            </div>
-                            <% } %>
                         </div>
+
+                        <!-- Card Body with Song Lyrics -->
                         <div class="card-body">
                             <ul class="list-group">
-                                <% song.parts.forEach(part => { %>
-                                    <li class="list-group-item lyrics-text">
-                                        <strong>
-                                            <% if (part.part_type === "CHORUS" || part.part_type === "Chorus") { %>
-                                                <%= t('song_parts.chorus') %>:
-                                            <% } else if (part.part_type === "VERSE" || part.part_type === "Verse") { %>
-                                                <%= t('song_parts.verse') %>:
-                                            <% } else if (part.part_type === "BRIDGE" || part.part_type === "BRIDGE") { %>
-                                                <%= t('song_parts.bridge') %>:
-                                            <% } else if (part.part_type === "CODA" || part.part_type === "Coda") { %>
-                                                <%= t('song_parts.coda') %>:
-                                            <% } else if (part.part_type === "OUTRO" || part.part_type === "Outro") { %>
-                                                <%= t('song_parts.outro') %>:
-                                            <% } else if (part.part_type === 'INTRO' || part.part_type === "Intro") { %>
-                                                <%= t('song_parts.intro') %>:
-                                            <% } else { %>
-                                                <%= t('song_parts.unknown') %>:
-                                            <% } %>
-                                        </strong>
-                                        <pre id="part-<%= part.id %>" class="part-text" contenteditable="false"><%= part.lyrics %></pre>
+                                <% song.parts.forEach((part, index) => { %>
+                                    <li class="list-group-item lyrics-text lyrics-content">
+                                        <!-- View Mode (default) -->
+                                        <div class="lyrics-part-view">
+                                            <strong>
+                                                <% if (part.part_type === "CHORUS" || part.part_type === "Chorus") { %>
+                                                    <%= t('song_parts.chorus') %>:
+                                                <% } else if (part.part_type === "VERSE" || part.part_type === "Verse") { %>
+                                                    <%= t('song_parts.verse') %>:
+                                                <% } else if (part.part_type === "BRIDGE") { %>
+                                                    <%= t('song_parts.bridge') %>:
+                                                <% } else if (part.part_type === "CODA") { %>
+                                                    <%= t('song_parts.coda') %>:
+                                                <% } else if (part.part_type === "OUTRO") { %>
+                                                    <%= t('song_parts.outro') %>:
+                                                <% } else if (part.part_type === 'INTRO') { %>
+                                                    <%= t('song_parts.intro') %>:
+                                                <% } else { %>
+                                                    <%= t('song_parts.unknown') %>:
+                                                <% } %>
+                                            </strong>
+                                            <pre class="part-text" id="partView-<%= index %>"><%= part.lyrics %></pre>
+                                        </div>
+
+                                        <!-- Edit Mode -->
+                                        <div class="lyrics-part-edit d-none">
+                                            <select form="editSongForm" name="part_type[<%= index %>]" class="form-control d-inline-block mb-2" style="width: auto;">
+                                                <% ["VERSE", "CHORUS", "BRIDGE", "INTRO", "OUTRO", "CODA"].forEach(type => { %>
+                                                    <option value="<%= type %>" <%= type === part.part_type.toUpperCase() ? 'selected' : '' %>><%= t('song_parts.' + type.toLowerCase()) %></option>
+                                                <% }) %>
+                                            </select>
+                                            <textarea
+                                                form="editSongForm"
+                                                class="form-control part-textarea"
+                                                name="lyrics[<%= index %>]"
+                                                id="partEdit-<%= index %>"
+                                                style="font-family: inherit; white-space: pre-wrap;"
+                                                rows="<%= Math.max(3, part.lyrics.split('\n').length) %>"
+                                            ><%= part.lyrics %></textarea>
+                                            <!-- Keep order info -->
+                                            <input form="editSongForm" type="hidden" name="part_order[<%= index %>]" value="<%= part.part_order %>">
+                                        </div>
                                     </li>
                                 <% }) %>
                             </ul>
-                        </div>                        
+                        </div>
                     </div>
                 </div>
             </div>
             <%- include('partials/footer') %>
         </div>
     </div>
+
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -163,20 +512,84 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/scripts/script.min.js"></script>
     <script>
-        function handleShare(event, buttonId) {
-            event.preventDefault();  // Prevent the default action (navigation)
+        // Auto-resize function for inputs
+        function autoResizeInput(input) {
+        const isMobile = window.innerWidth < 768;
+        
+        if (!input.value && !input.placeholder) {
+            // Set minimum width for empty inputs
+            const minWidth = input.name === 'book_song_number' ? 30 : 
+                           input.name === 'title' ? (isMobile ? 120 : 150) : 100;
+            input.style.width = minWidth + 'px';
+            return;
+        }
 
-            const shareUrl = window.location.origin + document.getElementById(buttonId).getAttribute('href');  // Get the link to share
-            const songTitle = document.getElementById(buttonId).getAttribute('data-song-title');  // Get the song title from the data attribute
+        // Create a temporary canvas to measure text width more accurately
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        const computedStyle = window.getComputedStyle(input);
+        
+        // Set font properties to match the input
+        context.font = `${computedStyle.fontWeight} ${computedStyle.fontSize} ${computedStyle.fontFamily}`;
+        
+        // Measure the text width
+        const text = input.value || input.placeholder || '';
+        const textWidth = context.measureText(text).width;
+        
+        // Calculate minimum and maximum widths based on input type and screen size
+        let minWidth, maxWidth;
+        if (input.name === 'book_song_number') {
+            minWidth = 30;
+            maxWidth = isMobile ? 60 : 80;
+        } else if (input.name === 'title') {
+            minWidth = isMobile ? 120 : 200;
+            maxWidth = isMobile ? window.innerWidth - 100 : 400; // Account for container padding on mobile
+        } else {
+            minWidth = isMobile ? 100 : 150;
+            maxWidth = isMobile ? window.innerWidth - 100 : 300;
+        }
+        
+        // Set width with padding, respecting min/max constraints
+        const paddedWidth = textWidth + (isMobile ? 15 : 20);
+        const finalWidth = Math.min(Math.max(paddedWidth, minWidth), maxWidth);
+        input.style.width = finalWidth + 'px';
+        
+        // Remove conflicting styles that prevent auto-resize on mobile
+        if (isMobile && input.name === 'title') {
+            input.style.flexGrow = 'unset';
+            input.style.flex = 'unset';
+        }
+    }
+    
+    // Initialize auto-resize on page load and setup event listeners
+    function initAutoResize() {
+        const autoResizeInputs = document.querySelectorAll('input[data-auto-resize]');
+        autoResizeInputs.forEach(input => {
+            autoResizeInput(input);
+            input.addEventListener('input', () => autoResizeInput(input));
+            input.addEventListener('focus', () => autoResizeInput(input));
+            input.addEventListener('blur', () => autoResizeInput(input));
+        });
+    }
+
+    // Re-initialize on window resize to handle orientation changes
+    window.addEventListener('resize', () => {
+        setTimeout(initAutoResize, 100);
+    });
+
+        function handleShare(event, buttonId) {
+            event.preventDefault();
+            const button = document.getElementById(buttonId);
+            let shareUrl = button.getAttribute('href') || button.getAttribute('data-share-url');
+            if (shareUrl && !shareUrl.startsWith('http')) {
+                shareUrl = window.location.origin + shareUrl;
+            }
+            const songTitle = button.getAttribute('data-song-title');
             const songText = `${songTitle}\n`;
 
-            // Check if the Web Share API is supported
             if (navigator.share) {
                 navigator.share({
                     title: songTitle,
@@ -185,21 +598,27 @@
                 }).then(() => {
                     console.log('Successfully shared');
                 }).catch((error) => {
+                    alert('Sharing failed: ' + error);
                     console.error('Error sharing', error);
                 });
-            } else {
-                // Fallback to copying URL to clipboard if Web Share API isn't supported
+            } else if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(shareUrl).then(() => {
                     alert('Link copied to clipboard!');
                 }).catch((error) => {
+                    alert('Copy failed: ' + error);
                     console.error('Error copying text', error);
                 });
+            } else {
+                alert('Sharing is not supported on this device/browser.');
             }
         }
 
-        document.querySelectorAll('.share-button').forEach(button => {
-            button.addEventListener('click', function(event) {
-                handleShare(event, button.id);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Attach share button event listeners
+            document.querySelectorAll('.share-button').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    handleShare(event, button.id);
+                }, { passive: false });
             });
         });
 
@@ -209,7 +628,7 @@
             const songTitle = document.getElementById('song-title')?.innerText.trim() || '';
             const songBookName = document.getElementById('song-book-name')?.innerText.trim() || '';
             const songArtist = document.getElementById('song-artist')?.innerText.trim() || '';
-            // Add song info to the copied text
+            
             if (songTitle) {
                 formattedLyrics += `${songTitle}\n`;
                 if (songArtist) {
@@ -220,7 +639,7 @@
                 }
                 formattedLyrics += '\n';
             }
-            // Add each part of the song to the copied text
+            
             songParts.forEach(item=>{
                 const partLabel = item.querySelector('strong').innerText.trim();
                 const partLyrics = item.querySelector('.part-text').innerText.trim();
@@ -242,62 +661,125 @@
             });
         }
 
-        document.querySelectorAll('.copy-clipboard-button').forEach(button => {
-            button.addEventListener('click', function() {
-                copyLyricsToClipboard();
+        // Ensure both desktop and mobile copy buttons work
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.copy-clipboard-button').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    copyLyricsToClipboard();
+                });
             });
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const editButton = document.getElementById('edit-button');
-            const saveButton = document.getElementById('save-button');
-            const title = document.getElementById('song-title');
-            const artist = document.getElementById('song-artist');
-            const bookName = document.getElementById('song-book-name');
-            const parts = document.querySelectorAll('.part-text');
+        let isEditMode = false;
 
-            const hiddenTitle = document.getElementById('hidden-title');
-            const hiddenArtist = document.getElementById('hidden-artist');
-            const hiddenBookName = document.getElementById('hidden-book-name');
-            const hiddenParts = [...document.querySelectorAll('input[name^="part_"]')];
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
 
-            editButton.addEventListener('click', () => {
-                const isEditing = editButton.getAttribute('data-edit') === 'true';
-                
-                if (isEditing) {
-                    // Save mode
-                    saveButton.classList.add('d-none');
-                    editButton.classList.remove('d-none');
-                    editButton.textContent = 'Edit';
-                    editButton.setAttribute('data-edit', 'false');
-                    
-                    // Update hidden fields with current editable content
-                    hiddenTitle.value = title.textContent.trim();
-                    hiddenArtist.value = artist.textContent.trim();
-                    hiddenBookName.value = bookName.textContent.trim();
-                    hiddenParts.forEach((input, index) => {
-                        input.value = parts[index].textContent.trim();
-                    });
+            const toggleBlocks = ['title', 'chord', 'artist', 'scripture', 'bookName', 'tags'];
 
-                    // Make fields read-only
-                    title.contentEditable = 'false';
-                    artist.contentEditable = 'false';
-                    bookName.contentEditable = 'false';
-                    parts.forEach(part => part.contentEditable = 'false');
-                } else {
-                    // Edit mode
-                    saveButton.classList.remove('d-none');
-                    editButton.classList.add('d-none');
-                    editButton.textContent = 'Cancel';
-                    editButton.setAttribute('data-edit', 'true');
-                    
-                    // Make fields editable
-                    title.contentEditable = 'true';
-                    artist.contentEditable = 'true';
-                    bookName.contentEditable = 'true';
-                    parts.forEach(part => part.contentEditable = 'true');
-                }
+            toggleBlocks.forEach(id => {
+                var viewEl = document.getElementById(id + 'View');
+                if (viewEl) viewEl.classList.toggle('d-none', isEditMode);
+                var editEl = document.getElementById(id + 'Edit');
+                if (editEl) editEl.classList.toggle('d-none', !isEditMode);
             });
+
+            // Toggle desktop buttons
+            var shareButton = document.getElementById('share-button');
+            var copyButton = document.getElementById('copy-button');
+            var increaseFontButton = document.getElementById('increase-font');
+            var decreaseFontButton = document.getElementById('decrease-font');
+            var requestButtonDesktop = document.getElementById('requestSongButton');
+            var removeButtonDesktop = document.getElementById('removeSongButton');
+            var toggleEditButton = document.getElementById('toggleEditButton');
+            if (toggleEditButton) toggleEditButton.classList.toggle('d-none', isEditMode);
+            var editButtons = document.getElementById('editButtons');
+            // Only if desktop
+            if (editButtons && window.innerWidth >= 768) {
+                editButtons.classList.toggle('d-none', !isEditMode);
+                if (isEditMode) {
+                    editButtons.classList.add('d-md-flex');
+                } else {
+                    editButtons.classList.remove('d-md-flex');
+                }
+            }
+            if (shareButton) shareButton.classList.toggle('d-none', isEditMode);
+            if (copyButton) copyButton.classList.toggle('d-none', isEditMode);
+            if (increaseFontButton) increaseFontButton.classList.toggle('d-none', isEditMode);
+            if (decreaseFontButton) decreaseFontButton.classList.toggle('d-none', isEditMode);
+            if (requestButtonDesktop) requestButtonDesktop.classList.toggle('d-none', isEditMode);
+            if (removeButtonDesktop) removeButtonDesktop.classList.toggle('d-none', isEditMode);
+            
+            
+            // Toggle mobile buttons
+            var shareButtonMobile = document.getElementById('share-button-mobile');
+            if (shareButtonMobile) shareButtonMobile.classList.toggle('d-none', isEditMode);
+            var copyButtonMobile = document.getElementById('copy-button-mobile');
+            if (copyButtonMobile) copyButtonMobile.classList.toggle('d-none', isEditMode);
+            var increaseFontButtonMobile = document.getElementById('increase-font-mobile');
+            if (increaseFontButtonMobile) increaseFontButtonMobile.classList.toggle('d-none', isEditMode);
+            var decreaseFontButtonMobile = document.getElementById('decrease-font-mobile');
+            if (decreaseFontButtonMobile) decreaseFontButtonMobile.classList.toggle('d-none', isEditMode);
+            var requestButtonMobile = document.getElementById('requestSongButtonMobile');
+            if (requestButtonMobile) requestButtonMobile.classList.toggle('d-none', isEditMode);
+            var removeButtonMobile = document.getElementById('removeSongButtonMobile');
+            if (removeButtonMobile) removeButtonMobile.classList.toggle('d-none', isEditMode);
+            // Hide desktop edit buttons too
+            var toggleEditButtonMobile = document.getElementById('toggleEditButtonMobile');
+            if (toggleEditButtonMobile) toggleEditButtonMobile.classList.toggle('d-none', isEditMode);
+            var editButtonsMobile = document.getElementById('editButtonsMobile');
+            if (editButtonsMobile) editButtonsMobile.classList.toggle('d-none', !isEditMode);
+
+            // Toggle lyrics view/edit
+            document.querySelectorAll('.lyrics-part-view').forEach(el => {
+                el.classList.toggle('d-none', isEditMode);
+            });
+            document.querySelectorAll('.lyrics-part-edit').forEach(el => {
+                el.classList.toggle('d-none', !isEditMode);
+            });
+            
+            // Initialize auto-resize when entering edit mode
+            if (isEditMode) {
+                setTimeout(initAutoResize, 0);
+            }
+        }
+        
+        // Initialize auto-resize on page load
+        document.addEventListener('DOMContentLoaded', initAutoResize);
+        
+        // Font size control functionality
+        let currentFontSize = 16; // Default font size in pixels
+        const minFontSize = 12;
+        const maxFontSize = 24;
+        const fontSizeStep = 2;
+        
+        function updateFontSize(newSize) {
+            currentFontSize = Math.max(minFontSize, Math.min(maxFontSize, newSize));
+            const remSize = currentFontSize / 16; // Convert to rem
+            
+            // Set CSS custom properties for both desktop and mobile
+            document.documentElement.style.setProperty('--lyrics-font-size', `${remSize}rem`);
+            document.documentElement.style.setProperty('--lyrics-font-size-mobile', `${remSize}rem`);
+        }
+        
+        function increaseFontSize() {
+            updateFontSize(currentFontSize + fontSizeStep);
+        }
+        
+        function decreaseFontSize() {
+            updateFontSize(currentFontSize - fontSizeStep);
+        }
+        
+        // Bind event listeners for font size controls
+        document.addEventListener('DOMContentLoaded', function() {
+            // Desktop buttons
+            document.getElementById('increase-font')?.addEventListener('click', increaseFontSize);
+            document.getElementById('decrease-font')?.addEventListener('click', decreaseFontSize);
+            
+            // Mobile buttons
+            document.getElementById('increase-font-mobile')?.addEventListener('click', increaseFontSize);
+            document.getElementById('decrease-font-mobile')?.addEventListener('click', decreaseFontSize);
         });
     </script>
 </body>

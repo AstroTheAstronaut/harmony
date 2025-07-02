@@ -7,6 +7,7 @@
         "books": "Cărți",
         "settings": "Setări",
         "activity_log": "Jurnal de Activitate",
+        "audit_log": "Jurnal de Audit",
         "notifications": "Notificări",
         "search": "Căutare",
         "dashboard": "Tabloul de Bord",
@@ -39,13 +40,36 @@
         "first_setup": "Configurare inițială",
         "no": "Nr.",
         "footer_verse": "Slujiți Domnului cu bucurie, veniți cu veselie înaintea Lui!",
-        "devinfo": "2024 Harmony App by Matteo"
+        "devinfo": "2025 Harmony App by Matteo",
+        "schedule": "Program",
+        "click_here": "Apasă aici"
     },
     "login_page": {
         "viewer": "Vizualizator",
         "moderator": "Moderator",
         "editor": "Editor",
-        "admin": "Administrator"
+        "admin": "Administrator",
+        "username": "Nume de utilizator",
+        "password": "Parolă",
+        "register_message": "Ai un cod de înregistrare?",
+        "login_user": "Conectează-te ca utilizator",
+        "remember_me": "Rămâi conectat",
+        "login_as": "Conectează-te ca",
+        "user_registered_success": "Utilizator înregistrat cu succes! Acum te poți conecta.",
+        "user_registered_error": "Înregistrarea utilizatorului a eșuat. Verifică codul de înregistrare și încearcă din nou.",
+        "logout_success": "Te-ai deconectat cu succes."
+    },
+    "register_page": {
+        "confirm_password": "Confirmă parola",
+        "email": "Email",
+        "register": "Înregistrează-te",
+        "friendly_message": "Creează un cont",
+        "register_code": "Cod de înregistrare",
+        "register_message": "Introdu codul de înregistrare pentru a-ți crea un cont",
+        "register_success": "Înregistrare reușită! Acum te poți autentifica.",
+        "register_error": "Înregistrare eșuată. Verifică codul de înregistrare și încearcă din nou.",
+        "already_account": "Ai deja un cont?",
+        "login_instead": "Autentifică-te"
     },
     "song_parts": {
         "title": "Titlu",
@@ -61,7 +85,8 @@
         "book": "Carte",
         "title": "Carte",
         "name": "Numele Cărții",
-        "uid": "UID Carte"
+        "uid": "UID Carte",
+        "no_book": "Necunoscut"
     },
     "song": {
         "title": "Titlu",
@@ -69,7 +94,8 @@
         "chord": "Acord",
         "part_type": "Tip Parte",
         "song_no_in_bo": "Numărul cântecului în carte",
-        "lyrics": "Versuri"
+        "lyrics": "Versuri",
+        "scripture": "Scriptură"
     },
     "upload": {
         "choose_file": "Alege Fișier",

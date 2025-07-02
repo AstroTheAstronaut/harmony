@@ -12,6 +12,80 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <!-- Custom CSS -->
+     <style>
+       body, html {
+            height: 100%;
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        #wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .error {
+            font-size: 7rem;
+            position: relative;
+        }
+        
+        .error:before {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            color: #e3e6f0;
+            font-size: 7rem;
+            z-index: -1;
+        }
+        
+        .sticky-footer {
+            margin-top: auto;
+        }
+        
+        .scroll-to-top {
+            position: fixed;
+            right: 1rem;
+            bottom: 1rem;
+            display: none;
+            width: 2.75rem;
+            height: 2.75rem;
+            text-align: center;
+            color: #fff;
+            background: rgba(90, 92, 105, 0.5);
+            line-height: 46px;
+        }
+        
+        .scroll-to-top:focus,
+        .scroll-to-top:hover {
+            color: white;
+        }
+        
+        .scroll-to-top:hover {
+            background: #5a5c69;
+        }
+        
+        .scroll-to-top i {
+            font-weight: 800;
+        }
+        footer {
+            width: 100%;
+        }
+     </style>
 </head>
 
 <body id="page-top">
@@ -21,9 +95,9 @@
                 <div class="container-fluid">
                     <div class="text-center mt-5">
                         <div class="error mx-auto" data-text="404">
-                            <p class="m-0">404</p>
+                            <p class="m-0">401</p>
                         </div>
-                        <p class="text-dark mb-5 lead"><%= t('messages.page_not_found'); %></p>
+                        <p class="text-dark mb-5 lead"><%= t('messages.unauthorized'); %></p>
                         <p class="text-black-50 mb-0"><%= t('messages.lost'); %></p><a href="/">← <%= t('messages.back_to_dashboard'); %></a>
                     </div>
                 </div>

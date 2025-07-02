@@ -1,4 +1,3 @@
-const pool = require('../connectors/db-connector');
 const fs = require('fs');
 //Goose models
 const User = require('../models/User');
@@ -6,6 +5,109 @@ const SongPart = require('../models/SongPart');
 const Song = require('../models/Song');
 const Book = require('../models/Book');
 const Request = require('../models/Request');
+const Note = require('../models/Note');
+const RegisterCode = require('../models/RegisterCode');
+const Notification = require('../models/Notification');
+
+async function createUser(username, email, password, registerCode) {
+    try {
+        
+    } catch (err) {
+        return Promise.reject(err);
+    }
+}
+
+async function getUsers() {
+    try {
+        var users = await User.find({}, { password: 0, __v: 0 });
+        return users;
+    } catch (err) {
+        return Promise.reject(err);
+    }
+}
+
+async function updateUserStatus(userId, newStatus, reason = null, durationDays = null) {
+    try {
+        const user = await User.findOne({ user_uid: userId });
+        if (!user) throw new Error(`User not found: ${userId}`);
+
+        // Save old status and punishment info in case needed for previousOffences
+        const oldStatus = user.status;
+        const oldPunishmentReason = user.punishmentReason;
+        const oldPunishmentDuration = user.punishmentDuration;
+        const oldPunishmentDate = user.punishmentDate;
+
+        // Clear punishment info by default
+        user.punishmentReason = null;
+        user.punishmentDuration = null;
+        user.punishmentDate = null;
+        user.deleteDate = null;
+
+        if (newStatus === 'deleted') {
+            user.status = 'deleted';
+            user.deleteDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+            user.punishmentReason = reason || 'No reason provided';
+            user.punishmentDate = new Date();
+
+            // Add to previousOffences
+            user.previousOffences.push({
+                date: user.punishmentDate,
+                reason: user.punishmentReason,
+                duration: durationDays || 7, // default 7 days until deletion
+                type: 'delete',
+            });
+        } 
+        else if (newStatus === 'suspended' || newStatus === 'banned') {
+            user.status = newStatus;
+            user.punishmentReason = reason || 'No reason provided';
+            user.punishmentDuration = durationDays || null;
+            user.punishmentDate = new Date();
+
+            user.previousOffences.push({
+                date: user.punishmentDate,
+                reason: user.punishmentReason,
+                duration: durationDays || null,
+                type: newStatus,
+            });
+        }
+        else if (newStatus === 'undelete') {
+            user.status = 'active';
+            user.deleteDate = null;
+        } 
+        else if (newStatus === 'unsuspend' || newStatus === 'unban') {
+            user.status = 'active';
+        } else {
+            // For other statuses, just update status
+            user.status = newStatus;
+        }
+
+        await user.save();
+    } catch (err) {
+        throw err;
+    }
+}
+
+async function deleteUsers() {
+    try {
+        const currentDate = new Date();
+
+        const usersToDelete = await User.find({
+            deleteDate: { $lte: currentDate },
+            status: 'deleted'
+        });
+
+        if (usersToDelete.length === 0) {
+            return Promise.resolve('No users to delete');
+        }
+
+        const userUids = usersToDelete.map(user => user.user_uid);
+        await User.deleteMany({ user_uid: { $in: userUids } });
+
+        return Promise.resolve(`Deleted ${usersToDelete.length} users`);
+    } catch (err) {
+        return Promise.reject(err);
+    }
+}
 
 async function getUser(role, password) {
     try {
@@ -49,6 +151,7 @@ async function getBooks() {
 async function getBookNameById(bookId) {
     try {
         var book = await Book.findOne({ bo_uid: bookId });
+        console.log('Book found:', book);
         return book ? book.bo_name : 'Unknown Book';
     } catch (err) {
         return 'Unknown Book';
@@ -85,28 +188,26 @@ async function addBook(bookName, book_uuid) {
     }
 }
 
-async function addSong(title, artist, bookId, song_uid, chord, parts, bookSongNumber){
+async function addSong(title, artist, bookId, song_uid, chord, parts, bookSongNumber, chord, scripture, tags) {
     try {
+        const embeddedParts = parts.map((part, index) => ({
+            part_type: part.type.toUpperCase(),
+            part_order: index+1,
+            lyrics: part.lyrics
+        }));
         var song = new Song({
             title: title,
             artist: artist,
             book_uuid: bookId,
             song_uid: song_uid,
             chord: chord,
-            book_song_number: bookSongNumber
+            book_song_number: bookSongNumber,
+            chord: chord,
+            scripture: scripture,
+            parts: embeddedParts,
+            tags: tags
         });
         await song.save();
-
-        const songPartPromises = parts.map((part, index) => {
-            const songPart = new SongPart({
-                song_uid: song_uid,
-                part_type: part.type,
-                lyrics: part.lyrics,
-                part_order: index + 1
-            });
-            return songPart.save();
-        });
-        await Promise.all(songPartPromises);
     } catch (err) {
         return Promise.reject(err);
     }
@@ -141,7 +242,19 @@ async function getSongsByBookUUID(book_uuid) {
 
 async function getSongsWithPagination(offset = 0, limit = 10) {
     try {
-        var songs = await Song.find().skip(offset).limit(limit);
+        var songs = await Song.aggregate([
+            {
+                $lookup: {
+                    from: 'books', // The name of the collection that contains books
+                    localField: 'book_uuid', // The field in the songs collection
+                    foreignField: 'bo_uid', // The field in the books collection
+                    as: 'book_details' // The name of the field where the book details will be added
+                }
+            },
+            { $unwind: { path: '$book_details', preserveNullAndEmptyArrays: true } }, // Unwind but preserve songs without books
+            { $skip: offset },
+            { $limit: limit }
+        ]);
         return songs;
     } catch (err) {
         return Promise.reject(err);
@@ -162,21 +275,22 @@ async function getSongById(id) {
         { $match: { song_uid: id } },
         {
             $lookup: {
-                from: 'books', // The name of the collection that contains books
-                localField: 'book_uuid', // The field in the songs collection
-                foreignField: 'bo_uid',// The field in the books collection
-                as: 'book_details' // The name of the field where the book details will be added
+                from: 'books',
+                localField: 'book_uuid',
+                foreignField: 'bo_uid',
+                as: 'book_details'
             },
         },
-        { $unwind: { path: '$book_details' } }, // Unwind the array of book details
+        { 
+            $unwind: {
+                path: '$book_details',
+                preserveNullAndEmptyArrays: true
+            }
+        },
     ]);
 
     if (song.length > 0) {
         const songData = song[0];
-        const songParts = await SongPart.find({ song_uid: id }) || [];
-
-        songData.parts = songParts;
-
         return songData;
     }
 
@@ -212,34 +326,22 @@ async function getSongsWithLimit (limit) {
 
 async function removeSong(id) {
     try {
-        await SongPart.deleteMany({ song_uid: id });
         await Song.deleteOne({ song_uid: id });
     } catch (err) {
         return Promise.reject(err);
     }
 }
 
-async function searchLyrics(term) {
+async function getAutocompleteResults(term) {
     try {
-        var lyricsResults = await SongPart.aggregate([
+        var results = await SongPart.aggregate([
             {
                 $search: {
                     index: 'songcontent',
-                    phrase: {
+                    autocomplete: {
                         query: term,
-                        path: 'lyrics',
-                        slop: 1
+                        path: 'lyrics'
                     }
-                    // text: {
-                    //     query: term,
-                    //     path: 'lyrics',
-                    //     fuzzy: {
-                    //         maxEdits: 2.0,
-                    //         prefixLength: 0,
-                    //         maxExpansions: 15
-                    //     },
-                    //     matchCriteria: "all"
-                    // }
                 }
             },
             {
@@ -274,31 +376,76 @@ async function searchLyrics(term) {
                     book_name: '$book_info.bo_name',
                     chord: '$song_info.chord',
                     part_type: 1,
-                    lyrics: 1,
-                    score: { $meta: 'searchScore' }
+                    lyrics: 1
                 }
             }
         ]);
 
-        // Write to file
-        fs.writeFile('lyricsResults.json', JSON.stringify(lyricsResults, null, 4), (err) => {
-            if (err) {
-                console.error('Error writing search results to file:', err);
-            }
-        });
+        console.log('Autocomplete results:', results);
 
-
-        return lyricsResults;
     } catch (err) {
         return Promise.reject(err);
     }
 }
+async function searchLyrics(term) {
+    try {
+        const results = await Song.aggregate([
+            {
+                $search: {
+                    index: "songsearch",
+                    text: {
+                        query: term,
+                        path: "parts.lyrics"
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: "books",
+                    localField: "book_uuid",   // in Song document
+                    foreignField: "bo_uid",     // in Book document
+                    as: "book"
+                }
+            },
+            {
+                $unwind: {
+                    path: "$book",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $project: {
+                    title: 1,
+                    artist: 1,
+                    parts: 1,
+                    book_song_number: 1,
+                    book_name: "$book.bo_name",   // ← get the book name
+                    book_uid: "$book.bo_uid",     // optional: if you want the uid too
+                    score: { $meta: "searchScore" }
+                }
+            },
+            {
+                $sort: { score: -1 }
+            },
+            {
+                $limit: 10
+            }
+        ]);
 
-async function requestSong(songUid, req_id) {
+        console.log("Search results:", results);
+        return results;
+    } catch (error) {
+        console.error("Error searching lyrics:", error);
+        throw error;
+    }
+}
+
+async function requestSong(songUid, req_id, req_user) {
     try {
         var request = new Request({
             song_uid: songUid,
-            request_id: req_id
+            request_id: req_id,
+            requested_by: req_user
         });
         await request.save();
         await Song.updateOne({ song_uid: songUid }, { $inc: { request_count: 1 } });   
@@ -368,8 +515,6 @@ async function getMostRequestedSongs() {
         return Promise.reject(err);
     }
 }
-
-
 
 async function getRequestedSongs() {
     try {
@@ -449,55 +594,113 @@ async function removeAllRequestedSongs() {
 // }
 
 
-async function editSong(song_uid, song_title, song_artist, book_uuid, book_song_number, parts, manageTransaction = true) {
-    let conn;
+async function editSong (song_uid, book_song_number, title, chrod, artist, scripture, book, tags, parts){
     try {
-        conn = await pool.getConnection();
-        if (manageTransaction) await conn.beginTransaction();
-
-        // Update the song details
-        const updateSongQuery = `
-            UPDATE songs
-            SET title = ?, artist = ?, book_uuid = ?, book_song_number = ?
-            WHERE song_uid = ?
-        `;
-        await conn.query(updateSongQuery, [song_title, song_artist, book_uuid, book_song_number, song_uid]);
-
-        // Update song parts
-        const deletePartsQuery = 'DELETE FROM song_parts WHERE song_uid = ?';
-        await conn.query(deletePartsQuery, [song_uid]);
-
-        const insertPartQuery = 'INSERT INTO song_parts (song_uid, part_type, lyrics, part_order) VALUES (?, ?, ?, ?)';
-        for (let i = 0; i < parts.length; i++) {
-            const part = parts[i];
-            const partOrder = i + 1; // Set the part order based on the index
-            await conn.query(insertPartQuery, [song_uid, part.type, part.lyrics, partOrder]);
+        var song = {
+            song_uid: song_uid.song_uid,
+            book_song_number: book_song_number,
+            title: title,
+            chord: chrod,
+            artist: artist,
+            scripture: scripture,
+            book_uuid: book,
+            tags: tags,
+            parts: parts
         }
-
-        if (manageTransaction) await conn.commit();
+        await Song.updateOne({ song_uid: song_uid }, song);
         return Promise.resolve();
     } catch (err) {
-        if (conn && manageTransaction) await conn.rollback();
         return Promise.reject(err);
-    } finally {
-        if (conn) conn.release();
     }
 }
 
+// NOTE - Test and verify this function
+async function addNote(note, user_id) {
+    try {
+        var note = new Note({
+            note: note,
+            user_id: user_id
+        });
+        await note.save();
+    } catch (err) {
+        return Promise.reject(err);
+    }
+}
 
-//NOTE - To be added later
-// async function getNotifications () {
-//     let conn;
-//     try {
-//         conn = await pool.getConnection();
-//         const [rows] = await conn.query('SELECT * FROM notifications');
-//         return rows;
-//     } catch (err) {
-//         return Promise.reject(err);
-//     } finally {
-//         if (conn) conn.release();
-//     }
-// }
+async function getRegistrationCodes () {
+    try {
+        var codes = await RegisterCode.find();
+        return codes;
+    } catch (err) {
+        return Promise.reject(err);
+    }
+}
+
+async function createRegistrationCode (code, expiryDate, email, role){ 
+    try {
+        if (!email) email = "No email";
+        if (!code) return Promise.reject(new Error("Code cannot be empty"));
+        if (!expiryDate) expiryDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // Default to 30 days from now
+
+        var registrationCode = new RegisterCode ({ 
+            code: code,
+            email: email,
+            role: role,
+            isUsed: false,
+            isExpired: false,
+            expiryDate: expiryDate,
+            createdAt: new Date()
+        });
+        await registrationCode.save();
+        return Promise.resolve();
+    } catch (Err) {
+        return Promise.reject(err);
+    }
+}
+
+async function markCodeAsExpired(code) {
+  try {
+    const registrationCode = await RegisterCode.findOne({ code: code });
+    if (!registrationCode) return; // prevent crash
+    if (registrationCode.expiryDate < new Date()) {
+      registrationCode.isExpired = true;
+      await registrationCode.save();
+    }
+  } catch (err) {
+    console.error(`Error marking code ${code} as expired:`, err);
+  }
+}
+
+async function createNotification(notification_id, userId, type, message, seen, song_id, link) {
+    try {
+        if (!userId || !type || !notification_id) {
+            return Promise.reject(new Error("User ID and/or notification ID is required for creating a notification"));
+        }
+        const notification = new Notification({
+            notification_id: notification_id,
+            user_id: userId,
+            type: type,
+            message: message || null,
+            seen: seen || false,
+            song_id: song_id || null,
+            link: link || null
+        });
+        await notification.save();
+        return Promise.resolve();
+    } catch (err) {
+        return Promise.reject(err);
+    }
+}
+
+async function getNotifications() {
+    try {
+        const notifications = await Notification.find({ seen: false }).sort({ created_at: -1 });
+        // Return empty array if none found — consistent return type
+        return notifications;
+    } catch (err) {
+        throw err;
+    }
+}
 
 module.exports = {
     getBooks,
@@ -524,5 +727,14 @@ module.exports = {
     editSong,
     getUser,
     getUserWithoutPassword,
-    getSongsByBookUUID
+    getSongsByBookUUID,
+    addNote,
+    getRegistrationCodes,
+    createRegistrationCode,
+    markCodeAsExpired,
+    getUsers,
+    updateUserStatus,
+    deleteUsers,
+    createNotification,
+    getNotifications
 };

@@ -1,0 +1,85 @@
+<div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="text-primary fw-bold m-0"><%= t('superuser.registration_codes') %></h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="fw-bold m-0"><%= t('superuser.active_registration_codes') %>:</h6>
+                                <button type="button" id="createNewRegCodeButton" class="btn btn-sm btn-outline-secondary" title="Create new code" data-bs-toggle="modal" data-bs-target="#createNewRegCodeButtonModal">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                                </div>
+
+                                <% if (activeCodes.length === 0) { %>
+                                <p class="text-muted">No active registration codes.</p>
+                                <% } else { %>
+                                <% activeCodes.forEach((code, index) => { %>
+                                    <div class="card my-2">
+                                    <div class="card-header d-flex justify-content-between align-items-center"
+                                        data-bs-toggle="collapse"
+                                        href="#collapseActive<%= index %>"
+                                        role="button"
+                                        aria-expanded="false"
+                                        aria-controls="collapseActive<%= index %>">
+                                        <span><strong><%= code.code %></strong></span>
+                                        <span class="badge bg-success">Created</span>
+                                    </div>
+                                    <div class="collapse" id="collapseActive<%= index %>">
+                                        <div class="card-body">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item"><strong>Created At:</strong> <%= code.createdAt.toLocaleString() %></li>
+                                            <li class="list-group-item"><strong>Expires At:</strong> <%= code.expiryDate.toLocaleString() %></li>
+                                            <li class="list-group-item"><strong>Role:</strong> <%= code.role %></li>
+                                            <li class="list-group-item"><strong>Email:</strong> <%= code.email || 'No email' %></li>
+                                        </ul>
+                                        </div>
+                                    </div>
+                                    </div>
+                                <% }) %>
+                                <% } %>
+                                <hr>
+                                <h6 class="fw-bold mt-3 mb-2"><%= t('superuser.expired_or_used_codes') || "Expired / Used Registration Codes" %>:</h6>
+
+                                <% if (expiredCodes.length === 0) { %>
+                                <p class="text-muted">No expired or used registration codes.</p>
+                                <% } else { %>
+                                <% expiredCodes.forEach((code, index) => { %>
+                                    <div class="card my-2">
+                                    <div class="card-header d-flex justify-content-between align-items-center"
+                                        data-bs-toggle="collapse"
+                                        href="#collapseExpired<%= index %>"
+                                        role="button"
+                                        aria-expanded="false"
+                                        aria-controls="collapseExpired<%= index %>">
+                                        <span><strong><%= code.code %></strong></span>
+                                        <span class="badge <%= code.isUsed ? 'bg-warning' : 'bg-danger' %>">
+                                        <%= code.isUsed ? 'Used' : 'Expired' %>
+                                        </span>
+                                    </div>
+                                    <div class="collapse" id="collapseExpired<%= index %>">
+                                        <div class="card-body">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item"><strong>Created At:</strong>
+                        <%= code.createdAt ? new Date(code.createdAt).toLocaleString() : 'Unknown' %>
+                        </li>
+
+                        <li class="list-group-item"><strong>Expired At:</strong>
+                        <%= code.expiryDate ? new Date(code.expiryDate).toLocaleString() : 'No expiry' %>
+                        </li>
+
+                                            <li class="list-group-item"><strong>Role:</strong> <%= code.role %></li>
+                                            <li class="list-group-item"><strong>Email:</strong> <%= code.email || 'No email' %></li>
+                                        </ul>
+                                        </div>
+                                    </div>
+                                    </div>
+                                <% }) %>
+                                <% } %>
+
+                                <div class="text-end mt-3">
+                                <a href="/superuser/regcodes" class="text-decoration-none small">
+                                    View all codes
+                                </a>
+                                </div>
+                            </div>
+                            </div>

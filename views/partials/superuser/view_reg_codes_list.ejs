@@ -1,0 +1,43 @@
+<div class="fade modal" role="dialog" aria-hidden="true" aria-labelledby="createRegistrationCodeLabel" id="createNewRegCodeButtonModal"
+        tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createRegistrationCodeLabel">Registration codes:</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <p>You are about to create a registration code.</p>
+                        <p>To continue, please enter the details below:</p>
+                        <label for="regCodeRole">Role:</label>
+                        <select class="form-control" id="regCodeRole" required>
+                            <option value="" disabled selected>Select a role</option>
+                            <option value="Viewer">Viewer</option>
+                            <option value="Moderator">Moderator</option>
+                            <option value="Editor">Editor</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                        <label for="regCodeEmail">Email address (optional):</label>
+                        <input type="email" class="form-control" id="regCodeEmail" placeholder="Enter email (optional)">
+                        <label for="regCodeExpiry">Expiry Date:</label>
+                        <input type="date" class="form-control" id="regCodeExpiry" required>
+                        <label for="regCodeCount">Number of codes to create:</label>
+                        <input type="number" class="form-control" id="regCodeCount" min="1" value="1" required>
+                        <p class="mt-2">Note: If you leave the email field empty, the code will not be associated with any email.</p>
+                    </div>
+                    
+                    <p>The following registration codes will be created:</p>
+                    <div class="card regCode-card">
+                        <div class="card-body text-center" id="generatedCodePreview"></div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <form action="/superuser/registration-code/create" method="POST" class="d-inline" id="createRegistrationCodeForm">
+                        <input type="hidden" name="registrationCodes" id="registrationCodesInput">
+                        <button type="submit" class="btn btn-success modal-button-black" id="submitRegCodeBtn" disabled>Create registration code</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

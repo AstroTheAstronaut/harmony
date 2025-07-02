@@ -6,27 +6,40 @@
         <ul class="list-group">
             <% books.forEach(book=> { %>
                 <li class="list-group-item">
-                    <div class="row">
+                    <div class="row align-items-center">
                         <div class="col">
-                            <h4 class="small fw-bold"
+                            <h4 class="small fw-bold mb-0"
                                 style="color: var(--bs-emphasis-color); font-size: 16px;">
-                                <%= book.bo_name %>
+                                <a href="/songs?book=<%= book.bo_uid %>"
+                                    class="text-decoration-none text-reset">
+                                     <%= book.bo_name %>
+                                </a>
                             </h4>
                             <!-- Placeholder for number of songs -->
-                            <span
-                                class="float-start"><!-- Number of songs will be inserted here later --></span>
+                            <span class="float-start"><!-- Number of songs will be inserted here later --></span>
                         </div>
-                        <% if(userRole === 'Viewer' || userRole === 'Moderator' || userRole === 'Editor') {} else { %>
-                        <div class="col-auto align-self-center">
-                            <button class="btn btn-danger btn-sm"
-                                data-book-id="<%= book.bo_uid %>"
-                                data-target="#deleteBookModal" data-toggle="modal"
-                                type="button"><%= t('general.delete') %></button>
-                        </div>
+                        <% if(hasPermission('remove_books')) { %>
+                            <div class="col-auto">
+                                <!-- Desktop: Button -->
+                                <button class="btn btn-danger btn-sm d-none d-md-inline-block"
+                                    data-book-id="<%= book.bo_uid %>"
+                                    data-target="#deleteBookModal" data-toggle="modal"
+                                    type="button">
+                                    <%= t('general.delete') %>
+                                </button>
+                                
+                                <!-- Mobile: Link -->
+                                <a href="#" 
+                                   class="text-danger text-decoration-none text-smaller-responsive d-md-none"
+                                   data-book-id="<%= book.bo_uid %>"
+                                   data-target="#deleteBookModal" data-toggle="modal">
+                                    <%= t('general.delete') %>
+                                </a>
+                            </div>
                         <% } %>
                     </div>
                 </li>
-                <% }) %>
+            <% }) %>
         </ul>
     </div>
 </div>

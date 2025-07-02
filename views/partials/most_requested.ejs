@@ -7,43 +7,111 @@
             <% mostRequestedSongs.forEach(song=> { %>
                 <li class="list-group-item">
                     <div class="row">
-                        <div class="col-auto align-self-center me-2">
-                            <a class="link-dark text-decoration-none"
-                                href="/song-view/<%= song.song_uid %>">
-                                <strong>
-                                    <% if(song.book_song_number) { %>
-                                        <%= song.book_song_number %>. <%= song.title
-                                                %>
+                        <div class="col">
+                            <div class="d-flex flex-column">
+                                <!-- Desktop: Single row layout -->
+                                <div class="d-none d-sm-flex justify-content-between align-items-center py-2">
+                                    <!-- Left side: Title, Artist, and Book badge -->
+                                    <div class="d-flex align-items-center">
+                                        <a class="link-dark text-decoration-none me-3"
+                                            href="/song-view/<%= song.song_uid %>">
+                                            <strong>
+                                                <% if(song.book_song_number) { %>
+                                                    <%= song.book_song_number %>. <%= song.title %> 
                                                 <% } else { %>
                                                     <%= song.title %>
-                                                        <% } %>
-                                </strong>
-                            </a>
-                            <% if (song.artist) { %> - <%= song.artist %>
-                                    <% } %>
-                                        <span class="text-xs ms-2">
-                                            <%= song.request_time %>
-                                        </span>
+                                                <% } %>
+                                            </strong>
+                                        </a>
+                                        <% if (song.artist) { %>
+                                            <span class="text-muted me-3">
+                                                <%= t('song.artist') %>: <%= song.artist %>
+                                            </span>
+                                        <% } %>
+                                        <!-- Book badge stuck to the left group -->
                                         <% if (song.book_song_number) { %>
-                                            <span
-                                                class="badge rounded-pill bg-primary ms-2">
+                                            <span class="badge rounded-pill bg-info">
                                                 <%= t('book.book') %>: <%= song.bo_name %>
                                             </span>
-                                            <% } else { %>
-                                                <span
-                                                    class="badge rounded-pill bg-primary ms-2"><%= t('book.book') %>:
-                                                    <%= t('none') %></span>
-                                            <% } %>
-                        </div>
-                        <div class="col-auto me-2 text-end ms-auto">
-                            <span class="badge bg-primary"><%= t('general.requests') %> <%=
-                                    song.request_count %></span>
+                                        <% } else { %>
+                                            <span class="badge rounded-pill bg-info">
+                                                <%= t('book.book') %>: <%= t('none') %>
+                                            </span>
+                                        <% } %>
+                                    </div>
+                                    
+                                    <!-- Right side: Request count badge -->
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge bg-primary">
+                                            <%= t('general.requests') %> <%= song.request_count %>
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Mobile: Stacked layout -->
+                                <div class="d-sm-none">
+                                    <!-- Title -->
+                                    <div class="mb-1">
+                                        <a class="link-dark text-decoration-none"
+                                            href="/song-view/<%= song.song_uid %>">
+                                            <strong>
+                                                <% if(song.book_song_number) { %>
+                                                    <%= song.book_song_number %>. <%= song.title %> 
+                                                <% } else { %>
+                                                    <%= song.title %>
+                                                <% } %>
+                                            </strong>
+                                        </a>
+                                    </div>
+                                    
+                                    <!-- Artist -->
+                                    <% if (song.artist) { %>
+                                        <div class="mb-2">
+                                            <span class="text-muted">
+                                                <%= t('song.artist') %>: <%= song.artist %>
+                                            </span>
+                                        </div>
+                                    <% } %>
+                                    
+                                    <!-- Badges row -->
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <% if (song.book_song_number) { %>
+                                            <span class="badge rounded-pill bg-info">
+                                                <%= t('book.book') %>: <%= song.bo_name %>
+                                            </span>
+                                        <% } else { %>
+                                            <span class="badge rounded-pill bg-info">
+                                                <%= t('book.book') %>: <%= t('none') %>
+                                            </span>
+                                        <% } %>
+                                        <span class="badge bg-primary">
+                                            <%= t('general.requests') %> <%= song.request_count %>
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- Time on mobile -->
+                                    <div class="mt-2">
+                                        <span class="text-xs text-muted">
+                                            <%= song.request_time %>
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Time on desktop only -->
+                                <div class="d-none d-sm-block">
+                                    <span class="text-xs text-muted">
+                                        <%= song.request_time %>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </li>
-                <% }) %>
-                    <% } else { %>
-                        <p class="text-center"><%= t('messages.no_requests_yet') %>.</p>
-                        <% } %>
+            <% }) %>
+        <% } else { %>
+            <li class="list-group-item d-flex justify-content-center align-items-center">
+                <p class="text-center text-muted m-0"><%= t('messages.no_requests_yet') %></p>
+            </li>
+        <% } %>
     </ul>
 </div>
