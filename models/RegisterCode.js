@@ -11,6 +11,11 @@ const registerCodeSchema = new mongoose.Schema({
         default: 'user',
         required: true
     },
+    email: {
+        type: String,
+        required: false,
+        default: null
+    },
     isUsed: {
         type: Boolean,
         default: false,
@@ -21,9 +26,19 @@ const registerCodeSchema = new mongoose.Schema({
         default: false,
         required: true
     },
+    isDisabled: {
+        type: Boolean,
+        default: false,
+        required: true
+    },
     expiryDate: {
         type: Date,
         required: true,
+    },
+    disabledAt: {
+        type: Date,
+        default: null,
+        required: false
     }
 }, {
     collection: 'registerCodes',

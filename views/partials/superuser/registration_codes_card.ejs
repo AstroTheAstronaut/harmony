@@ -31,6 +31,17 @@
                                             <li class="list-group-item"><strong>Expires At:</strong> <%= code.expiryDate.toLocaleString() %></li>
                                             <li class="list-group-item"><strong>Role:</strong> <%= code.role %></li>
                                             <li class="list-group-item"><strong>Email:</strong> <%= code.email || 'No email' %></li>
+                                            <li class="list-group-item d-flex gap-2">
+                                                <button
+                                                    class="btn-danger btn-sm btn flex-fill"
+                                                    data-code-id="<%= code._id %>"
+                                                    data-code="<%= code.code %>"
+                                                    data-action="disableRegistrationCode"
+                                                    onclick="disableRegistrationCode(this)"
+                                                    title="Disable this code">
+                                                    <i class="fa-solid fa-ban"></i> Disable code
+                                                </button>
+                                            </li>
                                         </ul>
                                         </div>
                                     </div>
@@ -54,18 +65,25 @@
                                         <span><strong><%= code.code %></strong></span>
                                         <span class="badge <%= code.isUsed ? 'bg-warning' : 'bg-danger' %>">
                                         <%= code.isUsed ? 'Used' : 'Expired' %>
+                                        <%= code.isDisabled ? ' (Disabled)' : '' %>
                                         </span>
                                     </div>
                                     <div class="collapse" id="collapseExpired<%= index %>">
                                         <div class="card-body">
                                         <ul class="list-group list-group-flush">
                                             <li class="list-group-item"><strong>Created At:</strong>
-                        <%= code.createdAt ? new Date(code.createdAt).toLocaleString() : 'Unknown' %>
-                        </li>
+                                                <%= code.createdAt ? new Date(code.createdAt).toLocaleString() : 'Unknown' %>
+                                            </li>
 
-                        <li class="list-group-item"><strong>Expired At:</strong>
-                        <%= code.expiryDate ? new Date(code.expiryDate).toLocaleString() : 'No expiry' %>
-                        </li>
+                                            <li class="list-group-item">
+                                                <% if (code.isExpired) { %>
+                                                    <strong>Expired At:</strong>
+                                                    <%= code.expiryDate ? new Date(code.expiryDate).toLocaleString() : 'No expiry' %>
+                                                <% } else if (code.isDisabled) { %>
+                                                    <strong>Disabled At:</strong>
+                                                    <%= code.disabledAt ? new Date(code.disabledAt).toLocaleString() : 'Not disabled' %>
+                                                <% } %>
+                                            </li>
 
                                             <li class="list-group-item"><strong>Role:</strong> <%= code.role %></li>
                                             <li class="list-group-item"><strong>Email:</strong> <%= code.email || 'No email' %></li>
@@ -83,3 +101,84 @@
                                 </div>
                             </div>
                             </div>
+
+<div id="disableRegCodeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="disableRegCodeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="disableRegCodeModalLabel">Disable Registration Code</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to <strong>disable</strong> this registration code?</p>
+                <p>This action cannot be undone easily.</p>
+                <p>Please type the registration code below to confirm:</p>
+
+                <div class="card uuid-card my-2">
+                    <div class="card-body text-center">
+                        <div><strong>Registration Code:</strong> <span id="regCodeDisplay"></span></div>
+                        <div><strong>Role:</strong> <span id="regCodeRoleDisplay"></span></div>
+                    </div>
+                </div>
+
+                <!-- Reason input -->
+                <div class="form-group mb-3">
+                    <label for="disableReason">Reason for disabling:</label>
+                    <textarea class="form-control" id="disableReason" rows="3" placeholder="Enter reason (optional)"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmRegCode">Type the registration code to confirm:</label>
+                    <input type="text" class="form-control" id="confirmRegCode" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button id="confirmDisableButton" class="btn btn-danger" disabled>Disable Code</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="manageUserModal" tabindex="-1" role="dialog" aria-labelledby="manageUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="manageUserModalLabel">Confirm User Action</h5>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to <strong id="userActionType">perform this action</strong> on this user?</p>
+        <p>This action cannot be undone easily.</p>
+        <p>Please type the username below to confirm:</p>
+
+        <div class="card uuid-card my-2">
+          <div class="card-body text-center">
+            <div><strong>User UID:</strong> <span id="userUIDDisplay"></span></div>
+            <div><strong>Username:</strong> <span id="usernameDisplay"></span></div>
+          </div>
+        </div>
+
+        <!-- Reason input -->
+        <div class="form-group mb-3">
+          <label for="punishmentReason">Reason for action:</label>
+          <textarea class="form-control" id="punishmentReason" rows="3" placeholder="Enter reason (optional)"></textarea>
+        </div>
+
+        <!-- Duration input, hidden by default -->
+        <div class="form-group mb-3" id="punishmentDurationGroup" style="display:none;">
+          <label for="punishmentDuration">Duration (days):</label>
+          <label for="banDurationClause" id ="banDurationClause" style="display:none;">If you don't enter a ban duration, it will be permanent.</label>
+          <input type="number" min="1" class="form-control" id="punishmentDuration" placeholder="Enter number of days">
+        </div>
+
+        <div class="form-group">
+          <label for="confirmUserUID">Type the username to confirm:</label>
+          <input type="text" class="form-control" id="confirmUsername" required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="confirmUserActionBtn" class="btn btn-danger" disabled>Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>

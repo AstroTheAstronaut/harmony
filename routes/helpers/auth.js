@@ -26,6 +26,10 @@ router.post('/login-user', async (req, res) => {
       return res.render('login', { error: 'Invalid username or password', username, query: req.query || {} });
     }
 
+    if (user.status === 'deleted') {
+      return res.render('login', { error: 'This account has been deleted.', username, query: req.query || {} });
+    }
+
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       return res.render('login', { error: 'Invalid username or password', username, query: req.query || {} });

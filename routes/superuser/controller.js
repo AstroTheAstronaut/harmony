@@ -1,4 +1,4 @@
-const {getRegistrationCodes, createRegistrationCode, markCodeAsExpired, getUsers, updateUserStatus, deleteUsers, deleteRegistrationCode} = require('./services');
+const {getRegistrationCodes, getCode, createRegistrationCode, markCodeAsExpired, getUsers, updateUserStatus, deleteUsers, deleteRegistrationCode, disableCode} = require('./services');
 
 function formatCustomDate(str) {
   if (!/^\d{12}$/.test(str)) return new Date(NaN);
@@ -48,7 +48,7 @@ async function renderSuperUserPage (req, res) {
             }
 
             // Separate active and expired codes
-            if (!code.isUsed && !code.isExpired) {
+            if (!code.isUsed && !code.isExpired && !code.isDisabled && code.expiryDate > now) {
                 activeCodes.push(code);
             } else {
                 expiredCodes.push(code);
@@ -125,6 +125,32 @@ async function handleUserAction (req, res) {
     }
 }
 
+async function handleDisableCode (req, res) {
+    try {
+        const { code } = req.body;
+
+        if (!code) {
+            return res.status(400).send('Code is required');
+        }
+
+        // Find the registration code in the database
+        const registrationCode = await getCode(code);
+        
+        if (!registrationCode) {
+            return res.status(404).send('Registration code not found');
+        }
+
+        // Disable the registration code
+        registrationCode.isDisabled = true;
+        await registrationCode.save();
+
+        res.status(200).send('Registration code disabled successfully');
+    } catch (err) {
+        console.error('Error disabling registration code:', err);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
 // async function purgeOldCodes(req, res) {
 //     try {
 //         // Purge expired and used registration codes older than 7 days
@@ -150,4 +176,5 @@ module.exports = {
     renderSuperUserPage,
     handleCreateRegistrationCode,
     handleUserAction,
+    handleDisableCode
 }

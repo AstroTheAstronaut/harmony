@@ -6,6 +6,20 @@ async function getRegistrationCodes () {
         var codes = await RegisterCode.find();
         return codes;
     } catch (err) {
+        console.error('Server: Error fetching registration codes:', err);
+        return Promise.reject(err);
+    }
+}
+
+async function getCode(code) {
+    try {
+        const registrationCode = await RegisterCode.findOne({ code: code });
+        if (!registrationCode) {
+            return Promise.reject(new Error(`Registration code not found: ${code}`));
+        }
+        return Promise.resolve(registrationCode);
+    } catch (err) {
+        console.error('Server: Error fetching registration code:', err);
         return Promise.reject(err);
     }
 }
@@ -28,6 +42,10 @@ async function createRegistrationCode (code, expiryDate, email, role){
         await registrationCode.save();
         return Promise.resolve();
     } catch (Err) {
+        console.error('Server: Error creating registration code:', Err);
+        if (Err.code === 11000) {
+            return Promise.reject(new Error('Registration code already exists'));
+        }
         return Promise.reject(err);
     }
 }
@@ -41,7 +59,8 @@ async function markCodeAsExpired(code) {
       await registrationCode.save();
     }
   } catch (err) {
-    console.error(`Error marking code ${code} as expired:`, err);
+    console.error('Server: Error marking code as expired:', err);
+    return Promise.reject(err);
   }
 }
 
@@ -50,6 +69,7 @@ async function getUsers() {
         var users = await User.find({}, { password: 0, __v: 0 });
         return users;
     } catch (err) {
+        console.error('Server: Error fetching users:', err);
         return Promise.reject(err);
     }
 }
@@ -112,6 +132,7 @@ async function updateUserStatus(userId, newStatus, reason = null, durationDays =
 
         await user.save();
     } catch (err) {
+        console.error(`Error updating user status for ${userId}:`, err);
         throw err;
     }
 }
@@ -134,6 +155,7 @@ async function deleteUsers() {
 
         return Promise.resolve(`Deleted ${usersToDelete.length} users`);
     } catch (err) {
+        console.error('Server: Error deleting users:', err);
         return Promise.reject(err);
     }
 }
@@ -146,16 +168,45 @@ async function deleteRegistrationCode(code) {
         }
         return Promise.resolve(`Registration code ${code} deleted successfully`);
     } catch (err) {
+        console.error('Server: Error deleting registration code:', err);
+        return Promise.reject(err);
+    }
+}
+
+async function disableCode (code) {
+    try {
+        console.log('Looking for registration code:', code);
+        const registrationCode = await RegisterCode.findOne({ code: code });
+        if (!registrationCode) {
+            return Promise.reject(new Error(`Registration code not found: ${code}`));
+        }
+        
+        console.log('Found registration code:', registrationCode);
+        console.log('Before update - isDisabled:', registrationCode.isDisabled, 'disabledAt:', registrationCode.disabledAt);
+        
+        registrationCode.isDisabled = true;
+        registrationCode.disabledAt = new Date();
+        
+        console.log('After setting values - isDisabled:', registrationCode.isDisabled, 'disabledAt:', registrationCode.disabledAt);
+        
+        const savedCode = await registrationCode.save();
+        console.log('After save - isDisabled:', savedCode.isDisabled, 'disabledAt:', savedCode.disabledAt);
+        
+        return Promise.resolve(savedCode);
+    } catch (err) {
+        console.error('Server: Error disabling registration code:', err);
         return Promise.reject(err);
     }
 }
 
 module.exports = {
     getRegistrationCodes,
+    getCode,
     createRegistrationCode,
     markCodeAsExpired,
     getUsers,
     updateUserStatus,
     deleteUsers,
-    deleteRegistrationCode
+    deleteRegistrationCode,
+    disableCode
 }

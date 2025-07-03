@@ -80,6 +80,16 @@
             display: none;
             margin-top: 0.25rem;
         }
+        @media (max-width: 576px) {
+            body {
+                background-image: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+                body{
+                background-image: none !important;
+            }
+        }
 
     </style>
 </head>
@@ -295,6 +305,14 @@
         confirmPasswordInput.addEventListener('blur', checkPasswordsMatch);
 
         registerCodeInput.addEventListener('input', () => {
+            // Remove whitespaces before and after the code value
+            registerCodeInput.value = registerCodeInput.value.trim();
+            // Debounce the input to avoid too many requests
+            if (registerCodeInput.value.length < 1) {
+                document.querySelector('#registerCodeInput + .text-danger').classList.add('d-none');
+                registerBtn.disabled = false;
+                return;
+            }
             clearTimeout(debounceTimeout);
 
             debounceTimeout = setTimeout(() => {
