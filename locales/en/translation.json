@@ -52,7 +52,12 @@
         "save": "Save",
         "save_changes": "Save Changes",
         "cancel": "Cancel",
-        "edit": "Edit"
+        "edit": "Edit",
+        "copy": "Copy",
+        "share": "Share",
+        "share_song": "Share Song",
+        "share_song_link": "Share Song Link",
+        "schedule-plural": "Schedules"
     },
     "superuser": {
         "superuser": "Superuser",
@@ -125,7 +130,9 @@
         "part_type": "Part Type",
         "song_no_in_bo": "Song Number in Book",
         "lyrics": "Lyrics",
-        "scripture": "Scripture"
+        "scripture": "Scripture",
+        "no_tags": "No Tags",
+        "tags": "Tags"
     },
     "upload": {
         "choose_file": "Choose File",
@@ -214,6 +221,21 @@
         "showing_songs_for": "Showing songs for",
         "auto_delete_requests": "Auto delete requests",
         "requests_deletion_time": "Requests deletion time",
-        "requests_deletion_time_desc": "Set the time (in hours) after which requests will be automatically deleted. Enabled only if auto-delete is turned on"
+        "requests_deletion_time_desc": "Set the time (in hours) after which requests will be automatically deleted. Enabled only if auto-delete is turned on",
+        "decrease_font": "Decrease font size",
+        "increase_font": "Increase font size",
+        "edit_song_message": "You can edit the song below. Make sure to save your changes.",
+        "increase_font_message": "Click to increase the font size of the song lyrics.",
+        "decrease_font_message": "Click to decrease the font size of the song lyrics.",
+        "share_song_message": "Share this song with others by copying the link below.",
+        "remove_song": "Remove Song",
+        "request_song": "Request Song",
+        "request_song_message": "Requesting a song adds it to the song request queue",
+        "request_song_success": "Song requested successfully!",
+        "request_song_error": "An error occurred while requesting the song. Please try again.",
+        "remove_song_success": "Song removed successfully!",
+        "remove_song_error": "An error occurred while removing the song. Please try again.",
+        "song_not_found": "Song not found",
+        "book_not_found": "Book not found"
     }
 }

@@ -1,0 +1,204 @@
+Query: binecuvantam
+Results: [
+  {
+    "_id": "6850922cc09c1af225829919",
+    "title": "Binecuvantam Doamne Numele Tau",
+    "artist": "",
+    "book_song_number": 137,
+    "song_uid": "68410d4c-e282-4274-961a-4ebb5216eb16",
+    "book_name": "Caietul Tinerilor 2025",
+    "book_uid": "ct2025",
+    "score": 196.4824981689453
+  },
+  {
+    "_id": "68509234c09c1af225829a35",
+    "title": "Fara binecuvantarea ta",
+    "artist": "",
+    "book_song_number": 206,
+    "song_uid": "07522b97-dc6a-4af5-85e2-22e26a514e84",
+    "book_name": "Caietul Tinerilor 2025",
+    "book_uid": "ct2025",
+    "score": 195.9779052734375
+  },
+  {
+    "_id": "68509235c09c1af225829a39",
+    "title": "Fii binecuvantat Cristos Miel fara pata",
+    "artist": "",
+    "book_song_number": 348,
+    "song_uid": "bf5e9d7f-c490-4d43-98b2-cf2052d762db",
+    "book_name": "Caietul Tinerilor 2025",
+    "book_uid": "ct2025",
+    "score": 194.7616424560547
+  },
+  {
+    "_id": "68509238c09c1af225829a99",
+    "title": "Măreţ eşti Dumnezeu",
+    "artist": "",
+    "book_song_number": 63,
+    "song_uid": "9678bc14-fddf-4109-b832-249c73ae93c8",
+    "book_name": "Caietul Tinerilor 2025",
+    "book_uid": "ct2025",
+    "score": 130.6035919189453
+  },
+  {
+    "_id": "689b2597e6573c9dcad5523f",
+    "title": "Cand sufletul",
+    "artist": "",
+    "book_song_number": 353,
+    "song_uid": "978144a2-d8d8-4568-8dde-a0f52e1731e1",
+    "book_name": "Pe Drumul Credintei",
+    "book_uid": "pdc01",
+    "score": 129.8234100341797
+  },
+  {
+    "_id": "689b259ce6573c9dcad552df",
+    "title": "Doi sau trei",
+    "artist": "",
+    "book_song_number": 222,
+    "song_uid": "f509dd3a-d68d-4d3f-aa2e-ea979f84a537",
+    "book_name": "Pe Drumul Credintei",
+    "book_uid": "pdc01",
+    "score": 129.792724609375
+  },
+  {
+    "_id": "6850923cc09c1af225829b2b",
+    "title": "Tată din ceruri, da noi Te iubim",
+    "artist": "",
+    "book_song_number": 92,
+    "song_uid": "54b22f6f-ebca-4ac4-ae79-3bef2aede2f4",
+    "book_name": "Caietul Tinerilor 2025",
+    "book_uid": "ct2025",
+    "score": 129.7675323486328
+  },
+  {
+    "_id": "68509235c09c1af225829a41",
+    "title": "Hristos în Cana Galilea",
+    "artist": "",
+    "book_song_number": 371,
+    "song_uid": "f170dcd1-b2e4-4abf-9c46-bf8ecd7ac24b",
+    "book_name": "Caietul Tinerilor 2025",
+    "book_uid": "ct2025",
+    "score": 129.6565704345703
+  },
+  {
+    "_id": "68509241c09c1af225829bd9",
+    "title": "’Naintea noastră o pereche stă",
+    "artist": "",
+    "book_song_number": 317,
+    "song_uid": "7effd18f-a186-4eaf-af88-9a21700c0e8c",
+    "book_name": "Caietul Tinerilor 2025",
+    "book_uid": "ct2025",
+    "score": 129.4188690185547
+  },
+  {
+    "_id": "689b259de6573c9dcad552fd",
+    "title": "E o stanca din vecie",
+    "artist": "",
+    "book_song_number": 119,
+    "song_uid": "f6415d93-bcb2-448f-a46a-c2bb20169b49",
+    "book_name": "Pe Drumul Credintei",
+    "book_uid": "pdc01",
+    "score": 129.1446990966797
+  },
+  {
+    "_id": "6850923fc09c1af225829b8b",
+    "title": "Voi cânta în orice vreme",
+    "artist": "",
+    "book_song_number": 189,
+    "song_uid": "e06bc2d3-725a-4edf-9d70-760069af2cbb",
+    "book_name": "Caietul Tinerilor 2025",
+    "book_uid": "ct2025",
+    "score": 129.0438995361328
+  },
+  {
+    "_id": "6850923cc09c1af225829b33",
+    "title": "Te voi lăuda Isuse",
+    "artist": "",
+    "book_song_number": 260,
+    "song_uid": "b5d00099-88aa-46a1-83ea-a5207ddb5e7f",
+    "book_name": "Caietul Tinerilor 2025",
+    "book_uid": "ct2025",
+    "score": 128.82252502441406
+  },
+  {
+    "_id": "6850923bc09c1af225829b0b",
+    "title": "Sufletul meu îl laudă pe Domnul",
+    "artist": "",
+    "book_song_number": 59,
+    "song_uid": "626ef7ff-6dda-45ab-9b66-a2772e82117d",
+    "book_name": "Caietul Tinerilor 2025",
+    "book_uid": "ct2025",
+    "score": 128.76400756835938
+  },
+  {
+    "_id": "6850922ac09c1af2258298e5",
+    "title": "Am găsit în Domnul fericirea",
+    "artist": "",
+    "book_song_number": 267,
+    "song_uid": "ef810cf2-4575-4a1d-af60-0f462db4db89",
+    "book_name": "Caietul Tinerilor 2025",
+    "book_uid": "ct2025",
+    "score": 128.65219116210938
+  },
+  {
+    "_id": "68509151c09c1af22582987e",
+    "title": "Am gasit in Domnul fericirea....",
+    "artist": "",
+    "book_song_number": 13,
+    "song_uid": "99cc22d9-b8bf-4d0e-9ee1-3ef6d3e64757",
+    "book_name": "Caiet Groza",
+    "book_uid": "cgr01",
+    "score": 128.65219116210938
+  },
+  {
+    "_id": "6850923cc09c1af225829b2d",
+    "title": "Te bucură Maria",
+    "artist": "",
+    "book_song_number": 96,
+    "song_uid": "6cf9adc0-0bb6-4a2b-9f83-3b52c43a6816",
+    "book_name": "Caietul Tinerilor 2025",
+    "book_uid": "ct2025",
+    "score": 128.5965118408203
+  },
+  {
+    "_id": "68509230c09c1af2258299ad",
+    "title": "Departe-ntr-o iesle",
+    "artist": "",
+    "book_song_number": 99,
+    "song_uid": "fa6a1217-692b-4be7-9cbc-a3e32a426ff2",
+    "book_name": "Caietul Tinerilor 2025",
+    "book_uid": "ct2025",
+    "score": 128.35140991210938
+  },
+  {
+    "_id": "6850923bc09c1af225829aff",
+    "title": "Slavă Ţie scump Isus",
+    "artist": "",
+    "book_song_number": 248,
+    "song_uid": "b26b3f59-caba-46f0-8e1b-b0e4444ff9cb",
+    "book_name": "Caietul Tinerilor 2025",
+    "book_uid": "ct2025",
+    "score": 128.1375732421875
+  },
+  {
+    "_id": "6850922ac09c1af2258298e3",
+    "title": "Am făcut legământul cu Domnul",
+    "artist": "",
+    "book_song_number": 225,
+    "song_uid": "85bc4fdf-428f-4682-b804-5ef898465171",
+    "book_name": "Caietul Tinerilor 2025",
+    "book_uid": "ct2025",
+    "score": 128.0594940185547
+  },
+  {
+    "_id": "689b259be6573c9dcad552bd",
+    "title": "Din tine am venit Iubire ",
+    "artist": "",
+    "book_song_number": 439,
+    "song_uid": "d21462a4-187e-4e5c-be96-b24b2b4bc7e3",
+    "book_name": "Pe Drumul Credintei",
+    "book_uid": "pdc01",
+    "score": 127.84695434570312
+  }
+]
+

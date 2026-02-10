@@ -40,6 +40,11 @@ const bcrypt = require('bcryptjs/dist/bcrypt');
 
 // Route to handle book deletion
 router.post('/delete-book', async (req, res) => {
+    // Check if user is authenticated
+    if (!req.session || !req.session.user) {
+        return res.redirect('/login');
+    }
+    
     const { book_uuid } = req.body;
     try {
         await deleteBook(book_uuid);
@@ -51,6 +56,11 @@ router.post('/delete-book', async (req, res) => {
 });
 
 router.post('/delete-book-with-songs', async (req, res) => {
+    // Check if user is authenticated
+    if (!req.session || !req.session.user) {
+        return res.redirect('/login');
+    }
+    
     const { book_uuid } = req.body;
     try {
         await deleteBookWithSongs(book_uuid);
@@ -63,6 +73,11 @@ router.post('/delete-book-with-songs', async (req, res) => {
 
 // POST route to handle book addition
 router.post('/add-book', async (req, res) => {
+    // Check if user is authenticated
+    if (!req.session || !req.session.user) {
+        return res.redirect('/login');
+    }
+    
     const { book_name, book_uuid } = req.body;
     if (!book_name || !book_uuid) {
         return res.status(400).send('Book name and UUID are required');
@@ -90,6 +105,11 @@ router.post('/add-book', async (req, res) => {
 
 // Route to handle song request
 router.post('/request-song', async (req, res) => {
+    // Check if user is authenticated
+    if (!req.session || !req.session.user) {
+        return res.redirect('/login');
+    }
+    
     const { song_uid } = req.body;
     const user_uid = req.session.user.user_id;  // Adjust if your session structure is different
 
@@ -121,6 +141,11 @@ router.post('/request-song', async (req, res) => {
 
 // Route to remove requested song
 router.post('/remove-requested', async (req, res) => {
+    // Check if user is authenticated
+    if (!req.session || !req.session.user) {
+        return res.redirect('/login');
+    }
+    
     const { request_id } = req.body;
     try {
         await removeRequestedSong(request_id);
@@ -132,6 +157,11 @@ router.post('/remove-requested', async (req, res) => {
 });
 
 router.post('/remove-all-requests', async (req, res) => {
+    // Check if user is authenticated
+    if (!req.session || !req.session.user) {
+        return res.redirect('/login');
+    }
+    
     try {
         await removeAllRequestedSongs();
         res.redirect('/');
@@ -160,6 +190,11 @@ router.post('/remove-all-requests', async (req, res) => {
 // });
 
 router.post('/upload-book', upload.single('bookFile'), async (req, res) => {
+    // Check if user is authenticated
+    if (!req.session || !req.session.user) {
+        return res.redirect('/login');
+    }
+    
     const zipPath = req.file.path;
     try {
         const zip = new AdmZip(zipPath);
@@ -261,6 +296,11 @@ router.post('/upload-book', upload.single('bookFile'), async (req, res) => {
 
 // Route to handle searching lyrics
 router.get('/search', async (req, res) => {
+    // Check if user is authenticated
+    if (!req.session || !req.session.user) {
+        return res.redirect('/login');
+    }
+    
     const query = req.query.query;
     if (!query) {
         return res.status(400).send('Search query is required');
@@ -317,6 +357,11 @@ router.get('/search', async (req, res) => {
 
 // Route to see a song in full screen
 router.get('/song-view/:id', async (req, res) => {
+    // Check if user is authenticated
+    if (!req.session || !req.session.user) {
+        return res.redirect('/login');
+    }
+    
     try {
         const song = await getSongById(req.params.id);
         const books = await getBooks();
@@ -344,6 +389,11 @@ router.get('/song/:song_uid/public', async (req, res) => {
 
 // Route to update a song
 router.post('/update-song', async (req, res) => {
+    // Check if user is authenticated
+    if (!req.session || !req.session.user) {
+        return res.redirect('/login');
+    }
+    
     const { song_uid, title, artist, book_name, ...parts } = req.body;
     
     try {
@@ -370,7 +420,7 @@ router.post('/update-song', async (req, res) => {
                 song_uid,
                 `/song-view/${song_uid}`
             );
-        } else {
+        } else {alt_title, 
             console.warn('No user_uid found in session. Skipping notification.');
         }
 
@@ -383,6 +433,11 @@ router.post('/update-song', async (req, res) => {
 
 
 router.post('/addNote', async (req, res) => {
+    // Check if user is authenticalt_title, ated
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ success: false, error: 'Authentication required' });
+    }
+    
     const { note, user_id } = req.body;
 
     try {
@@ -397,15 +452,20 @@ router.post('/addNote', async (req, res) => {
     }
 });
 
-router.get('/schedule' , async (req, res) => {
-    try {
-        //const schedule = await getSchedule();
-        res.render('schedule', {activePage: 'schedule', session: req.session});
-    } catch (err) {
-        console.error('Error fetching schedule:', err);
-        res.status(500).send('Error fetching schedule');
-    }
-});
+// router.get('/schedule' , async (req, res) => {
+//     // Check if user is authenticated
+//     if (!req.session || !req.session.user) {
+//         return res.redirect('/login');
+//     }
+    
+//     try {
+//         //const schedule = await getSchedule();
+//         res.render('schedule', {activePage: 'schedule', session: req.session});
+//     } catch (err) {
+//         console.error('Error fetching schedule:', err);
+//         res.status(500).send('Error fetching schedule');
+//     }
+// });
 
 router.post('/check-username', async (req, res) => {
   try {

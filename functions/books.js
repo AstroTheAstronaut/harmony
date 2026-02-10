@@ -1,5 +1,6 @@
 const Book = require('../models/Book');
-
+const Song = require('../models/Song');
+const SongPart = require('../models/SongPart');
 async function addBook(bookName, book_uuid) {
     try{
         var book = new Book({

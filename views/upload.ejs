@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="/styles/upload-style.css">
   <script src="
   https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js
-  "></script>  
+  "></script>
 </head>
 
 <body id="page-top">
@@ -28,13 +28,17 @@
         </div>
         <div class="card shadow mb-4">
           <div class="container my-4">
-          <form id="uploadForm" action="/upload/upload-song" method="post" enctype="multipart/form-data">
+          <form id="uploadForm" action="/upload/upload-song" method="post">
             <div class="row">
               <!-- Song Parts Column -->
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="title"><%= t('song.title') %></label>
                   <input type="text" id="title" name="title" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label for="alt_title"><%= t('song.alt_title') %></label>
+                  <input type="text" id="alt_title" name="alt_title" class="form-control">
                 </div>
                 <div class="form-group">
                   <label for="artist"><%= t('song.artist') %></label>
@@ -77,12 +81,12 @@
                 <button type="button" id="addPart" class="btn btn-primary"><%= t('general.add_part') %></button>
                 <input type="file" id="fileInput" accept=".lyric" class="form-control mt-2">
                 <button type="button" id="importButton" class="btn btn-secondary mt-2"><%= t('upload.import_from_file') %></button>
-      
+
                 <input type="hidden" id="parts" name="parts">
                 <br>
                 <button type="submit" class="btn btn-success mt-4"><%= t('upload.upload') %></button>
               </div>
-      
+
               <!-- Preview Column (Interactive) -->
               <div class="col-md-6">
                 <h2 class="mt-4 fst-italic"><%= t('general.preview') %></h2>
@@ -91,6 +95,7 @@
                     <span id="previewSongNumber"></span>
                     <span id="previewTitle"></span>
                   </div>
+                  <span id="previewAltTitle" class="previewAltTitle"></span>
                   <div id="previewArtist" class="previewArtist"></div>
                   <div id="previewChordContainer" class="previewChordContainer" style="display: none;">
                     <strong><%= t('song.chord') %>: </strong><span id="previewChord"></span>
@@ -102,7 +107,7 @@
               </div>
             </div>
           </form>
-      
+
           <!-- Dropdown for changing part type -->
           <select id="typeDropdown" class="form-control mt-2" style="display: none;">
             <option value="Verse"><%= t('song_parts.verse') %></option>
@@ -114,13 +119,13 @@
           </select>
         </div>
         </div>
-        
+
       </div>
       <%- include('partials/footer') %>
     </div>
-    
+
   </div>
-  
+
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>

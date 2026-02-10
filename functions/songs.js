@@ -1,6 +1,6 @@
 const Song = require('../models/Song');
 
-async function addSong(title, artist, bookId, song_uid, chord, parts, bookSongNumber, chord, scripture, tags) {
+async function addSong(title, artist, bookId, song_uid, chord, parts, bookSongNumber, scripture, tags) {
     try {
         const embeddedParts = parts.map((part, index) => ({
             part_type: part.type.toUpperCase(),
@@ -14,7 +14,6 @@ async function addSong(title, artist, bookId, song_uid, chord, parts, bookSongNu
             song_uid: song_uid,
             chord: chord,
             book_song_number: bookSongNumber,
-            chord: chord,
             scripture: scripture,
             parts: embeddedParts,
             tags: tags
@@ -127,6 +126,15 @@ async function getSongsWithLimit (limit) {
     }
 }
 
+async function getSongsByTag(tag) {
+    try {
+        var songs = await Song.find({ tags: { $elemMatch: { $regex: new RegExp(`^${tag}$`, 'i') } } });
+        return songs;
+    } catch (err) {
+        return Promise.reject(err);
+    }
+}
+
 async function removeSong(id) {
     try {
         await Song.deleteOne({ song_uid: id });
@@ -135,12 +143,13 @@ async function removeSong(id) {
     }
 }
 
-async function editSong (song_uid, book_song_number, title, chrod, artist, scripture, book, tags, parts){
+async function editSong (song_uid, book_song_number, title, alt_title, chrod, artist, scripture, book, tags, parts){
     try {
         var song = {
             song_uid: song_uid.song_uid,
             book_song_number: book_song_number,
             title: title,
+            alt_title: alt_title,
             chord: chrod,
             artist: artist,
             scripture: scripture,
@@ -166,5 +175,6 @@ module.exports = {
     getTotalSongs,
     getSongsWithLimit,
     removeSong,
-    editSong
+    editSong,
+    getSongsByTag
 }

@@ -9,7 +9,7 @@
             <li class="nav-item"><a class="nav-link <%= activePage === 'songs' ? 'active' : '' %>" href="/songs"><i class="fas fa-music" style="width: 15.6016px;font-size: 15px;"></i><span style="font-size: 15px;"><%= t('general.songs') %></span></a></li>
             <li class="nav-item"><a class="nav-link <%= activePage === 'books' ? 'active' : '' %>" href="/books"><i class="fas fa-book" style="font-size: 15px;"></i><span style="font-size: 15px;"><%= t('general.books') %></span></a></li>
             <% if (hasPermission('access_schedule')) { %>
-                <li class="nav-item"><a class="nav-link <%= activePage === 'schedule' ? 'active' : '' %>" href="/schedule"><i class="fas fa-clipboard-list" style="font-size: 19px;"></i><span style="font-size: 15px;"><%= t('general.schedule') %></span></a></li>
+                <li class="nav-item"><a class="nav-link <%= activePage === 'schedule' ? 'active' : '' %>" href="/schedules"><i class="fas fa-clipboard-list" style="font-size: 19px;"></i><span style="font-size: 15px;"><%= t('general.schedule') %></span></a></li>
             <% } %>
             <% if(hasPermission('upload_song')){ %>
             <li class="nav-item"><a class="nav-link <%= activePage === 'upload' ? 'active' : '' %>" href="/upload"><i class="fas fa-upload" style="font-size: 15px;"></i><span style="font-size: 15px;"><%= t('upload.upload_song') %></span></a></li>

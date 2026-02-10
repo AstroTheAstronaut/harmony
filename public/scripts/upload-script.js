@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const bookSelect = document.getElementById('book');
     const bookSongNumberInput = document.getElementById('bookSongNumber');
     const titleInput = document.getElementById('title');
+    const altTitleInput = document.getElementById('alt_title');
     const artistInput = document.getElementById('artist');
     const chordInput = document.getElementById('chord');
     const fileInput = document.getElementById('fileInput');
@@ -16,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const previewTitleContainer = document.getElementById('previewTitleContainer');
     const previewTitle = document.getElementById('previewTitle');
+    const previewAltTitle = document.getElementById('previewAltTitle');
     const previewSongNumber = document.getElementById('previewSongNumber');
     const previewChordContainer = document.getElementById('previewChordContainer');
     const previewChord = document.getElementById('previewChord');
@@ -30,7 +32,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const title = titleInput.value.trim() || '';
         previewTitle.innerText = title;
     }
+
+    function updatePreviewAltTitle() {
+        const altTitle = altTitleInput.value.trim() || '';
+        previewAltTitle.innerText = altTitle;
+    }
+    
     titleInput.addEventListener('input', updatePreviewTitle);
+    altTitleInput.addEventListener('input', updatePreviewAltTitle);
 
     function updatePreviewArtist() {
         const artist = artistInput.value.trim() || '';

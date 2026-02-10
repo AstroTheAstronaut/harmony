@@ -111,6 +111,12 @@
             <%- include('partials/navbar') %>
             <div class="container-fluid">
                 <h3 class="text-dark mb-0"><%= t('general.songs') %></h3>
+                <% if (uploaded) { %>
+                    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                        <%= uploadedMessage || t('messages.song_uploaded_success') || 'Song uploaded successfully' %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <% } %>
                 </br>
                 <div class="card shadow">
                     <div class="card-header py-3">
@@ -128,14 +134,14 @@
                                 <form id="orderByForm" class="d-flex align-items-center mb-0 flex-shrink-0">
                                     <label for="orderBySelect" class="me-2 text-nowrap small">Order by:</label>
                                     <select class="form-select form-select-sm" id="orderBySelect">
-                                        <option value="titleAsc" selected>Title: A-Z</option>
-                                        <option value="titleDesc">Title: Z-A</option>
-                                        <option value="noAsc">Number: Low to High</option>
-                                        <option value="noDesc">Number: High to Low</option>
-                                        <option value="artistAsc">Artist: A-Z</option>
-                                        <option value="artistDesc">Artist: Z-A</option>
-                                        <option value="bookAsc">Book: A-Z</option>
-                                        <option value="bookDesc">Book: Z-A</option>
+                                        <option value="titleAsc" <% if (orderBy === 'titleAsc') { %> selected <% } %>>Title: A-Z</option>
+                                        <option value="titleDesc" <% if (orderBy === 'titleDesc') { %> selected <% } %>>Title: Z-A</option>
+                                        <option value="noAsc" <% if (orderBy === 'noAsc') { %> selected <% } %>>Number: Low to High</option>
+                                        <option value="noDesc" <% if (orderBy === 'noDesc') { %> selected <% } %>>Number: High to Low</option>
+                                        <option value="artistAsc" <% if (orderBy === 'artistAsc') { %> selected <% } %>>Artist: A-Z</option>
+                                        <option value="artistDesc" <% if (orderBy === 'artistDesc') { %> selected <% } %>>Artist: Z-A</option>
+                                        <option value="bookAsc" <% if (orderBy === 'bookAsc') { %> selected <% } %>>Book: A-Z</option>
+                                        <option value="bookDesc" <% if (orderBy === 'bookDesc') { %> selected <% } %>>Book: Z-A</option>
                                     </select>
                                 </form>
                                 <!-- Page Size Selection -->
@@ -188,8 +194,20 @@
                                                 <td><%= song.book_song_number || (index + 1) %></td>
                                                 <td>
                                                     <a href="/song-view/<%= song.song_uid %>" class="text-decoration-none text-dark">
-                                                        <%= song.title %>
+                                                        <%= song.title %> 
                                                     </a>
+                                                    <% if (song.tags != 0) { %>
+                                                        <% for (let i = 0; i < song.tags.length; i++) { %>
+                                                        <span class="badge bg-primary text-light ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= song.tags[i] %>">
+                                                            <%= song.tags[i] %>
+                                                        </span>
+                                                        <% } %>
+                                                    <% } else if (song.tags.length>=3) {%>
+                                                        <!-- Join all tags as tooltip-->
+                                                        <span class="badge bg-primary text-light ms-2" data-bs-toggle="tooltip" data-bs-placement="top" title="<%= song.tags.join(', ') %>">
+                                                            <i class="fas fa-tags"></i>
+                                                        </span>
+                                                    <% } %>
                                                 </td>
                                                 <td><%= song.artist || 'N/A' %></td>
                                                 <% if (bookName === 'All Books') { %>
@@ -319,7 +337,7 @@
                                             <!-- Previous Page Button -->
                                             <% if (currentPage > 1) { %>
                                                 <li class="page-item">
-                                                    <a class="page-link" href="/songs?page=<%= currentPage - 1 %>&limit=10<%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %>" aria-label="Previous">
+                                                    <a class="page-link" href="/songs?page=<%= currentPage - 1 %>&limit=<%= limit %><%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %><%= orderBy ? '&orderBy=' + encodeURIComponent(orderBy) : '' %>" aria-label="Previous">
                                                         <span aria-hidden="true">&laquo;</span>
                                                     </a>
                                                 </li>
@@ -333,7 +351,7 @@
                                             <% if (totalPages <= 7) { %>
                                                 <% for (let i = 1; i <= totalPages; i++) { %>
                                                     <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                                                        <a class="page-link" href="/songs?page=<%= i %>&limit=10<%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %>"><%= i %></a>
+                                                        <a class="page-link" href="/songs?page=<%= i %>&limit=<%= limit %><%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %><%= orderBy ? '&orderBy=' + encodeURIComponent(orderBy) : '' %>"><%= i %></a>
                                                     </li>
                                                 <% } %>
                                             <% } else { %>
@@ -341,36 +359,36 @@
                                                 <% if (currentPage <= 4) { %>
                                                     <% for (let i = 1; i <= 5; i++) { %>
                                                         <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                                                            <a class="page-link" href="/songs?page=<%= i %>&limit=10<%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %>"><%= i %></a>
+                                                            <a class="page-link" href="/songs?page=<%= i %>&limit=<%= limit %><%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %>"><%= i %></a>
                                                         </li>
                                                     <% } %>
                                                     <li class="page-item disabled"><span class="page-link">...</span></li>
                                                     <li class="page-item">
-                                                        <a class="page-link" href="/songs?page=<%= totalPages %>&limit=10<%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %>"><%= totalPages %></a>
+                                                        <a class="page-link" href="/songs?page=<%= totalPages %>&limit=<%= limit %><%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %><%= orderBy ? '&orderBy=' + encodeURIComponent(orderBy) : '' %>"><%= totalPages %></a>
                                                     </li>
                                                 <% } else if (currentPage >= totalPages - 3) { %>
                                                     <li class="page-item">
-                                                        <a class="page-link" href="/songs?page=1&limit=10<%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %>">1</a>
+                                                        <a class="page-link" href="/songs?page=1&limit=<%= limit %><%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %><%= orderBy ? '&orderBy=' + encodeURIComponent(orderBy) : '' %>">1</a>
                                                     </li>
                                                     <li class="page-item disabled"><span class="page-link">...</span></li>
                                                     <% for (let i = totalPages - 4; i <= totalPages; i++) { %>
                                                         <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                                                            <a class="page-link" href="/songs?page=<%= i %>&limit=10<%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %>"><%= i %></a>
+                                                            <a class="page-link" href="/songs?page=<%= i %>&limit=<%= limit %><%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %><%= orderBy ? '&orderBy=' + encodeURIComponent(orderBy) : '' %>"><%= i %></a>
                                                         </li>
                                                     <% } %>
                                                 <% } else { %>
                                                     <li class="page-item">
-                                                        <a class="page-link" href="/songs?page=1&limit=10<%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %>">1</a>
+                                                        <a class="page-link" href="/songs?page=1&limit=<%= limit %><%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %><%= orderBy ? '&orderBy=' + encodeURIComponent(orderBy) : '' %>">1</a>
                                                     </li>
                                                     <li class="page-item disabled"><span class="page-link">...</span></li>
                                                     <% for (let i = currentPage - 2; i <= currentPage + 2; i++) { %>
                                                         <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                                                            <a class="page-link" href="/songs?page=<%= i %>&limit=10<%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %>"><%= i %></a>
+                                                            <a class="page-link" href="/songs?page=<%= i %>&limit=<%= limit %><%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %><%= orderBy ? '&orderBy=' + encodeURIComponent(orderBy) : '' %>"><%= i %></a>
                                                         </li>
                                                     <% } %>
                                                     <li class="page-item disabled"><span class="page-link">...</span></li>
                                                     <li class="page-item">
-                                                        <a class="page-link" href="/songs?page=<%= totalPages %>&limit=10<%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %>"><%= totalPages %></a>
+                                                        <a class="page-link" href="/songs?page=<%= totalPages %>&limit=<%= limit %><%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %><%= orderBy ? '&orderBy=' + encodeURIComponent(orderBy) : '' %>"><%= totalPages %></a>
                                                     </li>
                                                 <% } %>
                                             <% } %>
@@ -378,7 +396,7 @@
                                             <!-- Next Page Button -->
                                             <% if (currentPage < totalPages) { %>
                                                 <li class="page-item">
-                                                    <a class="page-link" href="/songs?page=<%= currentPage + 1 %>&limit=10<%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %>" aria-label="Next">
+                                                    <a class="page-link" href="/songs?page=<%= currentPage + 1 %>&limit=<%= limit %><%= bookId ? '&book=' + encodeURIComponent(bookId) : '' %><%= orderBy ? '&orderBy=' + encodeURIComponent(orderBy) : '' %>" aria-label="Next">
                                                         <span aria-hidden="true">&raquo;</span>
                                                     </a>
                                                 </li>
@@ -417,20 +435,36 @@
 
     <!-- Custom JS -->
     <script>
+        // Helper to build songs URL while preserving limit/book/orderBy
+        function buildSongsUrl(params) {
+            const page = params.page || 1;
+            const limit = params.limit || <%- JSON.stringify(limit) %>;
+            const book = params.book || (document.getElementById('bookFilterSelect') ? document.getElementById('bookFilterSelect').value : 'all');
+            const order = params.orderBy || <%- JSON.stringify(typeof orderBy !== 'undefined' ? orderBy : 'titleAsc') %>;
+
+            let url = '/songs?page=' + page + '&limit=' + limit;
+            if (book && book !== 'all') url += '&book=' + encodeURIComponent(book);
+            if (order) url += '&orderBy=' + encodeURIComponent(order);
+            return url;
+        }
+
         document.getElementById('bookFilterSelect').addEventListener('change', function() {
-            var form = document.getElementById('filterForm');
-            var selectedValue = this.value;
-            // Assuming you want to navigate to a URL with the selected book
-            window.location.href = '/songs?book=' + selectedValue;
+            const selectedValue = this.value;
+            // Reset to first page when changing book filter
+            window.location.href = buildSongsUrl({ page: 1, book: selectedValue });
         });
 
         document.getElementById('pageSizeSelect').addEventListener('change', function() {
-        var selectedSize = this.value;
-        var currentPage = "<%= currentPage %>"; // Get the current page number from server-side code
-        var bookFilter = document.getElementById('bookFilterSelect').value;
-        var url = '/songs?page=' + currentPage + '&limit=' + selectedSize + (bookFilter !== 'all' ? '&book=' + encodeURIComponent(bookFilter) : '');
-        window.location.href = url;
-    });
+            const selectedSize = this.value;
+            // Reset to first page when changing page size
+            window.location.href = buildSongsUrl({ page: 1, limit: selectedSize });
+        });
+
+        document.getElementById('orderBySelect').addEventListener('change', function() {
+            const selectedOrder = this.value;
+            // Reset to first page when changing ordering
+            window.location.href = buildSongsUrl({ page: 1, orderBy: selectedOrder });
+        });
     </script>
 </body>
 </html>

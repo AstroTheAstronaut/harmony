@@ -16,6 +16,7 @@
     </title>
     <!-- Bootstrap CSS from CDN -->
     <link rel="stylesheet" href="/styles/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/general-style.css">
     <!-- Flag icon CSS for language flags -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/css/flag-icon.min.css" />
     <!-- Font Awesome CSS from CDN -->
@@ -231,7 +232,20 @@
                                             </div>
                                         </div>
 
+                                        <!-- Alt Song Title block: always render edit block so user can add or edit alt title -->
+                                        <div id="altTitleBlock">
+                                            <div id="altTitleView" <%= (song.alt_title && song.alt_title !== "NaN") ? '' : 'class="d-none"' %>>
+                                                <h4 class="text-dark fst-italic m-0" id="song-alt-title"><%= song.alt_title %></h4>
+                                            </div>
+                                            <div id="altTitleEdit" class="d-none">
+                                                <h4 class="text-dark fst-italic m-0">
+                                                    <input name="alt_title" type="text" class="form-control" value="<%= song.alt_title || '' %>" data-auto-resize />
+                                                </h4>
+                                            </div>
+                                        </div>
+
                                         <!-- Song Chord -->
+                                        <% if (song.chord && song.chord !== "NaN") { %>
                                         <div id="chordBlock">
                                             <div id="chordView">
                                                 <% if(song.chord !== "NaN") { %>
@@ -250,8 +264,10 @@
                                                 </span></h5>
                                             </div>
                                         </div>
+                                        <% } %>
 
                                         <!-- Song Artist -->
+                                         <% if (song.artist && song.artist !== "NaN") { %>
                                         <div id="artistBlock">
                                             <div id="artistView">
                                                 <% if(song.artist !== "NaN") { %>
@@ -264,8 +280,10 @@
                                                 </h5>
                                             </div>
                                         </div>
+                                        <% } %>
 
                                         <!-- Song Scripture -->
+                                         <% if (song.scripture && song.scripture !== "NaN") { %>
                                         <div id="scriptureBlock">
                                             <div id="scriptureView">
                                                 <% if(song.scripture !== "NaN") { %>
@@ -278,8 +296,10 @@
                                                 </h5>
                                             </div>
                                         </div>
+                                        <% } %>
 
                                         <!-- Song Book -->
+                                        <% if (song.book_details && song.book_details.bo_name) { %>
                                         <div id="bookBlock">
                                             <div id="bookNameView">
                                                 <% if(song.book_details && song.book_details.bo_name) { %>
@@ -300,14 +320,16 @@
                                                 </h5>
                                             </div>
                                         </div>
+                                        <% } %>
 
                                         <!-- Song Tags -->
+                                        <% if (song.tags!=0) { %>
                                         <div id="tagsBlock">
                                             <div id="tagsView">
                                                 <h5 class="mt-2"><%= t('song.tags') %>:
-                                                    <% if(song.tags && song.tags.length > 0) { %>
+                                                    <% if(song.tags && song.tags.length != 0 && song.tags[0]!='') { %>
                                                         <% for (let i = 0; i < song.tags.length; i++) { %>
-                                                            <span class="badge rounded-pill bg-primary"><%= song.tags[i] %></span>
+                                                            <span class="badge rounded-pill bg-primary"><a href="/songs/tag/<%= song.tags[i] %>" class="text-light link-nodecoration"><%= song.tags[i] %></a></span>
                                                         <% } %>
                                                     <% } else { %>
                                                         <span class="badge rounded-pill bg-secondary"><%= t('song.no_tags') %></span>
@@ -320,6 +342,8 @@
                                                 </h5>
                                             </div>
                                         </div>
+                                        <% } else { %>
+                                        <% } %>
                                     </form>
                                 </div>
 
@@ -338,6 +362,7 @@
                                                         <% } else { %>
                                                             <%= song.title %>
                                                         <% } %>"
+                                                        title="<%= t('general.share') %>"
                                         >
                                              <i class="fa-regular fa-share-from-square"></i>
                                         </a>
@@ -346,22 +371,22 @@
                                         </button>
                                         
                                         <!-- Font Size Controls -->
-                                        <button id="decrease-font" class="text-secondary" style="background: none; border: none; padding: 0.375rem 0.5rem; display: inline-flex; align-items: center; cursor: pointer;" data-bs-toggle="tooltip" title="Decrease font size">
+                                        <button id="decrease-font" class="text-secondary" style="background: none; border: none; padding: 0.375rem 0.5rem; display: inline-flex; align-items: center; cursor: pointer;" data-bs-toggle="tooltip" title="<%= t('messages.decrease_font') %>">
                                             <i class="fa-solid fa-minus"></i>
                                         </button>
-                                        <button id="increase-font" class="text-secondary" style="background: none; border: none; padding: 0.375rem 0.5rem; display: inline-flex; align-items: center; cursor: pointer;" data-bs-toggle="tooltip" title="Increase font size">
+                                        <button id="increase-font" class="text-secondary" style="background: none; border: none; padding: 0.375rem 0.5rem; display: inline-flex; align-items: center; cursor: pointer;" data-bs-toggle="tooltip" title="<%= t('messages.increase_font') %>">
                                             <i class="fa-solid fa-plus"></i>
                                         </button>
                                         
                                         <!-- Permission-based Action Buttons -->
                                         <% if (hasPermission('edit_song')) { %>
-                                            <button id="toggleEditButton" class="btn btn-primary btn-sm" onclick="toggleEditMode()"><%= t('general.edit') %></button>
+                                            <button id="toggleEditButton" class="btn btn-primary btn-sm" onclick="toggleEditMode()" title="<%= t('messages.edit_song') %>"><%= t('general.edit') %></button>
                                         <% } %>
                                         
                                         <% if (hasPermission('request_song')) { %>
                                             <form action="/request-song" method="POST" class="d-inline">
                                                 <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                                <button type="submit" id="requestSongButton" class="btn btn-warning btn-sm"><%= t('general.request') %></button>
+                                                <button type="submit" id="requestSongButton" class="btn btn-warning btn-sm" title="<%= t('messages.request_song') %>"><%= t('general.request') %></button>
                                             </form>
                                         <% } %>
                                         
@@ -369,17 +394,17 @@
                                             <form action="/remove-song" method="POST" class="d-inline">
                                                 <input type="hidden" name="redirectTo" value="<%= decodeURIComponent(requestURL) %>">
                                                 <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                                <button type="submit" id="removeSongButton" class="btn btn-danger btn-sm"><%= t('general.remove') %></button>
+                                                <button type="submit" id="removeSongButton" class="btn btn-danger btn-sm" title="<%= t('messages.remove_song') %>"><%= t('general.remove') %></button>
                                             </form>
                                         <% } %>
                                     </div>
 
                                     <!-- Edit Mode Actions (Desktop) -->
                                     <div id="editButtons" class="d-none justify-content-end gap-2 mt-2">
-                                        <button form="editSongForm" type="submit" class="btn btn-success btn-sm">
+                                        <button form="editSongForm" type="submit" class="btn btn-success btn-sm" title="<%= t('general.save') %>">
                                             <i class="fa fa-check"></i> <%= t('general.save') %>
                                         </button>
-                                        <button type="button" class="btn btn-secondary btn-sm" onclick="toggleEditMode()">
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="toggleEditMode()" title="<%= t('general.cancel') %>">
                                             <i class="fa fa-times"></i> <%= t('general.cancel') %>
                                         </button>
                                     </div>
@@ -399,6 +424,7 @@
                                             <%= song.title %>
                                             <% } %>"
                                             data-share-url="/song/<%= song.song_uid %>/public"
+                                            title="<%= t('general.share') %>"
                                             >
                                             <i class="fa-regular fa-share-from-square"></i>
                                             </button>
@@ -407,23 +433,23 @@
                                             </button>
                                             
                                             <!-- Font Size Controls (Mobile) -->
-                                            <button id="decrease-font-mobile" class="text-secondary" style="background: none; border: none; padding: 0.375rem 0.5rem; display: inline-flex; align-items: center; cursor: pointer;" data-bs-toggle="tooltip" title="Decrease font size">
+                                            <button id="decrease-font-mobile" class="text-secondary" style="background: none; border: none; padding: 0.375rem 0.5rem; display: inline-flex; align-items: center; cursor: pointer;" data-bs-toggle="tooltip" title="<%= t('messages.decrease_font') %>">
                                                 <i class="fa-solid fa-minus"></i>
                                             </button>
-                                            <button id="increase-font-mobile" class="text-secondary" style="background: none; border: none; padding: 0.375rem 0.5rem; display: inline-flex; align-items: center; cursor: pointer;" data-bs-toggle="tooltip" title="Increase font size">
+                                            <button id="increase-font-mobile" class="text-secondary" style="background: none; border: none; padding: 0.375rem 0.5rem; display: inline-flex; align-items: center; cursor: pointer;" data-bs-toggle="tooltip" title="<%= t('messages.increase_font') %>">
                                                 <i class="fa-solid fa-plus"></i>
                                             </button>
                                         </div>
 
                                         <!-- Action Buttons (Mobile) -->
                                         <% if (hasPermission('edit_song')) { %>
-                                            <button id="toggleEditButtonMobile" class="btn btn-primary btn-sm w-100 mb-2" onclick="toggleEditMode()"><%= t('general.edit') %></button>
+                                            <button id="toggleEditButtonMobile" class="btn btn-primary btn-sm w-100 mb-2" onclick="toggleEditMode()" title="<%= t('messages.edit_song') %>"><%= t('general.edit') %></button>
                                         <% } %>
                                         
                                         <% if (hasPermission('request_song')) { %>
                                             <form action="/request-song" method="POST" class="mb-2">
                                                 <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                                <button type="submit" id="requestSongButtonMobile" class="btn btn-warning btn-sm w-100"><%= t('general.request') %></button>
+                                                <button type="submit" id="requestSongButtonMobile" class="btn btn-warning btn-sm w-100" title="<%= t('messages.request_song') %>"><%= t('general.request') %></button>
                                             </form>
                                         <% } %>
                                         
@@ -431,16 +457,16 @@
                                             <form action="/remove-song" method="POST" class="mb-2">
                                                 <input type="hidden" name="redirectTo" value="<%= decodeURIComponent(requestURL) %>">
                                                 <input type="hidden" name="song_uid" value="<%= song.song_uid %>">
-                                                <button type="submit" id="removeSongButtonMobile" class="btn btn-danger btn-sm w-100"><%= t('general.remove') %></button>
+                                                <button type="submit" id="removeSongButtonMobile" class="btn btn-danger btn-sm w-100" title="<%= t('messages.remove_song') %>"><%= t('general.remove') %></button>
                                             </form>
                                         <% } %>
 
                                         <!-- Edit Mode Actions (Mobile) -->
                                         <div id="editButtonsMobile" class="d-none">
-                                            <button form="editSongForm" type="submit" class="btn btn-success btn-sm w-100 mb-2">
+                                            <button form="editSongForm" type="submit" class="btn btn-success btn-sm w-100 mb-2" title="<%= t('general.save') %>">
                                                 <i class="fa fa-check"></i> <%= t('general.save') %>
                                             </button>
-                                            <button type="button" class="btn btn-secondary btn-sm w-100 mb-2" onclick="toggleEditMode()">
+                                            <button type="button" class="btn btn-secondary btn-sm w-100 mb-2" onclick="toggleEditMode()" title="<%= t('general.cancel') %>">
                                                 <i class="fa fa-times"></i> <%= t('general.cancel') %>
                                             </button>
                                         </div>
@@ -676,7 +702,7 @@
         function toggleEditMode() {
             isEditMode = !isEditMode;
 
-            const toggleBlocks = ['title', 'chord', 'artist', 'scripture', 'bookName', 'tags'];
+        const toggleBlocks = ['title', 'altTitle','chord', 'artist', 'scripture', 'bookName', 'tags'];
 
             toggleBlocks.forEach(id => {
                 var viewEl = document.getElementById(id + 'View');

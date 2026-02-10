@@ -18,6 +18,12 @@
             <p><strong>Book Name:</strong> <span id="bookNamePreview"></span></p>
             <p><strong>Book UID (Unique Identifier):</strong> <span id="bookUIDPreview"></span></p>
             <p><strong>Number of Songs:</strong> <span id="songCountPreview"></span></p>
-          </div>
+        </div>
+        <div class="d-none" id="progressBar">
+            <label for="uploadProgress"><%= t('upload.upload_progress') %>:</label>
+            <div class="progress">
+                <div id="uploadProgress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+            </div>
+        </div>
     </div>
 </div>

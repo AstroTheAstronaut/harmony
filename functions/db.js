@@ -8,6 +8,7 @@ const Request = require('../models/Request');
 const Note = require('../models/Note');
 const RegisterCode = require('../models/RegisterCode');
 const Notification = require('../models/Notification');
+const Setting = require('../models/Setting');
 
 async function createUser(username, email, password, registerCode) {
     try {
@@ -386,41 +387,146 @@ async function getAutocompleteResults(term) {
         return Promise.reject(err);
     }
 }
+// async function searchLyrics(term) {
+//     try {
+//         const results = await Song.aggregate([
+//             {
+//                 $search: {
+//                     index: "songsearch",
+//                     text: {
+//                         query: term,
+//                         path: "parts.lyrics"
+//                     }
+//                 }
+//             },
+//             {
+//                 $lookup: {
+//                     from: "books",
+//                     localField: "book_uuid",   // in Song document
+//                     foreignField: "bo_uid",     // in Book document
+//                     as: "book"
+//                 }
+//             },
+//             {
+//                 $unwind: {
+//                     path: "$book",
+//                     preserveNullAndEmptyArrays: true
+//                 }
+//             },
+//             {
+//                 $project: {
+//                     title: 1,
+//                     artist: 1,
+//                     parts: 1,
+//                     song_uid: 1,
+//                     book_song_number: 1,
+//                     book_name: "$book.bo_name",   // ← get the book name
+//                     book_uid: "$book.bo_uid",     // optional: if you want the uid too
+//                     score: { $meta: "searchScore" }
+//                 }
+//             },
+//             {
+//                 $sort: { score: -1 }
+//             },
+//             {
+//                 $limit: 10
+//             }
+//         ]);
+
+//         return results;
+//     } catch (error) {
+//         console.error("Error searching lyrics:", error);
+//         throw error;
+//     }
+// }
 async function searchLyrics(term) {
     try {
+        // Build the 'AND' clauses for title/artist
+        const andClausesTitle = term.split(' ').map(word => ({
+            text: { query: word, path: ["title", "artist", "tags"] }
+        }));
+
+        // Build the 'AND' clauses for lyrics
+        const andClausesLyrics = term.split(' ').map(word => ({
+            text: { query: word, path: "parts.lyrics" }
+        }));
+
         const results = await Song.aggregate([
             {
-                $search: {
-                    index: "songsearch",
+    $search: {
+        index: "songsearcher", // Your index name
+        compound: {
+            should: [
+                // ==============================================
+                // LYRICS: Massively boosted
+                // ==============================================
+                {
                     text: {
                         query: term,
-                        path: "parts.lyrics"
+                        path: "parts.lyrics",
+                        score: { boost: { value: 10 } } // <-- Aggressive 50x boost
+                    }
+                },
+                {
+                    text: {
+                        query: term,
+                        path: "parts.lyrics",
+                        score: { boost: { value: 1 } } // <-- 10x boost
+                    }
+                },
+                {
+                    phrase: {
+                        query: term,
+                        path: "parts.lyrics",
+                        score: { boost: { value: 15 } } // <-- Moderate 2x boost
+                    }
+                },       
+
+                // ==============================================
+                // OTHER FIELDS: Low boost
+                // ==============================================
+                {
+                    phrase: {
+                        query: term,
+                        path: ["title", "artist", "tags"],
+                        score: { boost: { value: 5 } } // <-- Low 5x boost
+                    }
+                },
+                {
+                    text: {
+                        query: term,
+                        path: ["title", "artist", "tags"],
+                        score: { boost: { value: 1 } } // <-- Base 1x boost
                     }
                 }
-            },
+            ],
+            minimumShouldMatch: 1 // Must match at least one
+        }
+    }
+},
+
+            // ==============================================
+            // YOUR OTHER STAGES ARE PERFECT.
+            // ==============================================
             {
                 $lookup: {
                     from: "books",
-                    localField: "book_uuid",   // in Song document
-                    foreignField: "bo_uid",     // in Book document
+                    localField: "book_uuid",
+                    foreignField: "bo_uid",
                     as: "book"
                 }
             },
             {
-                $unwind: {
-                    path: "$book",
-                    preserveNullAndEmptyArrays: true
-                }
+                $unwind: { path: "$book", preserveNullAndEmptyArrays: true }
             },
             {
                 $project: {
                     title: 1,
                     artist: 1,
-                    parts: 1,
                     song_uid: 1,
                     book_song_number: 1,
-                    book_name: "$book.bo_name",   // ← get the book name
-                    book_uid: "$book.bo_uid",     // optional: if you want the uid too
+                    book_name: "$book.bo_name",
+                    book_uid: "$book.bo_uid",
                     score: { $meta: "searchScore" }
                 }
             },
@@ -428,10 +534,17 @@ async function searchLyrics(term) {
                 $sort: { score: -1 }
             },
             {
-                $limit: 10
+                $limit: 20
             }
         ]);
+        //Add header to file with search query
+        //fs.writeFileSync('search_debug.json', JSON.stringify({ query: term, results }, null, 2));
+        //fs.writeFileSync('search_debug.json', JSON.stringify(results, null, 2));
 
+        // Filter results to weed out results that are irrelevant (score lower than avg of first 3)
+        const avgScore = results.slice(0, 3).reduce((acc, curr) => acc + curr.score, 0) / 3;
+        const newResults = results.filter(result => result.score >= avgScore);
+        console.log("Results: ", results)
         return results;
     } catch (error) {
         console.error("Error searching lyrics:", error);

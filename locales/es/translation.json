@@ -95,7 +95,9 @@
         "part_type": "Tipo de Parte",
         "song_no_in_bo": "Número de la Canción en el Libro",
         "lyrics": "Letras",
-        "scripture": "Escritura"
+        "scripture": "Escritura",
+        "no_tags": "Sin Etiquetas",
+        "tags": "Etiquetas"
     },
     "upload": {
         "choose_file": "Elegir Archivo",

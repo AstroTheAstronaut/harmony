@@ -13,7 +13,7 @@ async function renderUploadPage (req, res) {
 }
 
 async function handleUploadSong(req, res) {
-    const { title, artist, book, chord, bookSongNumber, parts } = req.body;
+    const { title, alt_title, artist, book, chord, bookSongNumber, parts } = req.body;
     const bookId = book || null;
     const songNumber = bookSongNumber ? parseInt(bookSongNumber) : null;
     const song_uid = uuidv4()
@@ -29,8 +29,8 @@ async function handleUploadSong(req, res) {
         }
 
         // Rest of the logic for checking book existence and adding the song
-        await addSong(title, artist, bookId, song_uid, chord, parsedParts, songNumber);
-        res.redirect(req.get('referer') || '/' || '/songs');
+        await addSong(title, alt_title, artist, bookId, song_uid, chord, parsedParts, songNumber);
+        res.redirect('/songs/upload-success');
     } catch (err) {
         console.error('Error handling upload song:', err);
         res.status(500).json({ error: 'Internal Server Error' });

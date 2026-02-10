@@ -96,7 +96,9 @@
         "part_type": "Tipo di Parte",
         "song_no_in_bo": "Numero della Canzone nel Libro",
         "lyrics": "Testo",
-        "scripture": "Bibbia"
+        "scripture": "Bibbia",
+        "no_tags": "Nessun Tag",
+        "tags": "Tag"
     },
     "upload": {
         "choose_file": "Scegli File",

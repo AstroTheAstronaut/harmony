@@ -3,8 +3,11 @@ const mongoose = require('mongoose');
 const songSchema = new mongoose.Schema({
     title: {
         type: String,
-        unique: true,
         required: true
+    },
+    alt_title: {
+        type: String,
+        required: false
     },
     artist: {
         type: String,
@@ -16,10 +19,11 @@ const songSchema = new mongoose.Schema({
     },
     book_song_number: {
         type: Number,
-        required: true
+        required: false
     },
     song_uid: {
         type: String,
+        unique: true,
         required: true
     },
     chord: {

@@ -95,7 +95,9 @@
         "part_type": "Tip Parte",
         "song_no_in_bo": "Numărul cântecului în carte",
         "lyrics": "Versuri",
-        "scripture": "Scriptură"
+        "scripture": "Scriptură",
+        "no_tags": "Fără tag-uri",
+        "tags": "Tag-uri"
     },
     "upload": {
         "choose_file": "Alege Fișier",
