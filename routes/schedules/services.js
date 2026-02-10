@@ -34,9 +34,10 @@ async function getInactiveSchedules () {
     }
 }
 
-async function createSchedule(schedule_uid, creator_uid, created_timestamp, type, target_church, expiry_date, scheduleStatus, song_list, speaker_list) {
+async function createSchedule(name, schedule_uid, creator_uid, created_timestamp, type, target_church, expiry_date, scheduleStatus, song_list, speaker_list) {
     try {
         const newSchedule = new Schedule({
+            name: name,
             schedule_uid: schedule_uid || uuidv4(),
             creator_uid: creator_uid,
             created_timestamp: created_timestamp || new Date(),

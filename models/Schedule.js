@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const scheduleSchema = new mongoose.Schema({
+    name : {
+        type: String,
+        required: true
+    },
     schedule_uid: {
         type: String,
         required: true
@@ -31,11 +35,7 @@ const scheduleSchema = new mongoose.Schema({
         default: 'active',
         required:true
     },
-    song_list: {
-        type: Array,
-        default: []
-    },
-    speaker_list: {
+    content: {
         type: Array,
         default: []
     }

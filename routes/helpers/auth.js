@@ -43,7 +43,9 @@ router.post('/login-user', async (req, res) => {
       user_id: user.user_uid,
       email: user.email,
       role: role,
+      user_uid: user.user_uid
     };
+    console.log('User logged in:', req.session.user);
 
     if (rememberMe && req.session.user!="viewer") req.session.cookie.maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
     else req.session.cookie.expires = false; 

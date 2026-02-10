@@ -9,6 +9,8 @@
                     <div class="form-group">
                         <p>You are about to create a new schedule.</p>
                         <p>To continue, please enter the details below:</p>
+                        <label for="nameLabel">Name:</label>
+                        <input type="text" class="form-control" id="nameInput" placeholder="Enter schedule name" required>
                         <label for="typeLabel">Type:</label>
                         <select class="form-control" id="typeSelect" required>
                             <option value="" disabled selected>Select the type of schedule</option>
@@ -22,12 +24,14 @@
                         <input type="text" class="form-control" id="targetChurchInput" placeholder="Enter target church (optional)">
                         <label for="expiryDateLabel">Expiry Date:</label>
                         <input type="date" class="form-control" id="expiryDateInput" required>
+                        <input type="text" class="form-control" id="creatorUidInput" value="<%= user.user_uid %>" hidden>
                         
                     </div>
                     
                     <p>The following schedule will be created:</p>
                     <div class="card scheduleInfo-card">
                         <div class="card-body align-items-center" id="scheduleInfo-card">
+                            <p><strong>Name:</strong> <span id="namePreview">N/A</span></p>
                             <p><strong>Type:</strong> <span id="typePreview">N/A</span></p>
                             <p><strong>Target Church:</strong> <span id="targetChurchPreview">N/A</span></p>
                             <p><strong>Expiry Date:</strong> <span id="expiryDatePreview">N/A</span></p>
@@ -35,11 +39,11 @@
                     </div>
                 </div>
 
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-success modal-button-black" id="submitScheduleBtn" disabled onclick="pushRequest()">Create schedule</button>
+                </div> -->
                 <div class="modal-footer">
-                    <form action="/schedules/create" method="POST" class="d-inline" id="createScheduleForm">
-                        <input type="hidden" name="schedules" id="schedulesInput">
-                        <button type="submit" class="btn btn-success modal-button-black" id="submitScheduleBtn" disabled>Create schedule</button>
-                    </form>
+                    <button type="button" class="btn btn-success modal-button-black" id="submitScheduleBtn" disabled onclick="pushRequest()">Create schedule</button>
                 </div>
             </div>
         </div>

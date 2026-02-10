@@ -441,73 +441,41 @@ async function getAutocompleteResults(term) {
 // }
 async function searchLyrics(term) {
     try {
-        // Build the 'AND' clauses for title/artist
-        const andClausesTitle = term.split(' ').map(word => ({
-            text: { query: word, path: ["title", "artist", "tags"] }
+        const searchWords = term.trim().split(/\s+/).filter(word => word.length > 0);
+
+        const mustClauses = searchWords.map(word => ({
+            text: {
+                query: word,
+                path: ["title", "artist", "tags", "parts.lyrics"],
+                fuzzy: { maxEdits: 1 } 
+            }
         }));
 
-        // Build the 'AND' clauses for lyrics
-        const andClausesLyrics = term.split(' ').map(word => ({
-            text: { query: word, path: "parts.lyrics" }
-        }));
-
-        const results = await Song.aggregate([
+        let results = await Song.aggregate([
             {
-    $search: {
-        index: "songsearcher", // Your index name
-        compound: {
-            should: [
-                // ==============================================
-                // LYRICS: Massively boosted
-                // ==============================================
-                {
-                    text: {
-                        query: term,
-                        path: "parts.lyrics",
-                        score: { boost: { value: 10 } } // <-- Aggressive 50x boost
-                    }
-                },
-                {
-                    text: {
-                        query: term,
-                        path: "parts.lyrics",
-                        score: { boost: { value: 1 } } // <-- 10x boost
-                    }
-                },
-                {
-                    phrase: {
-                        query: term,
-                        path: "parts.lyrics",
-                        score: { boost: { value: 15 } } // <-- Moderate 2x boost
-                    }
-                },       
-
-                // ==============================================
-                // OTHER FIELDS: Low boost
-                // ==============================================
-                {
-                    phrase: {
-                        query: term,
-                        path: ["title", "artist", "tags"],
-                        score: { boost: { value: 5 } } // <-- Low 5x boost
-                    }
-                },
-                {
-                    text: {
-                        query: term,
-                        path: ["title", "artist", "tags"],
-                        score: { boost: { value: 1 } } // <-- Base 1x boost
+                $search: {
+                    index: "songsearcher",
+                    compound: {
+                        must: mustClauses,
+                        should: [
+                            {
+                                phrase: {
+                                    query: term,
+                                    path: "title",
+                                    score: { boost: { value: 50 } } 
+                                }
+                            },
+                            {
+                                phrase: {
+                                    query: term,
+                                    path: "parts.lyrics",
+                                    score: { boost: { value: 10 } } 
+                                }
+                            }
+                        ]
                     }
                 }
-            ],
-            minimumShouldMatch: 1 // Must match at least one
-        }
-    }
-},
-
-            // ==============================================
-            // YOUR OTHER STAGES ARE PERFECT.
-            // ==============================================
+            },
             {
                 $lookup: {
                     from: "books",
@@ -527,6 +495,7 @@ async function searchLyrics(term) {
                     book_song_number: 1,
                     book_name: "$book.bo_name",
                     book_uid: "$book.bo_uid",
+                    parts: 1,
                     score: { $meta: "searchScore" }
                 }
             },
@@ -537,15 +506,26 @@ async function searchLyrics(term) {
                 $limit: 20
             }
         ]);
-        //Add header to file with search query
-        //fs.writeFileSync('search_debug.json', JSON.stringify({ query: term, results }, null, 2));
-        //fs.writeFileSync('search_debug.json', JSON.stringify(results, null, 2));
 
-        // Filter results to weed out results that are irrelevant (score lower than avg of first 3)
-        const avgScore = results.slice(0, 3).reduce((acc, curr) => acc + curr.score, 0) / 3;
-        const newResults = results.filter(result => result.score >= avgScore);
-        console.log("Results: ", results)
+        // =========================================================
+        // SMART FILTERING
+        // =========================================================
+        if (results.length > 0) {
+            const topScore = results[0].score;
+            
+            // Heuristic: If a result is less than 10% of the top match, 
+            // it is likely noise (common words found in random lyrics).
+            // For your data: 292 * 0.1 = 29.2. 
+            // This perfectly keeps the top result and deletes the 8.6 scores.
+            const threshold = topScore * 0.1; 
+
+            results = results.filter(r => r.score > threshold);
+        }
+
+        console.log(`Query: "${term}" | Top Score: ${results[0]?.score || 0} | Results returned: ${results.length}`);
+        
         return results;
+
     } catch (error) {
         console.error("Error searching lyrics:", error);
         throw error;
@@ -811,6 +791,15 @@ async function getNotifications() {
         return notifications;
     } catch (err) {
         throw err;
+    }
+}
+
+async function getActiveUserInfo(userId) {
+    try {
+        const user = await User.findOne({ user_uid: userId, status: 'active' }, { password: 0, __v: 0 });
+        return user;
+    } catch (err) {
+        return Promise.reject(err);
     }
 }
 

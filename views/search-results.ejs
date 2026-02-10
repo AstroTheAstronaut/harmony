@@ -111,19 +111,61 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/scripts/script.min.js"></script>
     <script> 
-        console.log("Search query is: <%= query %>");
-        // Highlight the search query in the lyrics
-        document.querySelectorAll('.lyrics').forEach(elem => {
-            const queryRegex = new RegExp('<%= query %>', 'gi');
-            elem.innerHTML = elem.innerHTML.replace(queryRegex, match => `<mark>${match}</mark>`);
+    document.addEventListener("DOMContentLoaded", function() {
+        const query = "<%= query %>";
+        
+        if (!query) return;
+
+        // 1. Split query into individual words
+        const words = query.trim().split(/\s+/).filter(w => w.length > 0);
+
+        // 2. Define Romanian characters for boundaries
+        const romanianChars = "a-zA-Z0-9ăĂâÂîÎșȘțȚşŞţŢ";
+        const boundaryLookbehind = `(?<![${romanianChars}])`;
+        const boundaryLookahead = `(?![${romanianChars}])`;
+
+        // 3. Create a flexible pattern for EACH word (diacritic insensitive)
+        const wordPatterns = words.map(word => {
+            let safeWord = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            return safeWord
+                .replace(/[aA]/g, '[aAăĂâÂ]')
+                .replace(/[iI]/g, '[iIîÎ]')
+                .replace(/[sS]/g, '[sSșȘşŞ]')
+                .replace(/[tT]/g, '[tTțȚţŢ]');
         });
-        // Highlight the search query in the title
-        document.querySelectorAll('.card-title').forEach(elem => {
-            const queryRegex = new RegExp('<%= query %>', 'gi');
-            // Add highlight class to the matched text h3
-            elem.innerHTML = elem.innerHTML.replace(queryRegex, match => `<mark class="title-highlight">${match}</mark>`);
-        });
-    </script>
+
+        // 4. Create the "Greedy Sequence" Regex
+        // This looks complex, but here is the logic:
+        // (Boundary + AnyOfOurWords + Boundary) followed by (Separators + Boundary + AnyOfOurWords + Boundary) repeated 0 or more times.
+        
+        const anySearchWord = `(${wordPatterns.join('|')})`;
+        
+        // Matches any whitespace or common punctuation (like commas) between words
+        const separator = `[\\s,.-]+`; 
+
+        const fullRegexStr = 
+            `${boundaryLookbehind}${anySearchWord}${boundaryLookahead}` + 
+            `(?:${separator}${boundaryLookbehind}${anySearchWord}${boundaryLookahead})*`;
+
+        const combinedPattern = new RegExp(fullRegexStr, 'gi');
+
+        // 5. Highlighting Helper
+        function highlightText(selector, className) {
+            document.querySelectorAll(selector).forEach(elem => {
+                if (combinedPattern.test(elem.textContent)) {
+                    combinedPattern.lastIndex = 0; // Reset regex cursor
+                    elem.innerHTML = elem.innerHTML.replace(combinedPattern, match => {
+                        return `<mark class="${className}">${match}</mark>`;
+                    });
+                }
+            });
+        }
+
+        // Apply highlighting
+        highlightText('.lyrics', ''); 
+        highlightText('.card-title', 'title-highlight');
+    });
+</script>
     
 </body>
 
