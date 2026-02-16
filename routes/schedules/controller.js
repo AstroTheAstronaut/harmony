@@ -16,11 +16,11 @@ async function renderSchedulesPage (req, res) {
 
 async function createScheduleRoute (req, res) {
     try {
-        const { name, type, target_church,  expiry_date, scheduleStatus } = req.body;
+        const { name, description, biblebible_passage, type, target_church,  expiry_date, scheduleStatus, visibility } = req.body;
         const creator_uid =  req.body.creator_uid;
         console.log(req.body);
         const schedule_uid = uuidv4();
-        await createSchedule(name, schedule_uid, creator_uid, new Date(), type, target_church, expiry_date, scheduleStatus, [], []);
+        await createSchedule(name, description, bible_passage, schedule_uid, creator_uid, new Date(), type, target_church, expiry_date, scheduleStatus, [], [], visibility);
         res.status(200).send('Schedule created successfully');
     } catch (error) {
         console.error('Error creating schedule:', error);

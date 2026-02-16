@@ -34,10 +34,12 @@ async function getInactiveSchedules () {
     }
 }
 
-async function createSchedule(name, schedule_uid, creator_uid, created_timestamp, type, target_church, expiry_date, scheduleStatus, song_list, speaker_list) {
+async function createSchedule(name, description, bible_passage, schedule_uid, creator_uid, created_timestamp, type, target_church, expiry_date, scheduleStatus, song_list, speaker_list, visibility) {
     try {
         const newSchedule = new Schedule({
             name: name,
+            description: description || '',
+            bible_passage: bible_passage || '',
             schedule_uid: schedule_uid || uuidv4(),
             creator_uid: creator_uid,
             created_timestamp: created_timestamp || new Date(),
@@ -46,7 +48,8 @@ async function createSchedule(name, schedule_uid, creator_uid, created_timestamp
             expiry_date: expiry_date || null,
             status: scheduleStatus || 'pending',
             song_list: song_list || [],
-            speaker_list: speaker_list || []
+            speaker_list: speaker_list || [],
+            visibility: visibility || 'private'
         });
         await newSchedule.save();
         return Promise.resolve();

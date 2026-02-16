@@ -34,7 +34,8 @@ const {
     removeAllRequestedSongs,
     getSongById,
     searchLyrics,
-    createNotification
+    createNotification,
+    autocompleteLyrics
 } = require('../../functions/db');
 const bcrypt = require('bcryptjs/dist/bcrypt');
 
@@ -291,6 +292,26 @@ router.post('/upload-book', upload.single('bookFile'), async (req, res) => {
     } catch (err) {
         console.error('Error processing ZIP file:', err);
         res.status(500).send('Error processing ZIP file');
+    }
+});
+
+// Route to handle live autocomplete typing
+router.get('/autocomplete', async (req, res) => {
+    // Check if user is authenticated
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ error: 'Not authenticated' });
+    }
+    
+    const query = req.query.q;
+    if (!query) return res.json([]);
+
+    try {
+        // We will need to add this function to your db.js file
+        const results = await autocompleteLyrics(query);
+        res.json(results);
+    } catch (err) {
+        console.error('Error fetching autocomplete:', err);
+        res.status(500).json({ error: 'Search failed' });
     }
 });
 

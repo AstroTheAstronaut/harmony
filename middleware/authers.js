@@ -13,6 +13,11 @@ async function checkAuth(req, res, next) {
                 return res.redirect('/login?error=system_error');
             }
             
+            // Skip database check for Viewer guest account
+            if (userUid === 'viewer-guest-account') {
+                return next();
+            }
+            
             // Check if user still exists and is not deleted/banned
             const user = await User.findOne({ user_uid: userUid });
             
@@ -40,6 +45,7 @@ async function checkAuth(req, res, next) {
                 return res.redirect('/login?error=account_suspended');
             }
             
+
             // User is valid, proceed
             return next();
         } catch (error) {
@@ -75,6 +81,11 @@ async function checkAuthWithCache(req, res, next) {
             console.error('Invalid user_id in session:', req.session.user);
             req.session.destroy();
             return res.redirect('/login?error=system_error');
+        }
+        
+        // Skip database check for Viewer guest account
+        if (userUid === 'viewer-guest-account') {
+            return next();
         }
         
         const cacheKey = `user_status_${userUid}`;

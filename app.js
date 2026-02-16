@@ -95,7 +95,7 @@ const registerRouter = require("./routes/register");
 const auditLogRoute = require("./routes/audit-log");
 const notificationsRoute = require("./routes/notifications");
 const scheduleRoute = require("./routes/schedules");
-
+const scheduleViewRoute = require("./routes/schedule-view");
 // Public routes
 app.use("/auth", authRoute);
 app.use("/login", loginRoute);
@@ -128,6 +128,12 @@ app.use(
   checkAuth,
   checkPermission("view_schedules"),
   scheduleRoute,
+);
+app.use(
+  "/schedule-view",
+  checkAuth,
+  checkPermission("edit_schedule"),
+  scheduleViewRoute,
 );
 app.use(
   "/notifications",
@@ -211,10 +217,10 @@ app.use((err, req, res, next) => {
 //   res.status(404).render('status/404', { activePage: 'home' });
 // });
 
-// // 403 Forbidden (you should trigger this with explicit logic)
-// app.use('/forbidden', (req, res) => {
-//   res.status(403).render('status/403', { activePage: 'home' });
-// });
+// 403 Forbidden (you should trigger this with explicit logic)
+app.use('/forbidden', (req, res) => {
+  res.status(403).render('status/403', { activePage: 'home' });
+});
 
 // ----------- SERVER START -----------
 const PORT = process.env.PORT || 3000;

@@ -9,6 +9,7 @@ const Note = require('../models/Note');
 const RegisterCode = require('../models/RegisterCode');
 const Notification = require('../models/Notification');
 const Setting = require('../models/Setting');
+const { query } = require('express-validator');
 
 async function createUser(username, email, password, registerCode) {
     try {
@@ -803,6 +804,59 @@ async function getActiveUserInfo(userId) {
     }
 }
 
+async function autocompleteLyrics(term) {
+    try {
+        if (!term || term.trim() === '') {
+            return []; 
+        }
+        const results = await Song.aggregate([
+            {
+                $search: {
+                    index: "autocompleter", 
+                    compound: {
+                        should: [
+                            {
+                                autocomplete: {
+                                    query: term,
+                                    path: "title"
+                                }
+                            },
+                            {
+                                autocomplete: {
+                                    query: term,
+                                    path: "alt_title"
+                                }
+                            },
+                            {
+                                autocomplete: {
+                                    query: term,
+                                    path: "parts.lyrics"
+                                }
+                            }
+                        ],
+                        // Ensure at least one of the 'should' clauses matches
+                        minimumShouldMatch: 1 
+                    }
+                }
+            },
+            {
+                $limit: 5 
+            },
+            {
+                $project: {
+                    title: 1,
+                    alt_title: 1,
+                    song_uid: 1 
+                }
+            }
+        ]);
+        return results;
+    } catch (err) {
+        console.error("Error in autocompleteLyrics:", err);
+        return Promise.reject(err);
+    }
+}
+
 module.exports = {
     getBooks,
     deleteBook,
@@ -837,5 +891,6 @@ module.exports = {
     updateUserStatus,
     deleteUsers,
     createNotification,
-    getNotifications
+    getNotifications,
+    autocompleteLyrics,
 };

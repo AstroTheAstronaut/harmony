@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Edit Schedule</title>
+    <link rel="stylesheet" href="/styles/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/d3b482db3e.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900&amp;display=swap">
+    
+    <style>
+        .content-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .content-card {
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            background: white;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .content-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+            border-color: #007bff;
+        }
+        .content-card:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .text-black-reduced {
+            color: rgba(0, 0, 0, 0.7);
+        }
+        /* Make dragged item solid white and pop out with a shadow */
+        .sortable-drag {
+            background-color: white !important;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+            opacity: 1 !important;
+            border-color: #007bff;
+        }
+        /* Dim the empty space left behind */
+        .sortable-ghost {
+            opacity: 0.4;
+            background-color: #f8f9fa;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cardsContainer = document.querySelector('.content-cards');
+            const isMobile = window.innerWidth <= 768; 
+            
+            if (cardsContainer) {
+                new Sortable(cardsContainer, {
+                    animation: 150, 
+                    ghostClass: 'sortable-ghost',
+                    dragClass: 'sortable-drag',
+                    
+                    forceFallback: isMobile, 
+                    fallbackOnBody: isMobile, 
+                    
+                    handle: isMobile ? '.drag-handle' : null
+                });
+            }
+        });
+    </script>
+</head>
+
+<body id="page-top">
+    <div id="wrapper" class="d-flex">
+        <%- include('partials/sidebar') %>
+        
+        <div class="d-flex flex-column flex-grow-1" id="content-wrapper" style="min-height: 100vh;">
+            <div id="content">
+                <%- include('partials/navbar', { userRole: userRole }) %>
+                
+                <div class="container-fluid">
+                    <div class="d-sm-flex justify-content-between align-items-center mb-3">
+                        <h3 class="text-dark mb-0">Edit schedule:</h3>
+                    </div>
+                    
+                    <div class="card shadow mb-3">
+                        <div class="card-body my-1">
+                            
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h4 class="mb-2 border-bottom pb-1">Details</h4>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-2">
+                                            <label for="scheduleTitle" class="form-label mb-1">Name</label>
+                                            <input type="text" class="form-control form-control-sm" id="scheduleTitle" placeholder="<%= schedule.name %>" value="<%= schedule.name %>">
+                                        </div>
+
+                                        <div class="col-md-6 mb-2">
+                                            <label for="description" class="form-label mb-1">Description</label>
+                                            <input type="text" class="form-control form-control-sm" id="description" placeholder="<%= schedule.description %>" value="<%= schedule.description %>">
+                                        </div>
+
+                                        <div class="col-md-4 mb-2">
+                                            <label for="scheduleType" class="form-label mb-1">Type</label>
+                                            <select class="form-select form-select-sm" id="scheduleType">
+                                                <option value="youth" <%= schedule.type === 'youth' ? 'selected' : '' %>>Youth</option>
+                                                <option value="church" <%= schedule.type === 'church' ? 'selected' : '' %>>Church</option>
+                                                <option value="mission" <%= schedule.type === 'mission' ? 'selected' : '' %>>Mission</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-4 mb-2">
+                                            <label for="scheduleTargetChurch" class="form-label mb-1">Target church</label>
+                                            <input type="text" class="form-control form-control-sm" id="scheduleTargetChurch" placeholder="<%= schedule.target_church %>" value="<%= schedule.target_church %>">
+                                        </div>
+
+                                        <div class="col-md-4 mb-2">
+                                            <label for="biblePassage" class="form-label mb-1">Bible Passage</label>
+                                            <input type="text" class="form-control form-control-sm" id="biblePassage" placeholder="<%= schedule.bible_passage %>" value="<%= schedule.bible_passage %>">
+                                        </div>
+                                        
+                                        <div class="col-md-6 mb-2">
+                                            <label for="scheduleExpiryDate" class="form-label mb-1">Expiry date</label>
+                                            <input type="date" class="form-control form-control-sm" id="scheduleExpiryDate" value="<%= schedule.expiry_date ? schedule.expiry_date.toISOString().split('T')[0] : '' %>">
+                                        </div>
+                                        
+                                        <div class="col-md-6 mb-2">
+                                            <label for="scheduleVisibility" class="form-label mb-1">Visibility</label>
+                                            <select class="form-select form-select-sm" id="scheduleVisibility">
+                                                <option value="public" <%= schedule.visibility === 'public' ? 'selected' : '' %>>Public</option>
+                                                <option value="private" <%= schedule.visibility === 'private' ? 'selected' : '' %>>Private</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-lg-6 mb-3 mb-lg-0">
+                                    <div class="d-flex justify-content-between">
+                                        <h4 class="mb-2 border-bottom pb-1">Content</h4>
+                                        <div class="actions">
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fas fa-plus"></i> Song
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="#">Introduction</a></li>
+                                                    <li><a class="dropdown-item" href="#">Verses</a></li>
+                                                    <li><a class="dropdown-item" href="#">Poem</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="content-cards">
+                                        
+                                        <div class="content-card d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-start">
+                                                <span class="badge bg-primary px-2 me-2 mt-1">1.</span>
+                                                <div>
+                                                    <h5 class="mb-0 fw-bold text-primary">Song</h5>
+                                                    <h4 class="mt-1 mb-0"><span class="fw-bold text-black-reduced">Sunt un pribeag</span></h4>
+                                                </div>
+                                            </div>
+                                            <i class="fas fa-grip-vertical text-muted fs-5 drag-handle d-md-none p-2" style="cursor: grab;"></i>
+                                        </div>
+
+                                        <div class="content-card ms-4 d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-start">
+                                                <div>
+                                                    <h6 class="mb-0 fw-bold text-primary">Introduction</h6>
+                                                    <div class="d-flex align-items-baseline mt-1">
+                                                        <h5 class="mt-1 mb-0"><span class="text-dark fw-bold me-2">Naty</span></h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <i class="fas fa-grip-vertical text-muted fs-5 drag-handle d-md-none p-2" style="cursor: grab;"></i>
+                                        </div>
+                                        
+                                        <div class="content-card d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-start">
+                                                <span class="badge bg-primary px-2 me-2 mt-1">2.</span>
+                                                <div>
+                                                    <h5 class="mb-0 fw-bold text-primary">Song</h5>
+                                                    <h4 class="mt-1 mb-0"><span class="fw-bold text-black-reduced">Eu nu sunt mai mult decât fulgul de nea</span></h4>
+                                                </div>
+                                            </div>
+                                            <i class="fas fa-grip-vertical text-muted fs-5 drag-handle d-md-none p-2" style="cursor: grab;"></i>
+                                        </div>
+
+                                        <div class="content-card ms-4 d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-start">
+                                                <div>
+                                                    <h6 class="mb-0 fw-bold text-primary">Solo song</h6>
+                                                    <div class="d-flex align-items-baseline mt-1">
+                                                        <h5 class="mt-1 mb-0"><span class="text-dark fw-bold me-2">Simona & Denis</span></h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <i class="fas fa-grip-vertical text-muted fs-5 drag-handle d-md-none p-2" style="cursor: grab;"></i>
+                                        </div>
+
+                                        <div class="content-card d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-start">
+                                                <span class="badge bg-primary px-2 me-2 mt-1">3.</span>
+                                                <div>
+                                                    <h5 class="mb-0 fw-bold text-primary">Song</h5>
+                                                    <h4 class="mt-1 mb-0"><span class="fw-bold text-black-reduced">Suntem trecători</span></h4>
+                                                </div>
+                                            </div>
+                                            <i class="fas fa-grip-vertical text-muted fs-5 drag-handle d-md-none p-2" style="cursor: grab;"></i>
+                                        </div>
+
+                                        <div class="content-card ms-4 d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-start">
+                                                <div>
+                                                    <h6 class="mb-0 fw-bold text-primary">Poem</h6>
+                                                    <div class="d-flex align-items-baseline mt-1">
+                                                        <h5 class="mt-1 mb-0"><span class="text-dark fw-bold me-2">Katy</span></h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <i class="fas fa-grip-vertical text-muted fs-5 drag-handle d-md-none p-2" style="cursor: grab;"></i>
+                                        </div>
+
+                                        <div class="content-card d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-start">
+                                                <span class="badge bg-primary px-2 me-2 mt-1">4.</span>
+                                                <div>
+                                                    <h5 class="mb-0 fw-bold text-primary">Song</h5>
+                                                    <h4 class="mt-1 mb-0"><span class="fw-bold text-black-reduced">Cu Isus vreau să-mi continui calea</span></h4>
+                                                </div>
+                                            </div>
+                                            <i class="fas fa-grip-vertical text-muted fs-5 drag-handle d-md-none p-2" style="cursor: grab;"></i>
+                                        </div>
+
+                                        <div class="content-card ms-4 d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-start">
+                                                <div>
+                                                    <h6 class="mb-0 fw-bold text-primary">Bible Verses</h6>
+                                                    <div class="d-flex align-items-baseline mt-1">
+                                                        <h5 class="mt-1 mb-0"><span class="text-dark fw-bold me-2">David</span></h5>
+                                                        <div class="mt-1 ms-2">
+                                                            <h6 class="mb-0"><span class="text-primary fw-bold">Evrei 13:8-10</span></h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <i class="fas fa-grip-vertical text-muted fs-5 drag-handle d-md-none p-2" style="cursor: grab;"></i>
+                                        </div>
+
+                                        <div class="content-card d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-start">
+                                                <span class="badge bg-primary px-2 me-2 mt-1">5.</span>
+                                                <div>
+                                                    <h5 class="mb-0 fw-bold text-primary">Song</h5>
+                                                    <h4 class="mt-1 mb-0"><span class="fw-bold text-black-reduced">Eu am în cer o casă</span></h4>
+                                                </div>
+                                            </div>
+                                            <i class="fas fa-grip-vertical text-muted fs-5 drag-handle d-md-none p-2" style="cursor: grab;"></i>
+                                        </div>
+
+                                        <div class="content-card d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-start">
+                                                <span class="badge bg-primary px-2 me-2 mt-1">6.</span>
+                                                <div>
+                                                    <h5 class="mb-0 fw-bold text-primary">Song</h5>
+                                                    <h4 class="mt-1 mb-0"><span class="fw-bold text-black-reduced">Dana</span></h4>
+                                                </div>
+                                            </div>
+                                            <i class="fas fa-grip-vertical text-muted fs-5 drag-handle d-md-none p-2" style="cursor: grab;"></i>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-6 mt-4 mt-lg-0">
+                                    <h4 class="mb-2 border-bottom pb-1">Preview</h4>
+                                    <div class="preview-container p-2 p-md-3 border rounded bg-light" style="min-height: 250px;">
+                                        
+                                        <div class="preview-content mb-3 p-3 p-md-4 border shadow rounded" style="background-color: #000; min-height: 400px;">
+                                            
+                                            <div class="mb-4">
+                                                <h5 class="fw-bold text-white mb-2" id="title">Străini și venetici</h5>
+                                                <p class="text-white-50 fst-italic lh-sm mb-0" id="description" style="font-size: 0.95rem;">
+                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                                </p>
+                                            </div>
+
+                                            <div class="d-flex flex-column gap-3">
+                                                
+                                                <div class="d-flex">
+                                                    <span class="text-white fs-5 me-2">1.</span>
+                                                    <div>
+                                                        <div class="text-white fs-5">Sunt un pribeag</div>
+                                                        <div class="text-white-50 fs-6 mt-1">Introduction: Naty</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex">
+                                                    <span class="text-white fs-5 me-2">2.</span>
+                                                    <div>
+                                                        <div class="text-white fs-5">Eu nu sunt mai mult decât fulgul de nea</div>
+                                                        <div class="text-white-50 fs-6 mt-1">Simona & Denis</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex">
+                                                    <span class="text-white fs-5 me-2">3.</span>
+                                                    <div>
+                                                        <div class="text-white fs-5">Suntem trecători</div>
+                                                        <div class="text-white-50 fs-6 mt-1">Katy</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex">
+                                                    <span class="text-white fs-5 me-2">4.</span>
+                                                    <div>
+                                                        <div class="text-white fs-5">Cu Isus vreau să-mi continui calea</div>
+                                                        <div class="text-white-50 fs-6 mt-1">David - Evrei 13:8-10</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex">
+                                                    <span class="text-white fs-5 me-2">5.</span>
+                                                    <div>
+                                                        <div class="text-white fs-5">Eu am în cer o casă</div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex">
+                                                    <span class="text-white fs-5 me-2">6.</span>
+                                                    <div>
+                                                        <div class="text-white fs-5">Dana</div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="styling-container p-3 border rounded bg-white text-center text-muted" style="min-height: 50px;">
+                                            STYLING CONTAINER
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            
+            <%- include('partials/footer') %>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/scripts/script.min.js"></script>
+</body>
+</html>

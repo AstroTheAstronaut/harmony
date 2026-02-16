@@ -12,6 +12,9 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    fullname : {
+        type: String  
+    },
     password: {
         type: String,
         required: true
@@ -27,7 +30,7 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'user', 'mod', 'editor', 'viewer', 'superuser', 'ADMIN', 'MOD', 'EDITOR', 'USER', 'VIEWER', 'SUPERUSER', 'Superuser'],
+        enum: ['admin', 'user', 'mod', 'moderator', 'editor', 'viewer', 'superuser', 'ADMIN', 'MOD', 'MODERATOR', 'EDITOR', 'USER', 'VIEWER', 'SUPERUSER', 'Superuser'],
         default: 'user'
     },
     status : {

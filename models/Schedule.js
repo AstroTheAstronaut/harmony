@@ -5,6 +5,16 @@ const scheduleSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    description: {
+        type: String,
+        default: '',
+        required: false
+    },
+    bible_passage: {
+        type: String,
+        default: '',
+        required: false
+    },
     schedule_uid: {
         type: String,
         required: true
@@ -38,6 +48,12 @@ const scheduleSchema = new mongoose.Schema({
     content: {
         type: Array,
         default: []
+    },
+    visibility: {
+        type: String,
+        default: 'private',
+        required: true,
+        enum: ['private', 'public']
     }
 }, {
     collection: 'schedules'

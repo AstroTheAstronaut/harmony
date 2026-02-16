@@ -14,6 +14,9 @@ router.post('/login-user', async (req, res) => {
       req.session.user = {
         username: 'Viewer',
         role: 'Viewer',
+        fullname: 'Viewer (Guest)',
+        user_uid: 'viewer-guest-account',
+        user_id: 'viewer-guest-account',
       };
       req.session.role = 'Viewer';
 
@@ -40,12 +43,12 @@ router.post('/login-user', async (req, res) => {
     req.session.user = {
       id: user._id,
       username: user.username,
+      fullname: user.fullname,
       user_id: user.user_uid,
       email: user.email,
       role: role,
       user_uid: user.user_uid
     };
-    console.log('User logged in:', req.session.user);
 
     if (rememberMe && req.session.user!="viewer") req.session.cookie.maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
     else req.session.cookie.expires = false; 
@@ -72,10 +75,10 @@ router.get('/logout', (req, res) => {
 });
 
 router.post ('/register-user', async(req, res) => {
-    const { username, password, confirmPassword, email, registerCode } = req.body;
+    const { username, fullname, password, confirmPassword, email, registerCode } = req.body;
     const user_id = uuidv4();
-    if (!username || !password || !email || !registerCode) {
-        return res.status(400).send('Missing required fields!');
+    if (!username || !password || !email || !registerCode || !fullname) {
+        return res.status(400).send(`Missing required fields!\nGot: Username: ${username}, Password:${password}, Email: ${email}, RegisterCode: ${registerCode}, Fullname: ${fullname} `);
     }
 
     const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -100,6 +103,7 @@ router.post ('/register-user', async(req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
         username,
+        fullname,
         user_uid : user_id,
         password: hashedPassword,
         email, 

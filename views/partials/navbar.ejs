@@ -1,43 +1,73 @@
-<!-- Flag icon CSS should be included in main layout -->
 <style>
     .selected-language {
         font-weight: bold;
         background-color: #f0f0f0;
     }
 </style>
+
 <nav class="navbar navbar-dark navbar-expand bg-white shadow mb-4 topbar">
     <div class="container-fluid">
         <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button">
             <i class="fas fa-bars"></i>
         </button>
-        <!-- Home Button (Visible only on mobile) -->
         <button class="btn btn-link d-md-none rounded-circle me-3" id="homeButton" type="button" onclick="window.location.href='/'">
             <i class="fas fa-home"></i>
         </button>
-        <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search" action="/search" method="GET">
+        
+        <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search position-relative" action="/search" method="GET">
             <div class="input-group">
-                <input class="bg-light form-control border-0 small" type="text" placeholder="<%= t('general.search_lyrics') %>" id="searchQuery" name="query" required>
+                <input class="bg-light form-control border-0 small search-input" type="text" placeholder="<%= t('general.search_lyrics') %>" id="searchQuery" name="query" autocomplete="off" required>
                 <button class="btn btn-primary py-0" type="submit">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
+            
+            <div class="search-results-dropdown shadow-sm border rounded mt-1 position-absolute bg-white w-100" style="z-index: 1000; display: none; top: 100%;">
+                <div class="list-group list-group-flush rounded">
+                    <a href="#" class="list-group-item list-group-item-action py-2">
+                        <div class="fw-bold text-dark mb-0">Sunt un pribeag</div>
+                        <small class="text-muted">Song Lyrics</small>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action py-2">
+                        <div class="fw-bold text-dark mb-0">Eu am în cer o casă</div>
+                        <small class="text-muted">Song Lyrics</small>
+                    </a>
+                    <div class="list-group-item text-center text-muted small py-2 bg-light" style="font-size: 0.8rem;">
+                        Press Enter to see all results
+                    </div>
+                </div>
+            </div>
         </form>
+
         <ul class="navbar-nav flex-nowrap ms-auto">
             <li class="nav-item dropdown d-sm-none no-arrow">
                 <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
                     <i class="fas fa-search"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
-                    <form class="me-auto navbar-search w-100" action="/search" method="GET">
+                    <form class="me-auto navbar-search w-100 position-relative" action="/search" method="GET">
                         <div class="input-group">
-                            <input class="bg-light border-0 form-control small" type="text" placeholder="<%= t('general.search_for') %>" name="query" required>
+                            <input class="bg-light border-0 form-control small search-input" type="text" placeholder="<%= t('general.search_for') %>" name="query" autocomplete="off" required>
                             <button class="btn btn-primary" type="submit">
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
+                        
+                        <div class="search-results-dropdown shadow-sm border rounded mt-1 position-absolute bg-white w-100" style="z-index: 1000; display: none; top: 100%;">
+                            <div class="list-group list-group-flush rounded">
+                                <a href="#" class="list-group-item list-group-item-action py-2">
+                                    <div class="fw-bold text-dark mb-0">Sunt un pribeag</div>
+                                    <small class="text-muted">Song Lyrics</small>
+                                </a>
+                                <div class="list-group-item text-center text-muted small py-2 bg-light" style="font-size: 0.8rem;">
+                                    Press Enter to see all results
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </li>
+
             <% if (hasPermission('view_notifications')) { %>
                 <li class="nav-item dropdown no-arrow mx-1">
                     <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
@@ -94,23 +124,28 @@
                         </div>
                 </li>
             <% } %>
+            
             <li class="nav-item dropdown no-arrow mx-1">
                 <div class="shadow dropdown-list dropdown-menu dropdown-menu-end" aria-labelledby="alertsDropdown"></div>
             </li>
             <div class="d-none d-sm-block topbar-divider"></div>
+            
             <li class="nav-item dropdown no-arrow">
                 <div class="nav-item dropdown no-arrow">
                     <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
                         <span class="d-none d-lg-inline me-2 text-gray-600 small">
                             <%= t('messages.logged_in_as') %>
-                            <%= session.user.username %>
-
+                            <%= session.user.fullname %>
                         </span>
                         <% if(userRole === 'Viewer') { %>
-                            <img class="border rounded-circle img-profile" src="/img/viewer-icon.jpg"> <% } else if(userRole === 'Moderator') { %>
-                                <img class="border rounded-circle img-profile" src="/img/moderator-icon.jpg"> <% } else if(userRole === 'Editor') { %>
-                                    <img class="border rounded-circle img-profile" src="/img/editor-icon.jpg"> <% } else if(userRole === 'Admin') { %>
-                                        <img class="border rounded-circle img-profile" src="/img/admin-icon.jpg"> <% } %>
+                            <img class="border rounded-circle img-profile" src="/img/viewer-icon.jpg"> 
+                        <% } else if(userRole === 'Moderator') { %>
+                            <img class="border rounded-circle img-profile" src="/img/moderator-icon.jpg"> 
+                        <% } else if(userRole === 'Editor') { %>
+                            <img class="border rounded-circle img-profile" src="/img/editor-icon.jpg"> 
+                        <% } else if(userRole === 'Admin') { %>
+                            <img class="border rounded-circle img-profile" src="/img/admin-icon.jpg"> 
+                        <% } %>
                     </a>
                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
                         <% if(hasPermission('access_settings')) { %>
@@ -125,18 +160,18 @@
                         <a class="dropdown-item" href="/auth/logout">
                             <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;<%= t('general.logout') %>
                         </a>
-                        <!-- Language Dropdown Added Here -->
+                        
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item selected-language" id="lang-en-mobile" href="/change-language/en">
+                        <a class="dropdown-item" id="lang-en" href="/change-language/en">
                             <span class="flag-icon flag-icon-gb"></span> <%= t('messages.english') %>
                         </a>
-                        <a class="dropdown-item" id="lang-ro-mobile" href="/change-language/ro">
+                        <a class="dropdown-item" id="lang-ro" href="/change-language/ro">
                             <span class="flag-icon flag-icon-ro"></span> <%= t('messages.romanian') %>
                         </a>
-                        <a class="dropdown-item" id="lang-it-mobile" href="/change-language/it">
+                        <a class="dropdown-item" id="lang-it" href="/change-language/it">
                             <span class="flag-icon flag-icon-it"></span> <%= t('messages.italian') %>
                         </a>
-                        <a class="dropdown-item" id="lang-es-mobile" href="/change-language/es">
+                        <a class="dropdown-item" id="lang-es" href="/change-language/es">
                             <span class="flag-icon flag-icon-es"></span> <%= t('messages.spanish') %>
                         </a>
                     </div>
@@ -148,7 +183,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Example function to get the current language from a cookie
+        // --- Language Highlighting ---
         function getCurrentLanguage() {
             const cookies = document.cookie.split(';');
             for (let cookie of cookies) {
@@ -157,20 +192,78 @@
                     return value;
                 }
             }
-            return 'en'; // Default language
+            return 'en'; 
         }
 
-        // Set the flag and highlight the selected language
         const currentLang = getCurrentLanguage();
-        const langIcon = document.querySelector('.flag-icon');
-        const selectedClass = 'selected-language';
-        
-        if (currentLang === 'ro') {
-            document.getElementById('lang-ro-mobile').classList.add(selectedClass);
-            document.getElementById('lang-en-mobile').classList.remove(selectedClass);
-        } else {
-            document.getElementById('lang-en-mobile').classList.add(selectedClass);
-            document.getElementById('lang-ro-mobile').classList.remove(selectedClass);
+        const langElement = document.getElementById(`lang-${currentLang}`);
+        if (langElement) {
+            langElement.classList.add('selected-language');
         }
+
+        // --- Live Autocomplete Toggle ---
+        const searchInputs = document.querySelectorAll('.search-input');
+
+        searchInputs.forEach(input => {
+            let debounceTimer;
+
+            input.addEventListener('input', function() {
+                const form = this.closest('form');
+                const dropdown = form.querySelector('.search-results-dropdown');
+                const listGroup = dropdown.querySelector('.list-group');
+                const query = this.value.trim();
+                
+                // Clear the timer every time they type a new letter
+                clearTimeout(debounceTimer);
+
+                if (query.length === 0) {
+                    dropdown.style.display = 'none';
+                    return;
+                }
+
+                // Wait 300ms after they stop typing to fetch results
+                debounceTimer = setTimeout(async () => {
+                    try {
+                        // Ping our new backend route
+                        const response = await fetch(`/autocomplete?q=${encodeURIComponent(query)}`);
+                        const results = await response.json();
+
+                        // Clear out the mock data
+                        listGroup.innerHTML = '';
+
+                        if (results.length > 0) {
+                            // Build the new HTML for each result
+                            results.forEach(song => {
+                                listGroup.innerHTML += `
+                                    <a href="/song-view/${song.song_uid}" class="list-group-item list-group-item-action py-2">
+                                        <div class="fw-bold text-dark mb-0">${song.title}</div>
+                                        <small class="text-muted">Song Lyrics</small>
+                                    </a>
+                                `;
+                            });
+                        } else {
+                            listGroup.innerHTML = `
+                                <div class="list-group-item text-center text-muted small py-2">
+                                    No results found
+                                </div>
+                            `;
+                        }
+
+                        dropdown.style.display = 'block';
+
+                    } catch (error) {
+                        console.error("Autocomplete error:", error);
+                    }
+                }, 300); // 300 millisecond delay
+            });
+
+            // Hide dropdown if clicked outside
+            document.addEventListener('click', function(event) {
+                if (!input.contains(event.target) && !input.closest('form').contains(event.target)) {
+                    input.closest('form').querySelector('.search-results-dropdown').style.display = 'none';
+                }
+            });
+        });
+
     });
 </script>

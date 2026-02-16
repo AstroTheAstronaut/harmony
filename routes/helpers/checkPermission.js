@@ -10,6 +10,8 @@ module.exports = function(requiredPermission) {
     if (hasPermission(userRole, requiredPermission)) {
       return next();
     }
-    return res.status(403).send('Forbidden');
+    const err = new Error('Access Denied');
+    err.status = 403;
+    return next(err);
   };
 };

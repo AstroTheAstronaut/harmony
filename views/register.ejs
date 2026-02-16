@@ -106,8 +106,14 @@
                     <span class="label d-block mb-1">
                         <%= t('login_page.username') %>:
                     </span>
-                    <input id="usernameInput" type="text" name="username" class="form-control mb-2" placeholder="<%= t('login_page.username') %>" required>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">@</span>
+                        <input id="usernameInput" type="text" name="username" class="form-control" placeholder="<%= t('login_page.username') %>" required>
+                    </div>
                     <span class="text-danger small d-none">Username already taken!</span>
+                    <span id="usernameSpacesWarning"class="text-danger small d-none">Username cannot contain spaces!</span>
+                    <span class="label d-block mb-1"><%= t('register.full_name') %></span>
+                    <input id="fullNameInput" type="text" name="fullname" class="form-control" placeholder="<%= t('register.full_name') %>" required>
                     <span class="label d-block mb-1">
                         <%= t('register_page.email') %>:
                     </span>
@@ -212,6 +218,16 @@
                 if (username.length === 0) {
                     document.querySelector('#usernameInput + .text-danger').classList.add('d-none');
                     registerBtn.disabled = false;
+                    return;
+                }
+                // Check if username has spaces
+                if (username.includes(" ")) {
+                    document.getElementById('usernameSpacesWarning').classList.remove('d-none');
+                    registerBtn.disabled  = true;
+                    return;
+                } else {
+                    document.getElementById('usernameSpacesWarning').classList.add('d-none');
+                    registerBtn.disabled  = false;
                     return;
                 }
 
