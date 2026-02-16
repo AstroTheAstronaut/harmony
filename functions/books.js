@@ -53,7 +53,6 @@ async function deleteBookWithSongs(book_uuid) {
 async function getBookNameById(bookId) {
     try {
         var book = await Book.findOne({ bo_uid: bookId });
-        console.log('Book found:', book);
         return book ? book.bo_name : 'Unknown Book';
     } catch (err) {
         return 'Unknown Book';

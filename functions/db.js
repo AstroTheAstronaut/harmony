@@ -523,8 +523,6 @@ async function searchLyrics(term) {
             results = results.filter(r => r.score > threshold);
         }
 
-        console.log(`Query: "${term}" | Top Score: ${results[0]?.score || 0} | Results returned: ${results.length}`);
-        
         return results;
 
     } catch (error) {
