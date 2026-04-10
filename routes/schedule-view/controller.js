@@ -1,28 +1,11 @@
-const {getScheduleById} = require("./services");
-
+const {getScheduleById} = require("./services.js");
 
 async function renderScheduleViewPage(req, res) {
   try {    
     const user = req.session.user;
-    const locale = req.language;
-    res.render("schedule-view", {
-      activePage: "schedule",
-      session: req.session,
-      user,
-      locale,
-    });
-  } catch (error) {
-    console.error("Error rendering schedule view page: ", error);
-    (res.status(500), send("Internal Server Erorr"));
-  }
-}
-
-async function renderWithScheduleId(req, res) {
-  try {
     const scheduleId = req.params.id;
-    const schedule = await getScheduleById(scheduleId);
-    const user = req.session.user;
     const locale = req.language;
+    const schedule = await getScheduleById(scheduleId);
     res.render("schedule-view", {
       activePage: "schedule",
       session: req.session,
@@ -37,6 +20,5 @@ async function renderWithScheduleId(req, res) {
 }
 
 module.exports = {
-  renderScheduleViewPage,
-  renderWithScheduleId
-};
+    renderScheduleViewPage
+}

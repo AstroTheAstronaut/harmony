@@ -1,0 +1,59 @@
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="text-primary fw-bold m-0"><%= t('schedules.active-public-schedules') %></h6>
+    </div>
+    <ul class="list-group list-group-flush">
+        <% let scheduleCount = 0 %>
+        <% if (activePublicSchedules.length> 0) { %>
+            <% activePublicSchedules.forEach(schedule=> { %>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex flex-column">
+                                <!-- Desktop: Single row layout -->
+                                <div class="d-none d-sm-flex justify-content-between align-items-center py-2">
+                                    <!-- Left side: Title, Artist, and Book badge -->
+                                    <div class="d-flex align-items-center">
+                                        <a class="link-dark text-decoration-none me-3"
+                                            href="/schedule-view/<%= schedule.schedule_uid %>">
+                                            <strong>
+                                                <%= schedule.name %>
+                                            </strong>
+                                        </a>
+                                            <span class="text-muted me-3">
+                                                by <%= schedule.creator_fullname %>
+                                            </span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Mobile: Stacked layout -->
+                                <div class="d-sm-none">
+                                    <!-- Title -->
+                                    <div class="mb-1">
+                                        <a class="link-dark text-decoration-none"
+                                            href="/schedule-view/<%= schedule.schedule_uid %>">
+                                            <strong>
+                                                <%= schedule.name %>
+                                            </strong>
+                                        </a>
+                                    </div>
+                                    
+                                    <!-- Artist -->
+                                    <div class="mb-2">
+                                        <span class="text-muted">
+                                            by <%= schedule.creator_fullname %>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            <% }) %>
+        <% } else { %>
+            <li class="list-group-item d-flex justify-content-center align-items-center">
+                <p class="text-center text-muted m-0"><%= t('messages.no_requests_yet') %></p>
+            </li>
+        <% } %>
+    </ul>
+</div>

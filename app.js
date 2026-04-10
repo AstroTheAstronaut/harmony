@@ -96,6 +96,7 @@ const auditLogRoute = require("./routes/audit-log");
 const notificationsRoute = require("./routes/notifications");
 const scheduleRoute = require("./routes/schedules");
 const scheduleViewRoute = require("./routes/schedule-view");
+const scheduleEditRoute = require("./routes/schedule-edit");
 // Public routes
 app.use("/auth", authRoute);
 app.use("/login", loginRoute);
@@ -132,8 +133,14 @@ app.use(
 app.use(
   "/schedule-view",
   checkAuth,
+  checkPermission("view_schedules"),
+  scheduleViewRoute
+)
+app.use(
+  "/schedule-edit",
+  checkAuth,
   checkPermission("edit_schedule"),
-  scheduleViewRoute,
+  scheduleEditRoute,
 );
 app.use(
   "/notifications",

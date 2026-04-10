@@ -1,0 +1,394 @@
+<!-- Song Modal -->
+<div class="modal fade" id="addSongToScheduleModal" tabindex="-1" aria-labelledby="addSongToScheduleModal"
+        aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSongToScheduleModal">Add a song</h5>
+                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Search for a song</p>
+                <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search position-relative" action="/search" method="GET">
+                    <div class="input-group">
+                        <input class="bg-light form-control border-0 small search-input" type="text" placeholder="<%= t('general.search_lyrics') %>" id="searchQuery" name="query" autocomplete="off" required>
+                        <button class="btn btn-primary py-0" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="search-results-addsong-dropdown shadow-sm border rounded mt-1 position-absolute bg-white w-100" style="z-index: 1000; display: none; top: 100%;">
+                        <div class="list-group list-group-flush rounded">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <form action="<%= typeof schedule !== 'undefined' && schedule ? `/schedule-edit/${schedule.schedule_uid}/add-content` : '#' %>" method="POST" class="d-inline" id="addSongToScheduleForm">
+                    <input name="title" type="hidden" id="hiddenSongTitle">
+                    <input name="type" type="hidden" value="song">
+                    <input name="song_uid" type="hidden" id="hiddenSongUid">
+                    <button type="submit" class="btn btn-secondary" id="addSongToScheduleButton" disabled>Add song to schedule</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Intro Modal -->
+
+<div class="modal fade" id="addIntroToScheduleModal" tabindex="-1" aria-labelledby="addIntroToScheduleModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="<%= typeof schedule !== 'undefined' && schedule ? `/schedule-edit/${schedule.schedule_uid}/add-content` : '#' %>" method="POST" id="addIntroToScheduleForm">
+                
+                <div class="modal-header">
+                    <h5 class="modal-title">Add an introduction</h5>
+                    <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Enter a speaker's name</p>
+                    <input class="bg-light form-control border-0 small" name="speaker" id="speakerNameInput" placeholder="Enter your speaker's name" required>
+                </div>
+
+                <div class="modal-footer">
+                    <input name="type" type="hidden" value="intro">
+                    <button type="submit" class="btn btn-secondary" id="addIntroToScheduleButton">Add intro to schedule</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Verses Modal -->
+
+<div class="modal fade" id="addVersesToScheduleModal" tabindex="-1" aria-labelledby="addVersesToScheduleModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="<%= typeof schedule !== 'undefined' && schedule ? `/schedule-edit/${schedule.schedule_uid}/add-content` : '#' %>" method="POST" id="addVersesToScheduleForm">
+                
+                <div class="modal-header">
+                    <h5 class="modal-title">Add verses</h5>
+                    <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Enter a speaker's name</p>
+                    <input class="bg-light form-control border-0 small" name="speaker" id="speakerNameInput" placeholder="Enter your speaker's name" required>
+                    <p>Verses:</p>
+                    <input class="bg-light form-control border-0 small" name="verses" id="versesInput" placeholder="Enter verses (optional)">
+                </div>
+
+                <div class="modal-footer">
+                    <input name="type" type="hidden" value="verses">
+                    <button type="submit" class="btn btn-secondary" id="addVersesToScheduleButton">Add verses to schedule</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Poem Modal -->
+
+<div class="modal fade" id="addPoemToScheduleModal" tabindex="-1" aria-labelledby="addPoemToScheduleModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="<%= typeof schedule !== 'undefined' && schedule ? `/schedule-edit/${schedule.schedule_uid}/add-content` : '#' %>" method="POST" id="addPoemToScheduleForm">
+                
+                <div class="modal-header">
+                    <h5 class="modal-title">Add poem</h5>
+                    <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Enter a speaker's name</p>
+                    <input class="bg-light form-control border-0 small" name="speaker" id="speakerNameInput" placeholder="Enter your speaker's name" required>
+                </div>
+
+                <div class="modal-footer">
+                    <input name="type" type="hidden" value="poem">
+                    <button type="submit" class="btn btn-secondary" id="addPoemToScheduleButton">Add poem to schedule</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Solo Song Modal -->
+
+<div class="modal fade" id="addSoloSongToScheduleModal" tabindex="-1" aria-labelledby="addSoloSongToScheduleModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="<%= typeof schedule !== 'undefined' && schedule ? `/schedule-edit/${schedule.schedule_uid}/add-content` : '#' %>" method="POST" id="addSoloSongToScheduleForm">
+                
+                <div class="modal-header">
+                    <h5 class="modal-title">Add solo song</h5>
+                    <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Enter a singer's name</p>
+                    <div class="d-flex flex-column mb-3">
+                        <input class="bg-light form-control border-0 mb-3 small" id="soloSongTitle" placeholder="Enter title (optional)">
+                        <input class="bg-light form-control border-0 mb-3 small" id="singerNameInput" placeholder="Enter name...">
+                        <button class="btn btn-primary" type="button" id="addSingerToListBtn">Add to list</button>
+                    </div>
+
+                    <div id="singersListDisplay" class="mb-3">
+                        <h6>Current Singers:</h6>
+                        <ul class="list-group" id="singersUl">
+                            <li class="list-group-item text-muted small">No singers added yet</li>
+                        </ul>
+                    </div>
+
+                    <div id="hiddenSingersInputs"></div>
+                    <input type="hidden" name="title" id="hiddenSoloSongTitle">
+                </div>
+
+                <div class="modal-footer">
+                    <input name="type" type="hidden" value="solo_song">
+                    <button type="submit" class="btn btn-secondary" id="addSingerToScheduleButton">Add solo song to schedule</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    // 1. Get the main modal
+    const addSongModal = document.getElementById('addSongToScheduleModal');
+    
+    // 2. Fix the naming: use addSongModal instead of modal
+    const searchInput = addSongModal ? addSongModal.querySelector('.search-input') : null;
+    const hiddenSongUid = document.getElementById('hiddenSongUid');
+    const hiddenSongTitle = document.getElementById('hiddenSongTitle');
+    const addSongButton = document.getElementById('addSongToScheduleButton');
+    const addSongForm = document.getElementById('addSongToScheduleForm');
+
+    // 3. Select dropdown elements once, carefully
+    const dropdown = addSongModal ? addSongModal.querySelector('.search-results-addsong-dropdown') : null;
+    const listGroup = dropdown ? dropdown.querySelector('.list-group') : null;
+
+    if (searchInput && dropdown && listGroup) {
+        let debounceTimer;
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            clearTimeout(debounceTimer);
+
+            if (query.length === 0) {
+                dropdown.style.display = 'none';
+                listGroup.innerHTML = '';
+                hiddenSongUid.value = '';
+                hiddenSongTitle.value = '';
+                addSongButton.disabled = true;
+                return;
+            }
+
+            debounceTimer = setTimeout(async () => {
+                try {
+                    const response = await fetch(`/autocomplete?q=${encodeURIComponent(query)}`);
+                    const results = await response.json();
+
+                    listGroup.innerHTML = '';
+
+                    if (results.length > 0) {
+                        results.forEach(song => {
+                            listGroup.innerHTML += `
+                                <button type="button" data-song-uid="${song.song_uid}" data-song-title="${song.title}" class="list-group-item list-group-item-action py-2 text-start border-0">
+                                    <div class="fw-bold text-dark mb-0">${song.title}</div>
+                                    <small class="text-muted">Song Lyrics</small>
+                                </button>
+                            `;
+                        });
+                    } else {
+                        listGroup.innerHTML = `<div class="list-group-item text-center text-muted small py-2">No results found</div>`;
+                    }
+
+                    dropdown.style.display = 'block';
+                } catch (error) {
+                    console.error("Autocomplete error:", error);
+                }
+            }, 300);
+        });
+
+        // Event Delegation for clicking results
+        // listGroup.addEventListener('click', function(event) {
+        //     const option = event.target.closest('[data-song-uid]');
+        //     if (!option) return;
+
+        //     hiddenSongTitle.value = option.getAttribute('data-song-title');
+        //     hiddenSongUid.value = option.getAttribute('data-song-uid');
+            
+        //     searchInput.value = option.getAttribute('data-song-title') || '';
+        //     addSongButton.disabled = false;
+        //     dropdown.style.display = 'none';
+        // });
+        listGroup.addEventListener('click', function(event) {
+            const option = event.target.closest('[data-song-uid]');
+            if (!option) return;
+
+            const selectedUid = option.getAttribute('data-song-uid');
+            const selectedTitle = option.getAttribute('data-song-title');
+
+            // Use the specific references we defined at the top
+            hiddenSongUid.value = selectedUid;
+            hiddenSongTitle.value = selectedTitle;
+            
+            // EXPLICITLY set the type here to be safe
+            const typeInput = addSongForm.querySelector('input[name="type"]');
+            if (typeInput) {
+                typeInput.value = 'song';
+            }
+
+            searchInput.value = selectedTitle || '';
+            addSongButton.disabled = false;
+            dropdown.style.display = 'none';
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!addSongModal.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        if (addSongForm) {
+            addSongForm.addEventListener('submit', function(event) {
+                if (!hiddenSongUid.value) {
+                    event.preventDefault();
+                }
+            });
+        }
+    }
+
+    // --- Solo Song Modal Logic ---
+    const soloSongModal = document.getElementById('addSoloSongToScheduleModal');
+
+    if (soloSongModal) {
+        const addSingerBtn = document.getElementById('addSingerToListBtn');
+        const singerInput = document.getElementById('singerNameInput');
+        const soloSongTitleInput = document.getElementById('soloSongTitle');
+        
+        const ul = document.getElementById('singersUl');
+        const hiddenContainer = document.getElementById('hiddenSingersInputs');
+        const hiddenTitle = document.getElementById('hiddenSoloSongTitle');
+        const submitBtn = document.getElementById('addSingerToScheduleButton');
+        const soloForm = document.getElementById('addSoloSongToScheduleForm');
+
+        // 1. Logic to add a singer to the list
+        addSingerBtn.addEventListener('click', function() {
+            const name = singerInput.value.trim();
+            
+            if (name === "") return;
+
+            // Remove placeholder if it exists
+            if (ul.querySelector('.text-muted')) ul.innerHTML = '';
+
+            // Add to visible list
+            const li = document.createElement('li');
+            li.className = 'list-group-item py-2';
+            li.textContent = name;
+            ul.appendChild(li);
+
+            // Add hidden input for the backend
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'singers'; 
+            hiddenInput.value = name;
+            hiddenContainer.appendChild(hiddenInput);
+
+            // Cleanup and enable submit
+            singerInput.value = '';
+            submitBtn.disabled = false;
+        });
+
+        // 2. Sync title and validate before form submission
+        soloForm.addEventListener('submit', function(e) {
+            // Grab the title from the visible input and put it in the hidden one
+            hiddenTitle.value = soloSongTitleInput.value.trim();
+
+            // Safety check: ensure at least one singer exists
+            const singersCount = hiddenContainer.querySelectorAll('input[name="singers"]').length;
+            if (singersCount === 0) {
+                e.preventDefault();
+                alert("Please add at least one singer before submitting.");
+            }
+        });
+    }
+
+    // --- Universal AJAX Add Content Logic ---
+    // const addForms = [
+    //     'addSongToScheduleForm', 
+    //     'addIntroToScheduleForm', 
+    //     'addVersesToScheduleForm', 
+    //     'addPoemToScheduleForm', 
+    //     'addSoloSongToScheduleForm'
+    // ];
+
+    // addForms.forEach(formId => {
+    //     const form = document.getElementById(formId);
+    //     if (!form) return;
+
+    //     form.addEventListener('submit', async function(e) {
+    //         // --- Validation Checks ---
+    //         // Let the specific solo song listener handle the "No Singers" alert
+    //         if (formId === 'addSoloSongToScheduleForm') {
+    //             const hiddenContainer = document.getElementById('hiddenSingersInputs');
+    //             if (hiddenContainer.querySelectorAll('input[name="singers"]').length === 0) {
+    //                 return; // Stop here, the other listener prevents default
+    //             }
+    //         }
+    //         // Don't submit an empty song search
+    //         if (formId === 'addSongToScheduleForm') {
+    //             const hiddenUid = document.getElementById('hiddenSongUid');
+    //             if (!hiddenUid.value) return; 
+    //         }
+
+    //         // 1. Stop the annoying full-page POST redirect
+    //         e.preventDefault();
+
+    //         // 2. Change the button to a loading state
+    //         const submitBtn = form.querySelector('button[type="submit"]');
+    //         const originalText = submitBtn.innerHTML;
+    //         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    //         submitBtn.disabled = true;
+
+    //         try {
+    //             // 3. Send the data silently
+    //             const response = await fetch(form.action, {
+    //                 method: 'POST',
+    //                 body: new URLSearchParams(new FormData(form)),
+    //                 headers: {
+    //                     'Accept': 'application/json',
+    //                     'Content-Type': 'application/x-www-form-urlencoded'
+    //                 }
+    //             });
+
+    //             if (response.ok) {
+    //                 // 4. Hide the modal gracefully
+    //                 const modalEl = form.closest('.modal');
+    //                 const modalInstance = bootstrap.Modal.getInstance(modalEl);
+    //                 if (modalInstance) modalInstance.hide();
+
+    //                 // 5. Soft reload to fetch the new EJS cards (keeps scroll position!)
+    //                 window.location.reload();
+    //             } else {
+    //                 alert("Failed to add item. Please check your inputs.");
+    //                 submitBtn.innerHTML = originalText;
+    //                 submitBtn.disabled = false;
+    //             }
+    //         } catch (error) {
+    //             console.error("AJAX Add Error:", error);
+    //             alert("Network error occurred.");
+    //             submitBtn.innerHTML = originalText;
+    //             submitBtn.disabled = false;
+    //         }
+    //     });
+    // });
+    
+</script>

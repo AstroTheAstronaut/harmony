@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Edit Schedule - <%= schedule.name %></title>
+    <link rel="stylesheet" href="/styles/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/d3b482db3e.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900&amp;display=swap">
+    
+    <style>
+        /* ================= BASE ================= */
+        .style-btn {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50% !important;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button.btn.style-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .bg-theme-1 { background-color: #000; border: 2px solid #000; }
+        .bg-theme-2 { background-color: #1a237e; border: 2px solid #1a237e; }
+        .bg-theme-3 { background-color: #2e7d32; border: 2px solid #2e7d32; }
+
+        .text-size-lg { font-size: 1.2rem; font-weight: bold; }
+        .text-size-sm { font-size: 0.8rem; font-weight: bold; }
+
+        /* ================= CARDS ================= */
+        .content-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .content-card {
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            background: white;
+            transition: all 0.2s ease;
+            cursor: grab;
+        }
+
+        .content-card:hover {
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+            border-color: #0d6efd;
+        }
+
+        .content-card:active {
+            cursor: grabbing;
+            transform: scale(0.98);
+        }
+
+        /* Dragging */
+        .sortable-drag {
+            background-color: white !important;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15) !important;
+            border-color: #0d6efd;
+        }
+
+        .sortable-ghost {
+            opacity: 0.35;
+            background-color: #f8f9fa;
+        }
+
+        .bg-warning-swap {
+            background-color: #fff3cd !important;
+            border-color: #ffc107 !important;
+        }
+
+        /* ================= LOADER ================= */
+        .circle-loader {
+            width: 1.5em;
+            height: 1.5em;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            border-top-color: black;
+            opacity: 50%;
+
+            display: inline-block;
+            position: relative;
+
+            animation: spin 0.7s linear infinite;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Stop spinning */
+        .circle-loader.load-complete {
+            animation: none;
+            border-color: black;
+            opacity: 50%;
+        }
+
+        /* ================= CHECKMARK ================= */
+        .checkmark {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .checkmark-circle {
+            stroke: black;
+            opacity: 50%;
+            stroke-width: 2;
+            fill: none;
+
+            stroke-dasharray: 157;
+            stroke-dashoffset: 157;
+        }
+
+        .checkmark-check {
+            stroke: black;
+            opacity: 75%;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+        }
+
+        /* Animate circle */
+        .circle-loader.load-complete .checkmark-circle {
+            animation: draw-circle 0.4s ease forwards;
+        }
+
+        /* Animate check */
+        .circle-loader.load-complete .checkmark-check {
+            animation: draw-check 0.35s ease forwards;
+            animation-delay: 0.25s;
+        }
+
+        /* ================= KEYFRAMES ================= */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes draw-circle {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes draw-check {
+            to { stroke-dashoffset: 0; }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+</head>
+
+<body id="page-top">
+    <div id="wrapper" class="d-flex">
+        <%- include('partials/sidebar') %>
+        
+        <div class="d-flex flex-column flex-grow-1" id="content-wrapper" style="min-height: 100vh;">
+            <div id="content">
+                <%- include('partials/navbar', { userRole: userRole }) %>
+                
+                <div class="container-fluid">
+                    <div class="d-sm-flex justify-content-between align-items-center mb-3">
+                        <h3 class="text-dark mb-0">Edit schedule:</h3>
+                    </div>
+                    
+                    <div class="card shadow mb-3">
+                        <div class="card-body my-1">
+                            
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <div class="d-flex border-bottom justify-content-between align-items-center">
+                                        <h4 class="mb-2 pb-1">Details</h4>
+                                        <div class="circle-loader d-none" id="saveIndicator">
+                                            <svg class="checkmark" viewBox="0 0 52 52">
+                                                <path class="checkmark-check" fill="none" d="M14 27l7 7 16-16"/>
+                                            </svg>
+                                        </div>
+                                        <!-- <div class="circle-loader d-none" id="saveIndicator">
+                                            <div class="checkmark"></div>
+                                        </div> -->
+                                    </div>
+                                    <div class="row">
+                                        <form class="row" id="editDetailsForm" action="/schedule-edit/<%= schedule.schedule_uid %>/edit-details" method="POST">
+                                            <div class="col-md-6 mb-2">
+                                                <label for="scheduleTitle" class="form-label mb-1">Name</label>
+                                                <input name="name" type="text" class="form-control form-control-sm" id="scheduleName" value="<%= schedule.name %>">
+                                                <div class="invalid-feedback">A name is required to save.</div>
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label for="description" class="form-label mb-1">Description</label>
+                                                <input name="description" type="text" class="form-control form-control-sm" id="scheduleDescription" value="<%= schedule.description %>">
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label for="scheduleType" class="form-label mb-1">Type</label>
+                                                <select name="type" class="form-select form-select-sm" id="scheduleType">
+                                                    <option value="youth" <%= schedule.type === 'youth' ? 'selected' : '' %>>Youth</option>
+                                                    <option value="church" <%= schedule.type === 'church' ? 'selected' : '' %>>Church</option>
+                                                    <option value="mission" <%= schedule.type === 'mission' ? 'selected' : '' %>>Mission</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label for="scheduleTargetChurch" class="form-label mb-1">Target church</label>
+                                                <input name="target_church" type="text" class="form-control form-control-sm" id="scheduleTargetChurch" value="<%= schedule.target_church %>">
+                                            </div>
+                                            <div class="col-md-4 mb-2">
+                                                <label for="biblePassage" class="form-label mb-1">Bible Passage</label>
+                                                <input name="bible_passage" type="text" class="form-control form-control-sm" id="biblePassage" value="<%= schedule.bible_passage %>">
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label for="scheduleExpiryDate" class="form-label mb-1">Expiry date</label>
+                                                <input name="expiry_date" type="date" class="form-control form-control-sm" id="scheduleExpiryDateInput" value="<%= schedule.expiry_date ? schedule.expiry_date.toISOString().split('T')[0] : '' %>">
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label for="scheduleVisibility" class="form-label mb-1">Visibility</label>
+                                                <select name="visibility" class="form-select form-select-sm" id="scheduleVisibility">
+                                                    <option value="public" <%= schedule.visibility === 'public' ? 'selected' : '' %>>Public</option>
+                                                    <option value="private" <%= schedule.visibility === 'private' ? 'selected' : '' %>>Private</option>
+                                                </select>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-lg-6 mb-3 mb-lg-0">
+                                    <div class="d-flex justify-content-between align-items-end mb-2 border-bottom pb-1">
+                                        <h4 class="mb-0">Content</h4>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addSongToScheduleModal"><i class="fas fa-plus"></i> Song</button>
+                                            <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addIntroToScheduleModal">Introduction</a>
+                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addVersesToScheduleModal">Verses</a>
+                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addPoemToScheduleModal">Poem</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addSoloSongToScheduleModal">Solo Song</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="content-cards" id="editorCardsContainer">
+                                        <% let songCounterEditor = 1; %>
+                                        <% (schedule.content || []).forEach((item) => { %>
+                                            
+                                            <% if (item && item.type === 'song') { %>
+                                                <div class="content-card d-flex justify-content-between align-items-center p-2 p-md-3" data-index="<%= item.position %>" data-type="song">
+                                                    <div class="d-flex align-items-center flex-grow-1 me-2 overflow-hidden">
+                                                        <span class="badge bg-primary px-2 me-3 fs-6 editor-number"><%= songCounterEditor %>.</span>
+                                                        <% songCounterEditor++ %>
+                                                        <div class="d-flex flex-column text-wrap">
+                                                            <small class="mb-0 fw-bold text-primary text-uppercase" style="font-size: 0.75rem;">Song</small>
+                                                            <span class="fw-bold text-dark fs-6 lh-sm mt-1"><%= item.title %></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex align-items-center flex-shrink-0">
+                                                        <i class="fas fa-grip-vertical text-muted fs-5 drag-handle d-md-none p-2 me-1"></i>
+                                                        <form action="/schedule-view/<%= schedule.schedule_uid %>/delete-content" method="POST" class="delete-form m-0 p-0">
+                                                            <input type="hidden" name="position" value="<%= item.position %>">
+                                                            <button type="submit" class="btn btn-link text-secondary p-0 border-0 text-decoration-none"><i class="fas fa-times fs-5 p-2"></i></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                            <% } else if (item && item.type === 'intro') { %>
+                                                <div class="content-card ms-md-4 d-flex justify-content-between align-items-center p-2 p-md-3" data-index="<%= item.position %>" data-type="intro">
+                                                    <div class="d-flex align-items-center flex-grow-1 me-2 overflow-hidden">
+                                                        <div class="d-flex flex-column text-wrap">
+                                                            <small class="mb-0 fw-bold text-primary text-uppercase" style="font-size: 0.75rem;">Introduction</small>
+                                                            <span class="fw-bold text-dark fs-6 lh-sm mt-1"><%= item.speaker %></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex align-items-center flex-shrink-0">
+                                                        <i class="fas fa-grip-vertical text-muted fs-5 drag-handle d-md-none p-2 me-1"></i>
+                                                        <form action="/schedule-view/<%= schedule.schedule_uid %>/delete-content" method="POST" class="delete-form m-0 p-0">
+                                                            <input type="hidden" name="position" value="<%= item.position %>">
+                                                            <button type="submit" class="btn btn-link text-secondary p-0 border-0 text-decoration-none"><i class="fas fa-times fs-5 p-2"></i></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                            <% } else if (item && item.type === 'poem') { %>
+                                                <div class="content-card ms-md-4 d-flex justify-content-between align-items-center p-2 p-md-3" data-index="<%= item.position %>" data-type="poem">
+                                                    <div class="d-flex align-items-center flex-grow-1 me-2 overflow-hidden">
+                                                        <div class="d-flex flex-column text-wrap">
+                                                            <small class="mb-0 fw-bold text-primary text-uppercase" style="font-size: 0.75rem;">Poem</small>
+                                                            <span class="fw-bold text-dark fs-6 lh-sm mt-1"><%= item.speaker %></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex align-items-center flex-shrink-0">
+                                                        <i class="fas fa-grip-vertical text-muted fs-5 drag-handle d-md-none p-2 me-1"></i>
+                                                        <form action="/schedule-view/<%= schedule.schedule_uid %>/delete-content" method="POST" class="delete-form m-0 p-0">
+                                                            <input type="hidden" name="position" value="<%= item.position %>">
+                                                            <button type="submit" class="btn btn-link text-secondary p-0 border-0 text-decoration-none"><i class="fas fa-times fs-5 p-2"></i></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                            <% } else if (item && item.type === 'verses') { %>
+                                                <div class="content-card ms-md-4 d-flex justify-content-between align-items-center p-2 p-md-3" data-index="<%= item.position %>" data-type="verses">
+                                                    <div class="d-flex align-items-center flex-grow-1 me-2 overflow-hidden">
+                                                        <div class="d-flex flex-column text-wrap">
+                                                            <small class="mb-0 fw-bold text-primary text-uppercase" style="font-size: 0.75rem;">Verses</small>
+                                                            <span class="fw-bold text-dark fs-6 lh-sm mt-1"><%= item.speaker %> <%= item.verses ? `- ${item.verses}` : '' %></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex align-items-center flex-shrink-0">
+                                                        <i class="fas fa-grip-vertical text-muted fs-5 drag-handle d-md-none p-2 me-1"></i>
+                                                        <form action="/schedule-view/<%= schedule.schedule_uid %>/delete-content" method="POST" class="delete-form m-0 p-0">
+                                                            <input type="hidden" name="position" value="<%= item.position %>">
+                                                            <button type="submit" class="btn btn-link text-secondary p-0 border-0 text-decoration-none"><i class="fas fa-times fs-5 p-2"></i></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                            <% } else if (item && item.type === 'solo_song') { %>
+                                                <div class="content-card ms-md-4 d-flex justify-content-between align-items-center p-2 p-md-3" data-index="<%= item.position %>" data-type="solo_song">
+                                                    <div class="d-flex align-items-center flex-grow-1 me-2 overflow-hidden">
+                                                        <div class="d-flex flex-column text-wrap">
+                                                            <small class="mb-0 fw-bold text-primary text-uppercase" style="font-size: 0.75rem;">Solo Song</small>
+                                                            <span class="fw-bold text-dark fs-6 lh-sm mt-1"><%= item.title || 'Untitled Solo' %></span>
+                                                            <small class="text-muted mt-1">Singers: <%= Array.isArray(item.singers) ? item.singers.join(', ') : item.singers %></small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex align-items-center flex-shrink-0">
+                                                        <i class="fas fa-grip-vertical text-muted fs-5 drag-handle d-md-none p-2 me-1"></i>
+                                                        <form action="/schedule-view/<%= schedule.schedule_uid %>/delete-content" method="POST" class="delete-form m-0 p-0">
+                                                            <input type="hidden" name="position" value="<%= item.position %>">
+                                                            <button type="submit" class="btn btn-link text-secondary p-0 border-0 text-decoration-none"><i class="fas fa-times fs-5 p-2"></i></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            <% } %>
+                                        <% }) %>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-6 mt-4 mt-lg-0">
+                                    <h4 class="mb-2 border-bottom pb-1">Preview</h4>
+                                    <div class="preview-container p-2 p-md-3 border rounded bg-light" style="min-height: 250px;">
+                                        <div>Download</div>    
+                                        
+                                        <div class="preview-content mb-3 p-3 p-md-4 border shadow rounded" id="previewBox" style="background-color: #000; min-height: 400px; overflow: hidden;">
+                                            <div id="previewTextWrapper" style="transition: transform 0.2s;">
+                                                <div class="d-flex flex-column align-items-center justify-content-center">
+                                                    <h5 class="fw-bold text-white mb-2"><%= schedule.name %></h5>
+                                                    <h6 class="fw-bold text-white mb-2"><%= schedule.bible_passage %></h6>
+                                                    <p class="text-white-50 fst-italic lh-sm mb-0 text-center" style="font-size: 0.95rem;"><%= schedule.description %></p>
+                                                </div>
+                                                <br>
+                                                
+                                                <div class="d-flex flex-column gap-1" id="previewListContainer">
+                                                    <% let previewCounter = 1; %>
+                                                    <% (schedule.content || []).forEach((item) => { %>
+                                                        <% if (item) { %>
+                                                            <div class="d-flex preview-item" data-index="<%= item.position %>" data-type="<%= item.type %>">
+                                                                
+                                                                <% if (item.type === 'song') { %>
+                                                                    <span class="text-white fs-5 me-2 preview-number"><%= previewCounter %>.</span>
+                                                                    <% previewCounter++; %>
+                                                                    <div class="text-white fs-5"><%= item.title %></div>
+                                                                    
+                                                                <% } else if (item.type === 'intro') { %>
+                                                                    <span class="fs-5 me-2" style="visibility: hidden;">0.</span> 
+                                                                    <div class="text-white-50 fs-6 mt-1">Introduction: <%= item.speaker %></div>
+                                                                    
+                                                                <% } else if (item.type === 'solo_song') { %>
+                                                                    <span class="fs-5 me-2" style="visibility: hidden;">0.</span> 
+                                                                    <div class="text-white-50 fs-6 mt-1">(Solo) <%= item.title %>: <%= Array.isArray(item.singers) ? item.singers.join(', ') : item.singers %></div>
+                                                                    
+                                                                <% } else if (item.type === 'verses') { %>
+                                                                    <span class="fs-5 me-2" style="visibility: hidden;">0.</span> 
+                                                                    <div class="text-white-50 fs-6 mt-1">Verses: <%= item.speaker %> <%= item.verses ? `- ${item.verses}` : '' %></div>
+                                                                    
+                                                                <% } else if (item.type === 'poem') { %>
+                                                                    <span class="fs-5 me-2" style="visibility: hidden;">0.</span> 
+                                                                    <div class="text-white-50 fs-6 mt-1">Poem: <%= item.speaker %></div>
+                                                                <% } %>
+                                                            </div>
+                                                        <% } %>
+                                                    <% }) %>
+                                                </div>
+                                                <div class="d-flex flex-column align-items-center justify-content-center mt-3">
+                                                    <h4 class="fw-bold text-white mb-0">~*~*~*~*~</h4>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="styling-container p-3 border rounded bg-white text-center">
+                                            <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
+                                                <button type="button" data-color="#000000" class="btn style-btn bg-theme-1 color-btn"></button>
+                                                <button type="button" data-color="#1a237e" class="btn style-btn bg-theme-2 color-btn"></button>
+                                                <button type="button" data-color="#2e7d32" class="btn style-btn bg-theme-3 color-btn"></button>
+                                                <div class="vr mx-2"></div>
+                                                <button type="button" id="btnTextIncrease" class="btn btn-outline-dark style-btn text-size-lg">A</button>
+                                                <button type="button" id="btnTextDecrease" class="btn btn-outline-dark style-btn text-size-sm">A</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            
+            <%- include('modals/add_content_schedule') %>
+            
+            <%- include('partials/footer') %>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const scheduleUid = "<%= schedule.schedule_uid %>";
+            const cardsContainer = document.getElementById('editorCardsContainer');
+            const previewContainer = document.getElementById('previewListContainer');
+
+            // --- 1. THE MASTER SYNC FUNCTION (Prevents data scrambling) ---
+            function syncAllPositions() {
+                const currentCards = cardsContainer.querySelectorAll('.content-card');
+                let songCount = 1;
+
+                currentCards.forEach((card, index) => {
+                    const oldPos = card.getAttribute('data-index');
+                    const newPos = index + 1; // 1-based index
+
+                    // A. Update the card's tracking index and hidden form input
+                    card.setAttribute('data-index', newPos);
+                    const deleteInput = card.querySelector('input[name="position"]');
+                    if (deleteInput) deleteInput.value = newPos;
+
+                    // B. Sync the preview item
+                    if (previewContainer) {
+                        const previewItem = previewContainer.querySelector(`.preview-item[data-index="${oldPos}"]`);
+                        if (previewItem) previewItem.setAttribute('data-index', newPos);
+                    }
+
+                    // C. Update the visual 1. 2. 3. numbers for SONGS only
+                    if (card.getAttribute('data-type') === 'song') {
+                        const badge = card.querySelector('.editor-number');
+                        if (badge) badge.textContent = songCount + '.';
+                        
+                        if (previewContainer) {
+                            const previewItem = previewContainer.querySelector(`.preview-item[data-index="${newPos}"]`);
+                            if (previewItem) {
+                                const pNum = previewItem.querySelector('.preview-number');
+                                if (pNum) pNum.textContent = songCount + '.';
+                            }
+                        }
+                        songCount++;
+                    }
+                });
+            }
+
+            // --- 2. SORTABLE DRAG & DROP (with Swap Mode) ---
+            if (cardsContainer) {
+                new Sortable(cardsContainer, {
+                    animation: 150, 
+                    swap: true, // Enables true 1-to-1 swapping
+                    delay: 200, // Requires a 200ms "long press" to pick up an item
+                    delayOnTouchOnly: true, // Desktop mouse clicks stay instant
+                    touchStartThreshold: 3,
+                    swapClass: 'bg-warning-swap', 
+                    ghostClass: 'sortable-ghost',
+                    dragClass: 'sortable-drag',
+                    
+                    onEnd: async function (evt) {
+                        try {
+                            this.option("disabled", true); // Lock to prevent rapid dragging
+
+                            const cards = cardsContainer.querySelectorAll('.content-card');
+                            const newOrder = [];
+
+                            // Gather old positions
+                            cards.forEach(card => newOrder.push(card.getAttribute('data-index')));
+
+                            // Physically rearrange the preview HTML to match
+                            if (previewContainer) {
+                                cards.forEach(card => {
+                                    const pos = card.getAttribute('data-index');
+                                    const previewItem = previewContainer.querySelector(`.preview-item[data-index="${pos}"]`);
+                                    if (previewItem) previewContainer.appendChild(previewItem);
+                                });
+                            }
+
+                            syncAllPositions(); // Resync all numbers
+
+                            // Save to DB
+                            await fetch(`/schedule-edit/${scheduleUid}/reorder`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ newOrder: newOrder })
+                            });
+
+                        } catch (err) {
+                            console.error("Reorder failed:", err);
+                            window.location.reload(); 
+                        } finally {
+                            this.option("disabled", false); // Unlock
+                        }
+                    }
+                });
+            }
+
+            // --- 3. AJAX DELETE ---
+            cardsContainer.addEventListener('submit', async function(e) {
+                const form = e.target.closest('.delete-form');
+                if (!form) return;
+
+                e.preventDefault();
+
+                const card = form.closest('.content-card');
+                const position = form.querySelector('input[name="position"]').value;
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: new URLSearchParams(new FormData(form)),
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                    });
+
+                    if (response.ok) {
+                        card.style.opacity = '0';
+                        card.style.transform = 'scale(0.9)';
+
+                        setTimeout(() => {
+                            card.remove();
+                            const previewItem = document.querySelector(`.preview-item[data-index="${position}"]`);
+                            if (previewItem) previewItem.remove();
+                            syncAllPositions(); // Resync after deletion
+                        }, 300);
+                    }
+                } catch (err) {
+                    alert("Delete failed.");
+                }
+            });
+
+            // --- 4. UNIVERSAL AJAX ADD (For Modals) ---
+            const addForms = [
+                'addSongToScheduleForm', 'addIntroToScheduleForm', 
+                'addVersesToScheduleForm', 'addPoemToScheduleForm', 'addSoloSongToScheduleForm'
+            ];
+
+            addForms.forEach(formId => {
+                const form = document.getElementById(formId);
+                if (!form) return;
+
+                form.addEventListener('submit', async function(e) {
+                    if (formId === 'addSongToScheduleForm') {
+                        const uid = document.getElementById('hiddenSongUid');
+                        if (!uid || !uid.value) { e.preventDefault(); return; }
+                    }
+                    
+                    e.preventDefault(); // Stop normal POST
+
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = 'Saving...';
+                    submitBtn.disabled = true;
+
+                    try {
+                        const response = await fetch(form.action, {
+                            method: 'POST',
+                            body: new URLSearchParams(new FormData(form)),
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                        });
+
+                        if (response.ok) {
+                            // Close modal and soft reload to draw EJS
+                            const modal = bootstrap.Modal.getInstance(form.closest('.modal'));
+                            if (modal) modal.hide();
+                            window.location.reload(); 
+                        } else {
+                            throw new Error("Failed");
+                        }
+                    } catch (error) {
+                        alert("Error saving content.");
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            });
+
+            // --- 5. UI TOOLS (Colors & Text Size) ---
+            const previewBox = document.getElementById('previewBox');
+            const previewTextWrapper = document.getElementById('previewTextWrapper');
+            
+            document.querySelectorAll('.color-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    previewBox.style.backgroundColor = this.getAttribute('data-color');
+                });
+            });
+
+            let currentScale = 1;
+            document.getElementById('btnTextIncrease').addEventListener('click', () => {
+                if (currentScale < 1.4) {
+                    currentScale += 0.1;
+                    previewTextWrapper.style.transform = `scale(${currentScale})`;
+                    previewTextWrapper.style.transformOrigin = "top center"; 
+                }
+            });
+
+            document.getElementById('btnTextDecrease').addEventListener('click', () => {
+                if (currentScale > 0.7) {
+                    currentScale -= 0.1;
+                    previewTextWrapper.style.transform = `scale(${currentScale})`;
+                    previewTextWrapper.style.transformOrigin = "top center"; 
+                }
+            });
+        });
+
+        const editDetailsForm = document.getElementById('editDetailsForm');
+        const saveIndicator = document.getElementById('saveIndicator');
+
+        const nameInput = document.getElementById('scheduleName');
+        const dateInput = document.getElementById('scheduleExpiryDateInput');
+
+        const circleLoader = document.querySelector('.circle-loader');
+        const checkmark = document.querySelector('.checkmark');
+
+        let debounceTimer;
+        if (editDetailsForm) {
+            function setSaveStatus(status) {
+                if (status === 'saving') {
+                    // Reset states and show
+                    circleLoader.style.display = 'inline-block';
+                    circleLoader.style.opacity = '0.5'; // Matching your CSS opacity
+                    circleLoader.classList.remove('d-none', 'load-complete');
+                } 
+                else if (status === 'saved') {
+                    // Stop spinner + trigger SVG animations
+                    circleLoader.classList.add('load-complete');
+
+                    // Wait 2 seconds for the user to see the checkmark
+                    setTimeout(() => {
+                        // Start fading out
+                        circleLoader.style.transition = 'opacity 0.5s ease';
+                        circleLoader.style.opacity = '0';
+
+                        // Wait for the transition to finish before adding d-none
+                        setTimeout(() => {
+                            circleLoader.classList.add('d-none');
+                            circleLoader.classList.remove('load-complete');
+                            // Reset inline styles for next time
+                            circleLoader.style.opacity = '';
+                            circleLoader.style.display = '';
+                        }, 500);
+                    }, 2000);
+                }
+            }
+
+            async function triggerAutoSave() {
+                if (!nameInput.value.trim()) {
+                    nameInput.classList.add('is-invalid'); // Bootstrap class for red border
+                    return;
+                } else {
+                    nameInput.classList.remove('is-invalid');
+                }
+
+                if (!dateInput.value.trim()) {
+                    dateInput.classList.add('is-invalid'); // Bootstrap class for red border
+                    return;
+                } else {
+                    dateInput.classList.remove('is-invalid');
+                }
+                
+
+                setSaveStatus('saving');
+                try {
+                    // Run the fetch AND a 500ms timer at the same time.
+                    // This forces the spinner to show for at least 0.5s even if the server is instantly fast!
+                    const [response] = await Promise.all([
+                        fetch(editDetailsForm.action, {
+                            method: 'POST',
+                            body: new URLSearchParams(new FormData(editDetailsForm)),
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                        }),
+                        new Promise(resolve => setTimeout(resolve, 500))
+                    ]);
+                    
+                    if (response.ok) { 
+                        setSaveStatus('saved');
+                        document.querySelector('#previewTextWrapper h5').textContent = document.getElementById('scheduleTitle').value;
+                        document.querySelector('#previewTextWrapper h6').textContent = document.getElementById('biblePassage').value;
+                        document.querySelector('#previewTextWrapper p').textContent = document.getElementById('description').value;
+                    } else {
+                        throw new Error("Server rejected save");
+                    }
+                } catch (error) {
+                    console.error("Save failed:", error);
+                }
+            }
+
+            editDetailsForm.addEventListener('input', function() {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(triggerAutoSave, 800);
+            });
+            
+            editDetailsForm.addEventListener('change', function(e) {
+                if (e.target.tagName === 'SELECT' || e.target.type === 'date') {
+                    clearTimeout(debounceTimer);
+                    triggerAutoSave();
+                }
+            });
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/scripts/script.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<div class="modal fade" id="deleteScheduleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Step 1: Confirm Name</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete <strong id="step1Name"></strong>?</p>
+                <div class="form-group">
+                    <label>Type the name to continue:</label>
+                    <input type="text" class="form-control" id="confirmNameInput">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="toStep2Btn" class="btn btn-secondary" disabled>Next Step</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteScheduleConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content border-danger">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Final Confirmation</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>Irreversibly deleting: <br><strong id="step2Name"></strong></p>
+                <h4 id="countdownText" class="text-danger fw-bold">Wait 5 seconds...</h4>
+            </div>
+            <div class="modal-footer">
+                <form action="/schedule-delete" method="POST">
+                    <input name="schedule_uid" type="hidden" id="finalDeleteUUID">
+                    <button type="submit" id="finalDeleteBtn" class="btn btn-danger" disabled>Delete Schedule</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

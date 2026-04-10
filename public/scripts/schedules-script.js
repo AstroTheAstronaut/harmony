@@ -1,46 +1,46 @@
-function updateSchedulePreview() {
-    const name = document.getElementById('nameInput').value;
-    const type = document.getElementById('typeSelect').value;
-    const targetChurch = document.getElementById('targetChurchInput').value;
-    const expiry = document.getElementById('expiryDateInput').value;
-    const visibility = document.getElementById('visibilitySelect').value;
-    const description = document.getElementById('descriptionInput').value;
-    const biblePassage = document.getElementById('biblePassageInput').value;
-    
-    const submitBtn = document.getElementById('submitScheduleBtn');
+// function updateSchedulePreview() {
+//     const name = document.getElementById('nameInput').value;
+//     const type = document.getElementById('typeSelect').value;
+//     const targetChurch = document.getElementById('targetChurchInput').value;
+//     const expiry = document.getElementById('expiryDateInput').value;
+//     const visibility = document.getElementById('visibilitySelect').value;
+//     const description = document.getElementById('descriptionInput').value;
+//     const biblePassage = document.getElementById('biblePassageInput').value;
+//     
+//     const submitBtn = document.getElementById('submitScheduleBtn');
+//
+//     const namePreview = document.getElementById('namePreview');
+//     const typePreview = document.getElementById('typePreview');
+//     const targetChurchPreview = document.getElementById('targetChurchPreview');
+//     const expiryDatePreview = document.getElementById('expiryDatePreview');
+//     const visibilityPreview = document.getElementById('visibilityPreview');
+//
+//     namePreview.textContent = name || 'N/A';
+//     typePreview.textContent = type || 'N/A';
+//     targetChurchPreview.textContent = targetChurch || 'N/A';
+//     expiryDatePreview.textContent = expiry || 'N/A';
+//     // Assuming visibility is either 'public' or 'private', we can format it nicely
+//     if (visibility === 'public') {
+//         visibilityPreview.textContent = 'Public';
+//     } else if (visibility === 'private') {
+//         visibilityPreview.textContent = 'Private';
+//     } else {
+//         visibilityPreview.textContent = 'N/A';
+//     }
+//     submitBtn.disabled = false;
+// }
 
-    const namePreview = document.getElementById('namePreview');
-    const typePreview = document.getElementById('typePreview');
-    const targetChurchPreview = document.getElementById('targetChurchPreview');
-    const expiryDatePreview = document.getElementById('expiryDatePreview');
-    const visibilityPreview = document.getElementById('visibilityPreview');
+// // Listeners for preview (disabled)
+// document.getElementById('nameInput').addEventListener('input', updateSchedulePreview);
+// document.getElementById('typeSelect').addEventListener('change', updateSchedulePreview);
+// document.getElementById('targetChurchInput').addEventListener('input', updateSchedulePreview);
+// document.getElementById('expiryDateInput').addEventListener('input', updateSchedulePreview);
+// document.getElementById('visibilitySelect').addEventListener('change', updateSchedulePreview);
+// document.getElementById('descriptionInput').addEventListener('input', updateSchedulePreview);
+// document.getElementById('biblePassageInput').addEventListener('input', updateSchedulePreview);
 
-    namePreview.textContent = name || 'N/A';
-    typePreview.textContent = type || 'N/A';
-    targetChurchPreview.textContent = targetChurch || 'N/A';
-    expiryDatePreview.textContent = expiry || 'N/A';
-    // Assuming visibility is either 'public' or 'private', we can format it nicely
-    if (visibility === 'public') {
-        visibilityPreview.textContent = 'Public';
-    } else if (visibility === 'private') {
-        visibilityPreview.textContent = 'Private';
-    } else {
-        visibilityPreview.textContent = 'N/A';
-    }
-    submitBtn.disabled = false;
-}
-
-// Listeners
-document.getElementById('nameInput').addEventListener('input', updateSchedulePreview);
-document.getElementById('typeSelect').addEventListener('change', updateSchedulePreview);
-document.getElementById('targetChurchInput').addEventListener('input', updateSchedulePreview);
-document.getElementById('expiryDateInput').addEventListener('input', updateSchedulePreview);
-document.getElementById('visibilitySelect').addEventListener('change', updateSchedulePreview);
-document.getElementById('descriptionInput').addEventListener('input', updateSchedulePreview);
-document.getElementById('biblePassageInput').addEventListener('input', updateSchedulePreview);
-
-// Initial call to set the preview on page load
-updateSchedulePreview();
+// // Initial call to set the preview on page load (disabled)
+// updateSchedulePreview();
 
 function resetScheduleForm() {
     document.getElementById('nameInput').value = '';
@@ -50,7 +50,7 @@ function resetScheduleForm() {
     document.getElementById('visibilitySelect').value = '';
     document.getElementById('descriptionInput').value = '';
     document.getElementById('biblePassageInput').value = '';
-    updateSchedulePreview();
+    // updateSchedulePreview(); // Preview logic disabled
 }
 
 function pushRequest() {

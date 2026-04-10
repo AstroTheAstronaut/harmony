@@ -11,3 +11,6 @@
 .table th {
     vertical-align: middle !important;
 }
+:root {
+    --button-color-black: #00000;
+}

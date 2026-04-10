@@ -133,7 +133,7 @@
                                                 <th>Name</th>
                                                 <th>Type</th>
                                                 <th>Target date:</th>
-                                                <th>Created at:</th>
+                                                <th>Church:</th>
                                                 <th>Status:</th>
                                                 <th>Action</th>
                                             </tr>
@@ -148,8 +148,8 @@
                                                     <tr role="button" tabindex="0" style="cursor:pointer" onclick="window.location.href='/schedule-view/<%= schedule.schedule_uid %>'" onkeydown="if(event.key==='Enter'){window.location.href='/schedule-view/<%= schedule.schedule_uid %>'}">
                                                         <td><%= schedule.name %></td>
                                                         <td><%= schedule.type %></td>
-                                                        <td><%= new Date(schedule.created_timestamp).toLocaleString(locale, { weekday: 'long', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })%></td>
                                                         <td><%= new Date(schedule.expiry_date).toLocaleDateString(locale, { weekday: 'long', month: 'short', day: '2-digit' })%></td>
+                                                        <td><%= schedule.target_church || 'N/A'%></td>
                                                         <td>
                                                             <% if (schedule.status === 'active') { %>
                                                                 <span class="badge rounded-pill bg-success">Active</span>
@@ -209,8 +209,10 @@
                                         <thead>
                                             <tr>
                                                 <th>Name</th>
-                                                <th>Expired at:</th>
-                                                <th>Created at:</th>
+                                                <th>Type</th>
+                                                <th>Target date</th>
+                                                <th>Church</th>
+                                                <th>Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -221,10 +223,19 @@
                                             <% } else { %>
                                                 <% inactiveSchedules.forEach(schedule => { %>
                                                     <tr role="button" tabindex="0" style="cursor:pointer" onclick="window.location.href='/schedule-view/<%= schedule.schedule_uid %>'" onkeydown="if(event.key==='Enter'){window.location.href='/schedule-view/<%= schedule.schedule_uid %>'}">
+                                                        <td><%= schedule.name %></td>
                                                         <td><%= schedule.type %></td>
-                                                        <!-- <td><%= schedule.expiry_date ? schedule.expiry_date.toISOString().split('T')[0] : 'N/A' %></td>
-                                                        <td><%= schedule.created_at.toISOString().split('T')[0] %></td> -->
-                                                        
+                                                        <td><%= new Date(schedule.expiry_date).toLocaleDateString(locale, { weekday: 'long', month: 'short', day: '2-digit' })%></td>
+                                                        <td><%= schedule.target_church || 'N/A'%></td>
+                                                        <td>
+                                                            <% if (schedule.status === 'active') { %>
+                                                                <span class="badge rounded-pill bg-success">Active</span>
+                                                            <% } else if (schedule.status === 'inactive') { %>
+                                                                <span class="badge rounded-pill bg-danger">Inactive</span>
+                                                            <% } else if (schedule.status === 'pending') { %>
+                                                                <span class="badge rounded-pill bg-warning text-dark">Pending</span>
+                                                            <% } %>
+                                                        </td>
                                                     </tr>
                                                 <% }); %>
                                             <% } %>

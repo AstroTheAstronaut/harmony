@@ -20,6 +20,24 @@ async function getActiveSchedules () {
     }
 }
 
+async function makeSchedulesInactive() {
+    try {
+        const currentDate = new Date();
+        const result = await Schedule.updateMany (
+            {
+                expiry_date : {$lte: currentDate},
+                status: 'active'
+            },
+            {
+                $set: {status: 'inactive'}
+            }
+        );
+        return result;
+    } catch (err) {
+        console.error("Failed to make schedules inactive:", err);
+    }
+}
+
 async function getInactiveSchedules () {
     try {
         const currentDate = new Date();
@@ -34,33 +52,35 @@ async function getInactiveSchedules () {
     }
 }
 
-async function createSchedule(name, description, bible_passage, schedule_uid, creator_uid, created_timestamp, type, target_church, expiry_date, scheduleStatus, song_list, speaker_list, visibility) {
+async function createSchedule(scheduleData) {
     try {
+        console.log("Schedule data: " + scheduleData);
         const newSchedule = new Schedule({
-            name: name,
-            description: description || '',
-            bible_passage: bible_passage || '',
-            schedule_uid: schedule_uid || uuidv4(),
-            creator_uid: creator_uid,
-            created_timestamp: created_timestamp || new Date(),
-            type: type,
-            target_church: target_church || '',
-            expiry_date: expiry_date || null,
-            status: scheduleStatus || 'pending',
-            song_list: song_list || [],
-            speaker_list: speaker_list || [],
-            visibility: visibility || 'private'
+            name: scheduleData.name,
+            description: scheduleData.description || '',
+            bible_passage: scheduleData.bible_passage || '',
+            schedule_uid: scheduleData.schedule_uid || uuidv4(),
+            creator_uid: scheduleData.creator_uid,
+            created_timestamp: scheduleData.created_timestamp || new Date(),
+            type: scheduleData.type,
+            target_church: scheduleData.target_church || '',
+            expiry_date: scheduleData.expiry_date || null,
+            status: scheduleData.scheduleStatus || 'pending',
+            content: scheduleData.content || [], // Replaces song_list and speaker_list
+            visibility: scheduleData.visibility || 'private'
         });
+        
         await newSchedule.save();
         return Promise.resolve();
     } catch (err) {
         console.error('Error in createSchedule:', err);
-        throw new Error('Faile  d to create schedule');
+        throw new Error('Failed to create schedule');
     }
 }
 
 module.exports = {
     getActiveSchedules,
     getInactiveSchedules,
-    createSchedule
+    createSchedule,
+    makeSchedulesInactive
 }

@@ -9,6 +9,7 @@ const Note = require('../models/Note');
 const RegisterCode = require('../models/RegisterCode');
 const Notification = require('../models/Notification');
 const Setting = require('../models/Setting');
+const Schedule = require ('../models/Schedule');
 const { query } = require('express-validator');
 
 async function createUser(username, email, password, registerCode) {
@@ -855,6 +856,56 @@ async function autocompleteLyrics(term) {
     }
 }
 
+async function getActivePublicSchedules () {
+    try {
+        const result = await Schedule.aggregate ([
+            {
+                $match: {
+                    visibility: { $regex: /^public$/i },
+                    status: { $regex: /^active$/i} 
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'creator_uid',
+                    foreignField: 'user_uid',
+                    as: 'user_info'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$user_info',
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $project: {
+                    name: 1,
+                    schedule_uid: 1,
+                    creator_uid: 1,
+                    created_timestamp: 1,
+                    expiry_date: 1,
+                    creator_username: '$user_info.username',
+                    creator_fullname: { $ifNull: ["$user_info.fullname", "$user_info.username"] }
+                }
+            },
+            {
+                $sort: {
+                    expiry_date: 1
+                }
+            },
+            {
+                $limit: 5
+            }
+        ])
+        return result;
+    } catch (error) {
+        console.error("Error in getActivePublicSchedules (/functions/db.js)");
+        return Promise.reject (error)
+    }
+}
+
 module.exports = {
     getBooks,
     deleteBook,
@@ -891,4 +942,5 @@ module.exports = {
     createNotification,
     getNotifications,
     autocompleteLyrics,
+    getActivePublicSchedules
 };
